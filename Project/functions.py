@@ -49,10 +49,8 @@ def filter_dataset_by_labels(D, labels):
     :param labels: It is the array containing the labels of the dataset
     :return: the dataset D filtered by the labels provided
     """
-    mask_setosa = (labels == 0)
-    mask_versicolor = (labels == 1)
-    mask_virginica = (labels == 2)
-    return D[:, mask_setosa], D[:, mask_versicolor], D[:, mask_virginica]
+
+    return D[:, labels==0], D[:, labels==1]
 
 
 def plot_scatter_attributes_X_label(D_setosa, D_versicolor, D_virginica, title=""):
@@ -189,7 +187,7 @@ def compute_subspace_svd(C, sub_dimension):
     return P
 
 
-def compute_LDA_generalized_eigenvalue(D, class_mapping, L, directions):
+def compute_LDA_generalized_eigenvalue(D, L, directions,labels):
     """
 
     :param D: dataset
@@ -199,8 +197,8 @@ def compute_LDA_generalized_eigenvalue(D, class_mapping, L, directions):
     :return: the reduced database
     """
 
-    Covariance_between = compute_between_covariance(D, class_mapping, L)
-    Covariance_within = compute_within_covariance(D, class_mapping, L)
+    Covariance_between = compute_between_covariance(D, L,labels)
+    Covariance_within = compute_within_covariance(D, L,labels)
     # scipy.linalg.eigh solves the generalized eigenvalue problem for hermitian...
     # ...(including real symmetric) matrix
     # We can use scipy.linalg.eigh on positive definite matrices...
@@ -217,7 +215,7 @@ def compute_LDA_generalized_eigenvalue(D, class_mapping, L, directions):
     return DP
 
 
-def compute_within_covariance(D, L, labels):
+def compute_within_covariance(D, L,labels ):
     Covariance_within = 0
     tot_samples = 0
     for label in labels:
@@ -231,13 +229,13 @@ def compute_within_covariance(D, L, labels):
     return Covariance_within
 
 
-def compute_between_covariance(D, class_mapping, samples_mapped_to_class):
+def compute_between_covariance(D,  L,labels):
     mu = to_column(D.mean(1))
-    labels = class_mapping.values()
+
     Covariance_between = 0
     tot_samples = 0
     for label in labels:
-        D_class = D[:, samples_mapped_to_class == label]
+        D_class = D[:, L == label]
         mu_class = to_column(D_class.mean(1))
         num_samples = D_class.shape[1]
         tot_samples += num_samples
@@ -584,20 +582,22 @@ def compute_error_rate(predictions, LTE):
 def read_traintext (filename):
     file = open(filename, "r")
     D_list = list()
+    D2_list=list()
 
     sample_mapping = list()
 
     for line in file:
         attr1 = line.rstrip().split(',')[0:5]
         attr2 = line.rstrip().split(',')[5:10]
-
+        attr= line.rstrip().split(',')[0:10]
         D_list.append(to_column(numpy.array([float(i) for i in attr1])))
+        D2_list.append(to_column(numpy.array([float(i) for i in attr])))
 
         sample_mapping.append(int(line.rstrip().split(',')[10]))
         D_list.append(to_column(numpy.array([float(i) for i in attr2])))
     file.close()
     sample_mapping = numpy.array(sample_mapping, dtype=numpy.int32)
-    return  numpy.hstack(D_list), sample_mapping
+    return  numpy.hstack(D_list), sample_mapping,numpy.hstack(D2_list)
 
 
 def read_testtext (filename):
