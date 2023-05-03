@@ -115,6 +115,10 @@ def compute_PCA(D, sub_dimension):
     return DP
 
 
+
+
+
+
 def compute_covariance(D):
     """
     :param D: dataset
