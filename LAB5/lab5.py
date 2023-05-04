@@ -53,6 +53,20 @@ if __name__ == "__main__":
 
     # ----------------------------------------------------- #
 
+    # NOW I WILL USE TIED NAIVE BAYES COVARIANCE CLASSIFIER
+
+    log_TNB_class_conditional_probabilities = compute_TNB_log_likelihood_as_score_matrix(DTR, LTR, DTE, labels)
+    TNB_class_conditional_probabilities = numpy.exp(log_TNB_class_conditional_probabilities)
+    TNB_posterior_probability = compute_posterior_probability(TNB_class_conditional_probabilities,
+                                                              class_prior_probability)
+    TNB_predictions = numpy.argmax(TNB_posterior_probability, axis=0)
+    TNB_prediction_accuracy = compute_prediction_accuracy(TNB_predictions, LTE)
+    TNB_error_rate = compute_error_rate(TNB_predictions, LTE)
+    print("TiedNaiveBayes prediction accuracy: ", TNB_prediction_accuracy)
+    print("TiedNaiveBayes error rate: %.2f" % TNB_error_rate)
+
+    # ----------------------------------------------------- #
+
 
     # NOW I WILL USE K-FOLD LOO (Leave One Out)
 

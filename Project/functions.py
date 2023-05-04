@@ -599,25 +599,6 @@ def read_file (filename):
     sample_mapping = numpy.array(sample_mapping, dtype=numpy.int32)
     return  numpy.hstack(D_list), sample_mapping,numpy.hstack(D2_list)
 
-
-def read_testtext (filename):
-    file = open(filename, "r")
-    D_list = list()
-
-    sample_mapping = list()
-
-    for line in file:
-        attr1 = line.rstrip().split(',')[0:10]
-
-        D_list.append(to_column(numpy.array([float(i) for i in attr1])))
-        sample_mapping.append(int(line.rstrip().split(',')[10]))
-
-    file.close()
-
-    sample_mapping = numpy.array(sample_mapping, dtype=numpy.int32)
-    return numpy.hstack(D_list), sample_mapping
-
-
 def merge_dataset(D):
 
     for index in range(0, D.shape[1], 2):
@@ -630,3 +611,27 @@ def merge_dataset(D):
 
 
     return D_new
+
+class logRegClass:
+
+    def __init__(self, DTR, LTR, l, feature_space_dimension=None, num_classes=None):
+        self.DTR = DTR
+        self.LTR = LTR
+        # This is lambda (the hyper parameter)
+        self.l = l
+        self.feature_space_dimension = feature_space_dimension
+        self.num_classes = num_classes
+
+    def log_reg_obj_bin(self, v):
+        w = v[0:-1]
+        b = v[-1]
+        regularization_term = (self.l / 2) * (numpy.power(numpy.linalg.norm(w), 2))
+        objective_function = 0
+        for i in range(self.DTR.shape[1]):
+            sample = self.DTR[:, i]
+            label = self.LTR[i]
+            objective_function = objective_function + numpy.logaddexp(0,
+                                                                      -(2 * label - 1) * (numpy.dot(w.T, sample) + b))
+        objective_function = objective_function / self.DTR.shape[1]
+        objective_function = regularization_term + objective_function
+        return objective_function
