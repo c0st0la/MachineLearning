@@ -6,8 +6,8 @@ from functions import *
 if __name__ == "__main__":
 
     ##PCA+ MultivariateGaussian
-    D,L,D_original=read_traintext("train.txt")
-    DTE1,LTE,DTE_original=read_traintext("Test.txt")
+    D,L,D_original=read_file("train.txt")
+    DTE1,LTE,DTE_original=read_file("Test.txt")
     labels = [i for i in range(0, numpy.amax(L) + 1)]
     class_prior_probability = numpy.array([9/10, 1 / 10], dtype=float).reshape(2, 1)
 
@@ -241,7 +241,7 @@ for i in range(1,5):
     print("LDA+TiedCovariance  Naive Bayes  error rate: %.2f" % TNB_error_rate)
 
 
-#--------------------------PCA No Merge------------------------#
+#--------------------------PCA No Merge--------------------------------------------------#
 print("--------------------------PCA No Merge------------------------")
 
 for i in range(1,5):

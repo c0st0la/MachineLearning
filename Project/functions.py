@@ -579,7 +579,7 @@ def compute_error_rate(predictions, LTE):
 
 #Project
 
-def read_traintext (filename):
+def read_file (filename):
     file = open(filename, "r")
     D_list = list()
     D2_list=list()
