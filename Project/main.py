@@ -9,7 +9,7 @@ if __name__ == "__main__":
     D,L,D_original=read_traintext("train.txt")
     DTE1,LTE,DTE_original=read_traintext("Test.txt")
     labels = [i for i in range(0, numpy.amax(L) + 1)]
-    class_prior_probability = numpy.array([1 / 10, 9 / 10], dtype=float).reshape(2, 1)
+    class_prior_probability = numpy.array([9/10, 1 / 10], dtype=float).reshape(2, 1)
     # LDA
 
     #DataPCA_false, DataPCA_true = filter_dataset_by_labels(DataPCA, L)
