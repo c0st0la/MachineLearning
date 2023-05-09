@@ -9,12 +9,24 @@ if __name__ == "__main__":
     D,L,D_original=read_file("train.txt")
     DTE1,LTE,DTE_original=read_file("Test.txt")
 
-    #provo a normalizzare
+    #provo a normalizzare zscore
 
     Dmean=numpy.mean(D,axis=1)
     Dvar=numpy.std(D,axis=1)
     D1 = (D- numpy.mean(D, axis=1).reshape(5,1)) / numpy.std(D, axis=1).reshape(5,1) +0.0000001
     D_original1= (D_original-numpy.mean(D_original,axis=1).reshape(10,1))/numpy.std(D_original,axis=1).reshape(10,1) + 0.0000001
+
+    #minmaz  da sistemare posterior probability mettendo log # (perchè sennò divido per 0)
+    for col in range(0,5):
+        min_val = D[col].min()
+        max_val = D[col].max()
+        D[col] = (D[col] - min_val) / (max_val - min_val)
+
+    for col in range(0, 10):
+        min_val =  D_original[col].min()
+        max_val =  D_original[col].max()
+        D_original[col] = ( D_original[col] - min_val) / (max_val - min_val)
+
     labels = [i for i in range(0, numpy.amax(L) + 1)]
 
 
