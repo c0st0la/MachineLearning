@@ -635,3 +635,20 @@ class logRegClass:
         objective_function = objective_function / self.DTR.shape[1]
         objective_function = regularization_term + objective_function
         return objective_function
+
+
+def logistic_regression_binary(DTR, LTR, DTE, LTE, l):
+    logReg = logRegClass(DTR, LTR, l)
+
+    x, f, d = scipy.optimize.fmin_l_bfgs_b(logReg.log_reg_obj_bin, x0=numpy.zeros(DTR.shape[0] + 1), approx_grad=True)
+    #print("The objective value at the minimum is %f" % f)
+    w = x[0:-1]
+    b = x[-1]
+    posterior_log_likelihood_ratio = numpy.dot(w.T, DTE) + b
+    predictions = numpy.zeros(posterior_log_likelihood_ratio.size)
+    for index in range(posterior_log_likelihood_ratio.size):
+        if posterior_log_likelihood_ratio[index] > 0:
+            predictions[index] = 1
+    predictions_accuracy = compute_prediction_accuracy(predictions, LTE)
+    print("The accuracy is %.3f" % predictions_accuracy)
+    #print("The error rate is %.3f" % (1 - predictions_accuracy))
