@@ -1,4 +1,3 @@
-  #10x10 --> 5x20
 import numpy
 
 from functions import *
@@ -36,13 +35,14 @@ if __name__ == "__main__":
     #no preprocessing
     print("----------------no processing-------------", )
 
+    print("----------------Logistic Regression-------------", )
+
+    logistic_regression_binary(D_original, L, DTE_original, LTE, l=10**-1)
+
     print("MultiVariateGaussian prediction accuracy : ",
           compute_MVG_accuracy(D_original, L, DTE_original, LTE, labels, class_prior_probability))
 
-
    #NAIVE BAYES CLASSIFIER
-
-
     print("NaiveBayes prediction accuracy: ",
           compute_NB_accuracy(D_original, L, DTE_original, LTE, labels, class_prior_probability))
 
@@ -84,8 +84,7 @@ if __name__ == "__main__":
     print("LDA+TiedCovariance prediction accuracy: ",
           compute_TC_accuracy(D_LDA, L, DTEST_LDA, LTE, labels, class_prior_probability))
 
-
-    # LDA+TIED NAIVE BAYES COVARIANCE CLASSIFIER
+    # LDA +  TIED NIAVE BAYES COVARIANCE CLASSIFIER
 
     print("LDA+TiedCovariance  Naive Bayes prediction accuracy: ",
           compute_TNB_accuracy(D_LDA, L, DTEST_LDA, LTE, labels, class_prior_probability))
