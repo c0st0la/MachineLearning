@@ -16,6 +16,7 @@ def load_iris():
 def to_column(array):
     return array.reshape((array.size, 1))
 
+
 def to_row(array):
     return array.reshape((1, array.size))
 
@@ -50,7 +51,7 @@ def filter_dataset_by_labels(D, labels):
     :return: the dataset D filtered by the labels provided
     """
 
-    return D[:, labels==0], D[:, labels==1]
+    return D[:, labels == 0], D[:, labels == 1]
 
 
 def plot_scatter_attributes_X_label(D_setosa, D_versicolor, D_virginica, title=""):
@@ -187,7 +188,7 @@ def compute_subspace_svd(C, sub_dimension):
     return P
 
 
-def compute_LDA_generalized_eigenvalue(D, L, directions,labels):
+def compute_LDA_generalized_eigenvalue(D, L, directions, labels):
     """
 
     :param D: dataset
@@ -197,8 +198,8 @@ def compute_LDA_generalized_eigenvalue(D, L, directions,labels):
     :return: the reduced database
     """
 
-    Covariance_between = compute_between_covariance(D, L,labels)
-    Covariance_within = compute_within_covariance(D, L,labels)
+    Covariance_between = compute_between_covariance(D, L, labels)
+    Covariance_within = compute_within_covariance(D, L, labels)
     # scipy.linalg.eigh solves the generalized eigenvalue problem for hermitian...
     # ...(including real symmetric) matrix
     # We can use scipy.linalg.eigh on positive definite matrices...
@@ -215,7 +216,7 @@ def compute_LDA_generalized_eigenvalue(D, L, directions,labels):
     return DP
 
 
-def compute_within_covariance(D, L,labels ):
+def compute_within_covariance(D, L, labels):
     Covariance_within = 0
     tot_samples = 0
     for label in labels:
@@ -229,7 +230,7 @@ def compute_within_covariance(D, L,labels ):
     return Covariance_within
 
 
-def compute_between_covariance(D,  L,labels):
+def compute_between_covariance(D, L, labels):
     mu = to_column(D.mean(1))
 
     Covariance_between = 0
@@ -304,7 +305,7 @@ def log_probab_distr_func_GAU_matrix(D, mu, C):
 def log_likelihood(D):
     muML = compute_mean(D)
     CML = compute_empirical_covariance(D)
-    arrayLogLikelihood = log_probab_distr_func_GAU_matrix(D ,muML, CML)
+    arrayLogLikelihood = log_probab_distr_func_GAU_matrix(D, muML, CML)
     LogLikelihood = numpy.sum(arrayLogLikelihood)
     return LogLikelihood
 
@@ -489,7 +490,8 @@ def K_fold_cross_validation(D, L, classifier, k, class_prior_probability, labels
         for i in range(k):
             (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
             log_MVG_class_conditional_probabilities = compute_MVG_log_likelihood_as_score_matrix(DTR, LTR, DTE, labels)
-            log_MVG_posterior_probability = compute_log_posterior_probability(log_MVG_class_conditional_probabilities, class_prior_probability)
+            log_MVG_posterior_probability = compute_log_posterior_probability(log_MVG_class_conditional_probabilities,
+                                                                              class_prior_probability)
             MVG_posterior_probability = numpy.exp(log_MVG_posterior_probability)
             MVG_predictions = numpy.argmax(MVG_posterior_probability, axis=0)
             MVG_prediction_accuracy = compute_prediction_accuracy(MVG_predictions, LTE)
@@ -502,7 +504,7 @@ def K_fold_cross_validation(D, L, classifier, k, class_prior_probability, labels
             (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
             log_NB_class_conditional_probabilities = compute_NB_log_likelihood_as_score_matrix(DTR, LTR, DTE, labels)
             log_NB_posterior_probability = compute_log_posterior_probability(log_NB_class_conditional_probabilities,
-                                                                              class_prior_probability)
+                                                                             class_prior_probability)
             NB_posterior_probability = numpy.exp(log_NB_posterior_probability)
             NB_predictions = numpy.argmax(NB_posterior_probability, axis=0)
             NB_prediction_accuracy = compute_prediction_accuracy(NB_predictions, LTE)
@@ -528,7 +530,7 @@ def K_fold_cross_validation(D, L, classifier, k, class_prior_probability, labels
             (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
             log_TNB_class_conditional_probabilities = compute_TNB_log_likelihood_as_score_matrix(DTR, LTR, DTE, labels)
             log_TNB_posterior_probability = compute_log_posterior_probability(log_TNB_class_conditional_probabilities,
-                                                                             class_prior_probability)
+                                                                              class_prior_probability)
             TNB_posterior_probability = numpy.exp(log_TNB_posterior_probability)
             TNB_predictions = numpy.argmax(TNB_posterior_probability, axis=0)
             TNB_prediction_accuracy = compute_prediction_accuracy(TNB_predictions, LTE)
@@ -577,19 +579,19 @@ def compute_error_rate(predictions, LTE):
     return 1 - accuracy
 
 
-#Project
+# Project
 
-def read_file (filename):
+def read_file(filename):
     file = open(filename, "r")
     D_list = list()
-    D2_list=list()
+    D2_list = list()
 
     sample_mapping = list()
 
     for line in file:
         attr1 = line.rstrip().split(',')[0:5]
         attr2 = line.rstrip().split(',')[5:10]
-        attr= line.rstrip().split(',')[0:10]
+        attr = line.rstrip().split(',')[0:10]
         D_list.append(to_column(numpy.array([float(i) for i in attr1])))
         D2_list.append(to_column(numpy.array([float(i) for i in attr])))
 
@@ -597,26 +599,27 @@ def read_file (filename):
         D_list.append(to_column(numpy.array([float(i) for i in attr2])))
     file.close()
     sample_mapping = numpy.array(sample_mapping, dtype=numpy.int32)
-    return  numpy.hstack(D_list), sample_mapping,numpy.hstack(D2_list)
+    return numpy.hstack(D_list), sample_mapping, numpy.hstack(D2_list)
+
 
 def merge_dataset(D):
-
     for index in range(0, D.shape[1], 2):
-        matrix = D[:, index:index+2]
-        tmp=to_column(numpy.hstack(matrix))
-        if index!=0:
-            D_new=numpy.concatenate([D_new,tmp], axis=1)
+        matrix = D[:, index:index + 2]
+        tmp = to_column(numpy.hstack(matrix))
+        if index != 0:
+            D_new = numpy.concatenate([D_new, tmp], axis=1)
         else:
             D_new = tmp
 
-
     return D_new
+
 
 class logRegClass:
 
-    def __init__(self, DTR, LTR, l, feature_space_dimension=None, num_classes=None):
+    def __init__(self, DTR, LTR, l, class_prior_probability, feature_space_dimension=None, num_classes=None):
         self.DTR = DTR
         self.LTR = LTR
+        self.class_prior_probability = class_prior_probability
         # This is lambda (the hyper parameter)
         self.l = l
         self.feature_space_dimension = feature_space_dimension
@@ -626,22 +629,30 @@ class logRegClass:
         w = v[0:-1]
         b = v[-1]
         regularization_term = (self.l / 2) * (numpy.power(numpy.linalg.norm(w), 2))
-        objective_function = 0
-        for i in range(self.DTR.shape[1]):
-            sample = self.DTR[:, i]
-            label = self.LTR[i]
-            objective_function = objective_function + numpy.logaddexp(0,
-                                                                      -(2 * label - 1) * (numpy.dot(w.T, sample) + b))
-        objective_function = objective_function / self.DTR.shape[1]
-        objective_function = regularization_term + objective_function
+        objective_function_true = 0
+        objective_function_false = 0
+        DTR_false, DTR_true = filter_dataset_by_labels(self.DTR, self.LTR)
+        for i in range(DTR_true.shape[1]):
+            sample = DTR_true[:, i]
+            label = 1
+            objective_function_true = objective_function_true + \
+                                 numpy.logaddexp(0, -(2 * label - 1) * (numpy.dot(w.T, sample) + b))
+        objective_function_true = ( objective_function_true / DTR_true.shape[1] ) * self.class_prior_probability[1]
+        for i in range(DTR_false.shape[1]):
+            sample = DTR_false[:, i]
+            label = 0
+            objective_function_false = objective_function_false + \
+                                 numpy.logaddexp(0, -(2 * label - 1) * (numpy.dot(w.T, sample) + b))
+        objective_function_false = ( objective_function_false / DTR_false.shape[1] ) * self.class_prior_probability[0]
+        objective_function = regularization_term + objective_function_false + objective_function_true
         return objective_function
 
 
-def logistic_regression_binary(DTR, LTR, DTE, LTE, l):
-    logReg = logRegClass(DTR, LTR, l)
+def logistic_regression_binary(DTR, LTR, DTE, LTE, l, class_prior_probability):
+    logReg = logRegClass(DTR, LTR, l, class_prior_probability)
 
     x, f, d = scipy.optimize.fmin_l_bfgs_b(logReg.log_reg_obj_bin, x0=numpy.zeros(DTR.shape[0] + 1), approx_grad=True)
-    #print("The objective value at the minimum is %f" % f)
+    # print("The objective value at the minimum is %f" % f)
     w = x[0:-1]
     b = x[-1]
     posterior_log_likelihood_ratio = numpy.dot(w.T, DTE) + b
@@ -651,4 +662,4 @@ def logistic_regression_binary(DTR, LTR, DTE, LTE, l):
             predictions[index] = 1
     predictions_accuracy = compute_prediction_accuracy(predictions, LTE)
     print("The accuracy is %.3f" % predictions_accuracy)
-    #print("The error rate is %.3f" % (1 - predictions_accuracy))
+    # print("The error rate is %.3f" % (1 - predictions_accuracy))
