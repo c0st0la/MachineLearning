@@ -661,5 +661,5 @@ def logistic_regression_binary(DTR, LTR, DTE, LTE, l, class_prior_probability):
         if posterior_log_likelihood_ratio[index] > 0:
             predictions[index] = 1
     predictions_accuracy = compute_prediction_accuracy(predictions, LTE)
-    print("The accuracy is %.3f" % predictions_accuracy)
+    print("The  Logistic Regression accuracy is %.3f" % predictions_accuracy)
     # print("The error rate is %.3f" % (1 - predictions_accuracy))

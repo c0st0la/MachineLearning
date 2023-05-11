@@ -41,7 +41,7 @@ if __name__ == "__main__":
     #no preprocessing
     print("----------------no processing-------------", )
 
-    print("----------------Logistic Regression-------------", )
+
 
     logistic_regression_binary(D_original, L, DTE_original, LTE, l, class_prior_probability)
 
@@ -71,7 +71,7 @@ if __name__ == "__main__":
     #DataPCA_false, DataPCA_true = filter_dataset_by_labels(DataPCA, L)
 
     print("-------------------LDA--------------------", 1)
-    D_LDA = compute_LDA_generalized_eigenvalue(D_original, L, directions=1, labels=labels)
+    D_LDA = compute_LDA_generalized_eigenvalue(D_original, L, directions=1,labels=labels)
     DTEST_LDA = compute_LDA_generalized_eigenvalue(DTE_original, LTE, directions=1, labels=labels)
     ##LDA+Logistic_Regression
 
