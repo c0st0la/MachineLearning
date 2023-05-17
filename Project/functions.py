@@ -649,11 +649,12 @@ class logRegClass:
 
 
 def logistic_regression_binary(DTR, LTR, DTE, LTE, l, class_prior_probability):
+    # TRASFORMSRE QUDRATICO DTR, DTE
     logReg = logRegClass(DTR, LTR, l, class_prior_probability)
 
     x, f, d = scipy.optimize.fmin_l_bfgs_b(logReg.log_reg_obj_bin, x0=numpy.zeros(DTR.shape[0] + 1), approx_grad=True)
     # print("The objective value at the minimum is %f" % f)
-    w = x[0:-1]
+    w = x[0:-1]   ##phi(x) da applicare su DTR +DTE
     b = x[-1]
     posterior_log_likelihood_ratio = numpy.dot(w.T, DTE) + b
     predictions = numpy.zeros(posterior_log_likelihood_ratio.size)
@@ -663,3 +664,34 @@ def logistic_regression_binary(DTR, LTR, DTE, LTE, l, class_prior_probability):
     predictions_accuracy = compute_prediction_accuracy(predictions, LTE)
     print("The  Logistic Regression accuracy is %.3f" % predictions_accuracy)
     # print("The error rate is %.3f" % (1 - predictions_accuracy))
+
+
+def logistic_regression_binary_quadratic_surface(DTR, LTR, DTE, LTE, l, class_prior_probability):
+    DTR=quadratic_expansion(DTR)
+    DTE=quadratic_expansion(DTE)
+
+    logReg = logRegClass(DTR, LTR, l, class_prior_probability)
+
+    x, f, d = scipy.optimize.fmin_l_bfgs_b(logReg.log_reg_obj_bin, x0=numpy.zeros(DTR.shape[0] + 1), approx_grad=True)
+    # print("The objective value at the minimum is %f" % f)
+    w = x[0:-1]   ##phi(x) da applicare su DTR +DTE
+    b = x[-1]
+    posterior_log_likelihood_ratio = numpy.dot(w.T, DTE) + b
+    predictions = numpy.zeros(posterior_log_likelihood_ratio.size)
+    for index in range(posterior_log_likelihood_ratio.size):
+        if posterior_log_likelihood_ratio[index] > 0:
+            predictions[index] = 1
+    predictions_accuracy = compute_prediction_accuracy(predictions, LTE)
+    print("The  Logistic Regression accuracy with quadratic expansion is %.3f" % predictions_accuracy)
+    # print("The error rate is %.3f" % (1 - predictions_accuracy))
+
+
+def quadratic_expansion(D):
+    D_2 = numpy.dot(D, D.T)
+    D_3 = numpy.hstack(D_2).reshape(-1, 1)
+    vec_xxT = numpy.tile(D_3, (1, D.shape[1]))
+    phi = numpy.concatenate((vec_xxT, D), axis=0)
+
+
+
+    return phi

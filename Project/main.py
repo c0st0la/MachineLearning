@@ -8,6 +8,9 @@ if __name__ == "__main__":
     D,L,D_original=read_file("train.txt")
     DTE1,LTE,DTE_original=read_file("Test.txt")
 
+
+
+
     #provo a normalizzare zscore
 
     Dmean=numpy.mean(D,axis=1)
@@ -31,22 +34,16 @@ if __name__ == "__main__":
 
     labels = [i for i in range(0, numpy.amax(L) + 1)]
 
-    l=10 ** -3  #lambda
-
-
-
-
+    l=0.0001 #lambda
     class_prior_probability = numpy.array([9/10, 1/10], dtype=float).reshape(2, 1)
 
     #no preprocessing
     print("----------------no processing-------------", )
-
-
-
     logistic_regression_binary(D_original, L, DTE_original, LTE, l, class_prior_probability)
+    logistic_regression_binary_quadratic_surface(D_original, L, DTE_original, LTE, l, class_prior_probability)
 
     print("MultiVariateGaussian prediction accuracy : ",
-          compute_MVG_accuracy(D_original, L, DTE_original, LTE, labels, class_prior_probability))
+    compute_MVG_accuracy(D_original, L, DTE_original, LTE, labels, class_prior_probability))
 
    #NAIVE BAYES CLASSIFIER
     print("NaiveBayes prediction accuracy: ",
@@ -76,6 +73,7 @@ if __name__ == "__main__":
     ##LDA+Logistic_Regression
 
     logistic_regression_binary(D_LDA, L, DTEST_LDA, LTE, l, class_prior_probability)
+    logistic_regression_binary_quadratic_surface(D_LDA, L, DTEST_LDA, LTE, l, class_prior_probability)
 
     ##LDA+ MultivariateGaussian
 
@@ -105,6 +103,7 @@ if __name__ == "__main__":
         DPCA, DTEPCA = compute_PCA_data_and_test_merged(D, DTE1, i)
         #PCA+logistic_regression
         logistic_regression_binary(DPCA, L, DTEPCA, LTE, l, class_prior_probability)
+        logistic_regression_binary_quadratic_surface(DPCA, L, DTEPCA, LTE, l, class_prior_probability)
 
         print("MultiVariateGaussian prediction accuracy : ",
               compute_MVG_accuracy(DPCA, L, DTEPCA, LTE, labels, class_prior_probability))
@@ -132,6 +131,7 @@ if __name__ == "__main__":
 
         # PCA+LDA+logistic_regression
         logistic_regression_binary(DP_LDA, L, DTEST_LDA, LTE,l, class_prior_probability)
+        logistic_regression_binary_quadratic_surface(DP_LDA, L, DTEST_LDA, LTE, l, class_prior_probability)
 
         print("MultiVariateGaussian prediction accuracy : ",
               compute_MVG_accuracy(DP_LDA, L, DTEST_LDA, LTE, labels, class_prior_probability))
@@ -161,6 +161,7 @@ if __name__ == "__main__":
 
         # PCA+Logistic_regression-nomerge
         logistic_regression_binary(DPCA, L, DTEPCA, LTE, l, class_prior_probability)
+        logistic_regression_binary_quadratic_surface(DPCA, L, DTEPCA, LTE, l, class_prior_probability)
 
         print("MultiVariateGaussian prediction accuracy : ",
               compute_MVG_accuracy(DPCA, L, DTEPCA, LTE, labels, class_prior_probability))
@@ -191,6 +192,7 @@ if __name__ == "__main__":
         DTEST_LDA = compute_LDA_generalized_eigenvalue(DTEPCA, LTE, directions=1, labels=labels)
 
         logistic_regression_binary(DP_LDA, L, DTEST_LDA, LTE, l, class_prior_probability)
+        logistic_regression_binary_quadratic_surface(DP_LDA, L, DTEST_LDA, LTE, l, class_prior_probability)
 
         ##LDA+ MultivariateGaussian
 
