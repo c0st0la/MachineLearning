@@ -688,7 +688,7 @@ def logistic_regression_binary_quadratic_surface(DTR, LTR, DTE, LTE, l, class_pr
 
 def quadratic_expansion(D):
     for i in range(0, D.shape[1]):
-        x = D[:, i].reshape((10, 1))
+        x = D[:, i].reshape((D.shape[0], 1))
         x_2 = numpy.dot(x, x.T)
         x_3 = numpy.hstack(x_2).reshape(-1, 1)
         if i == 0:
