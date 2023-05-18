@@ -5,7 +5,7 @@ from functions2 import *
 if __name__ == "__main__":
 
     ##PCA+ MultivariateGaussian
-    D,L,D_original=read_file("train.txt")
+    D,L,D_original=read_file("Train.txt")
     DTE1,LTE,DTE_original=read_file("Test.txt")
 
 
