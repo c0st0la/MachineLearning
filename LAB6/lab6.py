@@ -1,7 +1,5 @@
 from data import load
-from utilities import *
-import numpy
-
+from discreteFunctions import *
 
 def load_data():
     lInf = []
