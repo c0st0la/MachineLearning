@@ -696,7 +696,7 @@ def compute_confusion_matrix(predictions, L):
     return matrix
 
 
-def compute_optimal_bayes_decision(logLikelihoodRatios, priorsProbability, costs, L):
+def compute_optimal_bayes_decision(logLikelihoodRatios, priorsProbability, costs):
     """
 
     :param logLikelihoodRatio:  ll of class 1 over ll of class 0
@@ -715,3 +715,60 @@ def compute_optimal_bayes_decision(logLikelihoodRatios, priorsProbability, costs
             predictions[index] = 0
     return predictions
 
+
+def compute_optimal_bayes_decision_given_threshold(logLikelihoodRatios, threshold):
+    """
+
+    :param logLikelihoodRatio:  ll of class 1 over ll of class 0
+    :param priorsProbability: index 0 contains priors of class 0, index 1 contatins priors of class 1
+    :param costs: index 0 contains cost of false negative, index 1 contains cost of false postive
+    :return:
+    """
+    predictions = np.zeros((logLikelihoodRatios.size), dtype=np.int8)
+    for index, llr in enumerate(logLikelihoodRatios):
+        if llr > threshold:
+            # it is predicted as class 1
+            predictions[index] = 1
+        else:
+            # it is predicted as class 0
+            predictions[index] = 0
+    return predictions
+
+
+
+def compute_binary_prediction_rates(confusionMatrix):
+    FNR = confusionMatrix[0, 1]/(confusionMatrix[0, 1] + confusionMatrix[1, 1])
+    FPR = confusionMatrix[1, 0]/(confusionMatrix[0, 0] + confusionMatrix[1, 0])
+    TNR = confusionMatrix[0, 0]/(confusionMatrix[0, 0] + confusionMatrix[1, 0])
+    TPR = confusionMatrix[1, 1] / (confusionMatrix[0, 1] + confusionMatrix[1, 1])
+    return FNR, FPR, TNR, TPR
+
+
+def compute_detection_cost_function(confusionMatrix, classPriorsProbability, costs):
+    """
+
+    :param confusionMatrix: confusionMatrix
+    param priorsProbability: index 0 contains priors of class 0, index 1 contatins priors of class 1
+    :param costs: index 0 contains cost of false negative, index 1 contains cost of false postive
+    :return:
+    """
+    FNR, FPR, TNR, TPR = compute_binary_prediction_rates(confusionMatrix)
+    return classPriorsProbability[1]*costs[0]*FNR + (1-classPriorsProbability[1])*costs[1]*FPR
+
+
+def compute_normalized_detection_cost_function(confusionMatrix, classPriorsProbability, costs):
+    """
+
+    :param confusionMatrix: confusionMatrix
+    param priorsProbability: index 0 contains priors of class 0, index 1 contatins priors of class 1
+    :param costs: index 0 contains cost of false negative, index 1 contains cost of false postive
+    :return:
+    """
+    DCF = compute_detection_cost_function(confusionMatrix, classPriorsProbability, costs)
+    return DCF/min(classPriorsProbability[1]*costs[0], (1-classPriorsProbability[1])*costs[1])
+
+
+def plot_ROC_curve(confusionMatrix, classPriorsProbability, costs):
+    """
+
+    """
