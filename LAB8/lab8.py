@@ -86,121 +86,152 @@ if __name__ == "__main__":
     LInfPar = np.load('Data/commedia_labels_infpar.npy')
     optimalBayesDecisionPredictions = compute_optimal_bayes_decision(logLikelihoodRatioInfPar, classPriorProbability, costs)
 
-    confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LInfPar)
-    DCF = compute_detection_cost_function(confusionMatrix, classPriorProbability, costs)
-    DCFNormalized = compute_normalized_detection_cost_function(confusionMatrix, classPriorProbability, costs)
-    print("The priors probabilities are : ", classPriorProbability, "\n")
-    print("The costs are :")
-    print("Costs of false negative (label a class to 0 when the real is 1) : ", classPriorProbability[0], "\n")
-    print("Costs of false positive (label a class to 1 when the real is 0) : ", classPriorProbability[1], "\n")
-    print("Confusion Matrix : \n", confusionMatrix, "\n")
-    print("DCF : %.3f\n" % DCF)
-    print("Normalized DCF : %.3f\n" % DCFNormalized)
+    # confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LInfPar)
+    # DCF = compute_detection_cost_function(confusionMatrix, classPriorProbability, costs)
+    # DCFNormalized = compute_normalized_detection_cost_function(confusionMatrix, classPriorProbability, costs)
+    # print("The priors probabilities are : ", classPriorProbability, "\n")
+    # print("The costs are :")
+    # print("Costs of false negative (label a class to 0 when the real is 1) : ", classPriorProbability[0], "\n")
+    # print("Costs of false positive (label a class to 1 when the real is 0) : ", classPriorProbability[1], "\n")
+    # print("Confusion Matrix : \n", confusionMatrix, "\n")
+    # print("DCF : %.3f\n" % DCF)
+    # print("Normalized DCF : %.3f\n" % DCFNormalized)
+    #
+    #
+    #
+    # # NOW I WILL COMPUTE DCF GIVEN A SET OF TRHESHOLDS
+    #
+    # classPriorProbability = numpy.array([0.5, 0.5], dtype=float)
+    # costs = numpy.array([1, 1], dtype=float)
+    # thresholds = [i for i in numpy.arange(-10,10, 0.1)]
+    # DCFsNormalized = []
+    # for threshold in thresholds:
+    #     optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(logLikelihoodRatioInfPar, threshold)
+    #     confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LInfPar)
+    #     DCFsNormalized.append(compute_normalized_detection_cost_function(confusionMatrix, classPriorProbability, costs))
+    # DFCmin = min(DCFsNormalized)
+    # print("The min of the normalized DFC : %.3f" % DFCmin)
+    #
+    #
+    # # NOW I WILL PLOT THE ROC CURVE
+    #
+    # classPriorProbability = numpy.array([0.5, 0.5], dtype=float)
+    # costs = numpy.array([1, 1], dtype=float)
+    # thresholds = [i for i in numpy.arange(-100, 100, 0.1)]
+    # x = []
+    # y = []
+    # for threshold in thresholds:
+    #     optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(logLikelihoodRatioInfPar,
+    #                                                                                      threshold)
+    #     confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LInfPar)
+    #     FNR, FPR, TNR, TPR = compute_binary_prediction_rates(confusionMatrix)
+    #     x.append(FPR)
+    #     y.append(TPR)
+    # plt.figure()
+    # plt.plot(x, y)
+    # plt.xlabel("FPR")
+    # plt.ylabel("TPR")
+    # plt.grid()
+    # plt.show()
+    #
+    #
+    # # NOW I WILL COMPUTER BAYES ERROR RATES
+    # costs = numpy.array([1, 1], dtype=float)
+    # x = []
+    # y = []
+    # DCFsNormalized = []
+    # DCFsNormalized2 = []
+    # DCFsNormalizedMin = []
+    # effPriorLogOdds = numpy.linspace(-3, 3, 21)
+    # for effPriorLogOdd in effPriorLogOdds:
+    #     x.append(effPriorLogOdd)
+    #     effPrior = 1/(1 + (numpy.exp(-effPriorLogOdd)))
+    #     classPriorProbability = numpy.array([1-effPrior, effPrior], dtype=float)
+    #     optimalBayesDecisionPredictions = compute_optimal_bayes_decision(logLikelihoodRatioInfPar,
+    #                                                                      classPriorProbability, costs)
+    #
+    #     confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LInfPar)
+    #     DCFsNormalized.append(compute_normalized_detection_cost_function(confusionMatrix, classPriorProbability, costs))
+    #     thresholds = [i for i in numpy.arange(-50, 50, 0.4)]
+    #     for threshold in thresholds:
+    #         optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(logLikelihoodRatioInfPar,
+    #                                                                                          threshold)
+    #         confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LInfPar)
+    #         DCFsNormalized2.append(
+    #             compute_normalized_detection_cost_function(confusionMatrix, classPriorProbability, costs))
+    #     DCFsNormalizedMin.append(min(DCFsNormalized2))
+    #     DCFsNormalized2 = []
+    # plt.figure()
+    # plt.plot(effPriorLogOdds, DCFsNormalized, label='DCF', color ='r')
+    # plt.plot(effPriorLogOdds, DCFsNormalizedMin, label='minDCF', color ='b')
+    #
+    #
+    #
+    # # COMPARING RECOGNIZER BINARY CALSSIFICATION
+    #
+    # logLikelihoodRatioInfPar = numpy.load('Data/commedia_llr_infpar_eps1.npy')
+    # costs = numpy.array([1, 1], dtype=float)
+    # DCFsNormalizedEps1 = []
+    # DCFsNormalized2 = []
+    # DCFsNormalizedMinEps1 = []
+    # effPriorLogOdds = numpy.linspace(-3, 3, 21)
+    # for effPriorLogOdd in effPriorLogOdds:
+    #     x.append(effPriorLogOdd)
+    #     effPrior = 1/(1 + (numpy.exp(-effPriorLogOdd)))
+    #     classPriorProbability = numpy.array([1-effPrior, effPrior], dtype=float)
+    #     optimalBayesDecisionPredictions = compute_optimal_bayes_decision(logLikelihoodRatioInfPar,
+    #                                                                      classPriorProbability, costs)
+    #
+    #     confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LInfPar)
+    #     DCFsNormalizedEps1.append(compute_normalized_detection_cost_function(confusionMatrix, classPriorProbability, costs))
+    #     thresholds = [i for i in numpy.arange(-50, 50, 0.4)]
+    #     for threshold in thresholds:
+    #         optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(logLikelihoodRatioInfPar,
+    #                                                                                          threshold)
+    #         confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LInfPar)
+    #         DCFsNormalized2.append(
+    #             compute_normalized_detection_cost_function(confusionMatrix, classPriorProbability, costs))
+    #     DCFsNormalizedMinEps1.append(min(DCFsNormalized2))
+    #     DCFsNormalized2 = []
+    # plt.plot(effPriorLogOdds, DCFsNormalizedEps1, label='DCFEps1', color ='y')
+    # plt.plot(effPriorLogOdds, DCFsNormalizedMinEps1, label='minDCFEps1', color ='g')
+    # plt.ylim([0, 1.1])
+    # plt.xlim([-3, 3])
+    # plt.legend()
+    # plt.xlabel("prior log-odds")
+    # plt.ylabel("DCF value")
+    # plt.grid()
+    # plt.show()
+
+
+    # COMPARING RECOGNIZER MULTICLASS CLASSIFICATION
+
+    logLikelihoodCommedia = numpy.load('Data/commedia_ll.npy')
+    LCommedia = numpy.load('Data/commedia_labels.npy')
+    costs = numpy.array([[0, 1, 2], [1, 0, 1], [2, 1, 0]], dtype=float)
+    classPriorProbability = numpy.array([0.3, 0.4, 0.3], dtype=float)
+    multiclassPosteriorProbability = numpy.exp(compute_log_posterior_probability(
+        logLikelihoodCommedia, classPriorProbability
+    ))
+
+
+    costClassifier = numpy.dot(costs, multiclassPosteriorProbability)
+    multiclassPrediction = numpy.argmin(costClassifier, axis=0)
+    confusionMatrix = compute_confusion_matrix(multiclassPrediction, LCommedia)
+
+    missClassificationRatio = compute_missclassification_ratios(confusionMatrix)
+    DCFu = compute_detection_cost_functio_by_misclassificationRatio(costs,
+                                                                    missClassificationRatio,
+                                                                    classPriorProbability)
+    DCFDummy = numpy.min(numpy.dot(costs, classPriorProbability))
+    1
+
+    # SUGGESTION 3
 
 
 
-    # NOW I WILL COMPUTE DCF GIVEN A SET OF TRHESHOLDS
-
-    classPriorProbability = numpy.array([0.5, 0.5], dtype=float)
-    costs = numpy.array([1, 1], dtype=float)
-    thresholds = [i for i in numpy.arange(-10,10, 0.1)]
-    DCFsNormalized = []
-    for threshold in thresholds:
-        optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(logLikelihoodRatioInfPar, threshold)
-        confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LInfPar)
-        DCFsNormalized.append(compute_normalized_detection_cost_function(confusionMatrix, classPriorProbability, costs))
-    DFCmin = min(DCFsNormalized)
-    print("The min of the normalized DFC : %.3f" % DFCmin)
 
 
-    # NOW I WILL PLOT THE ROC CURVE
-    classPriorProbability = numpy.array([0.5, 0.5], dtype=float)
-    costs = numpy.array([1, 1], dtype=float)
-    thresholds = [i for i in numpy.arange(-100, 100, 0.1)]
-    x = []
-    y = []
-    for threshold in thresholds:
-        optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(logLikelihoodRatioInfPar,
-                                                                                         threshold)
-        confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LInfPar)
-        FNR, FPR, TNR, TPR = compute_binary_prediction_rates(confusionMatrix)
-        x.append(FPR)
-        y.append(TPR)
-    plt.figure()
-    plt.plot(x, y)
-    plt.xlabel("FPR")
-    plt.ylabel("TPR")
-    plt.grid()
-    plt.show()
-
-
-    # NOW I WILL COMPUTER BAYES ERROR RATES
-    costs = numpy.array([1, 1], dtype=float)
-    x = []
-    y = []
-    DCFsNormalized = []
-    DCFsNormalized2 = []
-    DCFsNormalizedMin = []
-    effPriorLogOdds = numpy.linspace(-3, 3, 21)
-    for effPriorLogOdd in effPriorLogOdds:
-        x.append(effPriorLogOdd)
-        effPrior = 1/(1 + (numpy.exp(-effPriorLogOdd)))
-        classPriorProbability = numpy.array([1-effPrior, effPrior], dtype=float)
-        optimalBayesDecisionPredictions = compute_optimal_bayes_decision(logLikelihoodRatioInfPar,
-                                                                         classPriorProbability, costs)
-
-        confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LInfPar)
-        DCFsNormalized.append(compute_normalized_detection_cost_function(confusionMatrix, classPriorProbability, costs))
-        thresholds = [i for i in numpy.arange(-50, 50, 0.4)]
-        for threshold in thresholds:
-            optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(logLikelihoodRatioInfPar,
-                                                                                             threshold)
-            confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LInfPar)
-            DCFsNormalized2.append(
-                compute_normalized_detection_cost_function(confusionMatrix, classPriorProbability, costs))
-        DCFsNormalizedMin.append(min(DCFsNormalized2))
-        DCFsNormalized2 = []
-    plt.figure()
-    plt.plot(effPriorLogOdds, DCFsNormalized, label='DCF', color ='r')
-    plt.plot(effPriorLogOdds, DCFsNormalizedMin, label='minDCF', color ='b')
-
-
-
-    # COMPARING RECOGNIZER
-
-    logLikelihoodRatioInfPar = numpy.load('Data/commedia_llr_infpar_eps1.npy')
-    costs = numpy.array([1, 1], dtype=float)
-    DCFsNormalizedEps1 = []
-    DCFsNormalized2 = []
-    DCFsNormalizedMinEps1 = []
-    effPriorLogOdds = numpy.linspace(-3, 3, 21)
-    for effPriorLogOdd in effPriorLogOdds:
-        x.append(effPriorLogOdd)
-        effPrior = 1/(1 + (numpy.exp(-effPriorLogOdd)))
-        classPriorProbability = numpy.array([1-effPrior, effPrior], dtype=float)
-        optimalBayesDecisionPredictions = compute_optimal_bayes_decision(logLikelihoodRatioInfPar,
-                                                                         classPriorProbability, costs)
-
-        confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LInfPar)
-        DCFsNormalizedEps1.append(compute_normalized_detection_cost_function(confusionMatrix, classPriorProbability, costs))
-        thresholds = [i for i in numpy.arange(-50, 50, 0.4)]
-        for threshold in thresholds:
-            optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(logLikelihoodRatioInfPar,
-                                                                                             threshold)
-            confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LInfPar)
-            DCFsNormalized2.append(
-                compute_normalized_detection_cost_function(confusionMatrix, classPriorProbability, costs))
-        DCFsNormalizedMinEps1.append(min(DCFsNormalized2))
-        DCFsNormalized2 = []
-    plt.plot(effPriorLogOdds, DCFsNormalizedEps1, label='DCFEps1', color ='y')
-    plt.plot(effPriorLogOdds, DCFsNormalizedMinEps1, label='minDCFEps1', color ='g')
-    plt.ylim([0, 1.1])
-    plt.xlim([-3, 3])
-    plt.legend()
-    plt.xlabel("prior log-odds")
-    plt.ylabel("DCF value")
-    plt.grid()
-    plt.show()
 
 
 

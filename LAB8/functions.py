@@ -768,7 +768,19 @@ def compute_normalized_detection_cost_function(confusionMatrix, classPriorsProba
     return DCF/min(classPriorsProbability[1]*costs[0], (1-classPriorsProbability[1])*costs[1])
 
 
-def plot_ROC_curve(confusionMatrix, classPriorsProbability, costs):
-    """
+def compute_missclassification_ratios(confusionMatrix):
+    misClassification_ratios = numpy.zeros((confusionMatrix.shape[0],  confusionMatrix.shape[1]))
+    for i in range(confusionMatrix.shape[0]):
+            for j in range(confusionMatrix.shape[1]):
+                misClassification_ratios[i ,j] = confusionMatrix[i, j]/(numpy.sum(confusionMatrix[:, j]))
+    return misClassification_ratios
 
-    """
+
+def compute_detection_cost_functio_by_misclassificationRatio(costs, misClassificationRatios, classPriorsProbability):
+    DCF = 0
+    for j in range(classPriorsProbability.size):
+        sum = 0
+        for i in range(classPriorsProbability.size):
+            sum += costs[i, j]*misClassificationRatios[i, j]
+        DCF += classPriorsProbability[j] * sum
+    return DCF

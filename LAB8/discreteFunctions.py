@@ -1,7 +1,7 @@
 import numpy as np
 from functions import *
 
-def compute_class_conditional_log_likelihoods_as_score_matrix(dictTextTrain, text_Evaluation, class2Index):
+def compute_class_conditional_log_likelihoods_as_score_matrix(dictTextTrain, text_Evaluation, class2Index, eps = 0.001):
     """
          IT IS USED IN THE DISCRETE DOMAIN
          This function return the score (e.g the class conditional probabilities/log_likehood f(x|C) )
@@ -14,7 +14,7 @@ def compute_class_conditional_log_likelihoods_as_score_matrix(dictTextTrain, tex
 
     """
     log_class_conditional_probabilities = numpy.zeros((len(class2Index), len(text_Evaluation)))
-    dictClassOccurrences, dictClassModelParameter = estimate_model_parameter(dictTextTrain, eps=0.001)
+    dictClassOccurrences, dictClassModelParameter = estimate_model_parameter(dictTextTrain, eps)
 
     for column_index, tercet in enumerate(text_Evaluation):
         sample_scores = compute_sample_log_likelihood(dictClassModelParameter, tercet, class2Index)
