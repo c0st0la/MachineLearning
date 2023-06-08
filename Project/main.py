@@ -39,6 +39,8 @@ if __name__ == "__main__":
 
     #no preprocessing
     print("----------------no processing-------------", )
+
+    compute_SVM_vector_accuracy(D_original,L,DTE_original,LTE, 1, 0.1,-0.5)
     logistic_regression_binary(D_original, L, DTE_original, LTE, l, class_prior_probability)
     logistic_regression_binary_quadratic_surface(D_original, L, DTE_original, LTE, l, class_prior_probability)
 
@@ -213,3 +215,5 @@ if __name__ == "__main__":
 
         print("TiedCovariance  Naive Bayes prediction accuracy: ",
               compute_TNB_accuracy(DP_LDA, L, DTEST_LDA, LTE, labels, class_prior_probability))
+
+

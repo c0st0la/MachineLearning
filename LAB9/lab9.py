@@ -7,9 +7,12 @@ if __name__=="__main__":
     (DTR, LTR), (DTE, LTE) = split_db_2to1(D, L)
     DTRnew = numpy.vstack((DTR, numpy.ones((1,DTR.shape[1]))))
     DTEnew = numpy.vstack((DTE, numpy.ones((1,DTE.shape[1]))))
-    C = 10
-    K = 10
-    svm = support_vector_machine(DTR, LTR, DTE, LTE, K, C)
-
+    C = 1.0
+    K = 1.0
+    c=1
+    d=2
+    gamma = 1.0
+   # svm = support_vector_machine(DTR, LTR, DTE, LTE, K, C)
+    svm2 = support_vector_machine_kernel(DTR, LTR, DTE, LTE, K, C, 'r', c=None, d=None, gamma=gamma)
 
 

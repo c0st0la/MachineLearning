@@ -704,3 +704,39 @@ def quadratic_expansion(D):
 
 
     return phi
+
+
+class SVMClass:
+
+    def __init__(self, DTR, LTR, DTE, K, C):
+        self.DTR = numpy.vstack((DTR,K*numpy.ones((1,DTR.shape[1]))))
+        self.LTR = LTR
+        self.DTE = numpy.vstack((DTE,K*numpy.ones((1, DTE.shape[1]))))
+        self.C = C
+        self.K = K
+        self.z = []
+        for index in range(LTR.size):
+            if LTR[index] == 1:
+                self.z.append(1)
+            else:
+                self.z.append(-1)
+        self.H = numpy.zeros((self.DTR.shape[1], self.DTR.shape[1]))
+        for i in range(self.DTR.shape[1]):
+            for j in range(self.DTR.shape[1]):
+                self.H[i, j] = self.z[i] * self.z[j] * numpy.dot(self.DTR[:, i].T, self.DTR[:, j])
+
+
+    def svm_dual_obj(self, alpha):
+        ones = numpy.ones(self.DTR.shape[1])
+        dualObjectiveFunction = 1/2 * numpy.dot(numpy.dot(alpha.T, self.H), alpha) - numpy.dot(alpha.T, ones)
+        gradient = numpy.dot(self.H, alpha) - ones
+        gradient = numpy.reshape(gradient, (alpha.size,))
+        return dualObjectiveFunction, gradient
+
+    def compute_primal_obj(self, w_optimal):
+        primalObjectiveFunction = 0
+        regularitazionTerm = 0.5 * (numpy.power(numpy.linalg.norm(w_optimal), 2))
+        for i in range(self.DTR.shape[1]):
+            primalObjectiveFunction += max(0, 1-self.z[i]*numpy.dot(w_optimal.T, self.DTR[:, i]))
+        primalObjectiveFunction = regularitazionTerm + self.C * primalObjectiveFunction
+        return primalObjectiveFunction

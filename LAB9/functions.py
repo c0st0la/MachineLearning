@@ -855,3 +855,82 @@ def support_vector_machine(DTR, LTR, DTE, LTE, K, C, threshold=0):
     print("Dual Obj Func %.6f" % dualObjFunc)
     print("Duality gap is %.10f" %((primalObjFunc + dualObjFunc)*10**5))
     print("The error rate is %.3f" % (compute_error_rate(predictions, LTE)*100))
+
+
+class SVMKernelClass:
+
+    def __init__(self, DTR, LTR, DTE, K, C, kernelFunction, c= None, d=None, gamma=None):
+        self.DTR = DTR
+        self.LTR = LTR
+        self.DTE = DTE
+        self.K = K
+        self.C = C
+        self.c = c
+        self.d = d
+        self.gamma = gamma
+        self.z = []
+        if kernelFunction == 'p':
+            self.kernelFunction = polyKernelFunction
+        elif kernelFunction == 'r':
+            self.kernelFunction = radialBassKernelFunction
+        for index in range(LTR.size):
+            if LTR[index] == 1:
+                self.z.append(1)
+            else:
+                self.z.append(-1)
+        self.H = numpy.zeros((self.DTR.shape[1], self.DTR.shape[1]))
+        for i in range(self.DTR.shape[1]):
+            for j in range(self.DTR.shape[1]):
+                if kernelFunction == 'p':
+                    self.H[i, j] = self.z[i] * self.z[j] * self.kernelFunction(DTR[:, i], DTR[:, j], self.c, self.d, self.K)
+                elif kernelFunction == 'r':
+                    self.H[i, j] = self.z[i] * self.z[j] * self.kernelFunction(DTR[:, i], DTR[:, j], self.gamma, self.K)
+
+
+
+    def svm_dual_obj(self, alpha):
+        ones = np.ones(self.DTR.shape[1])
+        dualObjectiveFunction = 1/2 * np.dot(np.dot(alpha.T, self.H), alpha) - np.dot(alpha.T, ones)
+        gradient = np.dot(self.H, alpha) - ones
+        gradient = np.reshape(gradient, (alpha.size,))
+        return dualObjectiveFunction, gradient
+
+
+def support_vector_machine_kernel(DTR, LTR, DTE, LTE, K, C, kernelFunction, c=None, d=None, gamma=None, threshold=0):
+    svm = SVMKernelClass(DTR, LTR, DTE, K, C, kernelFunction, c, d, gamma)
+    bounds = []
+    for i in range(svm.DTR.shape[1]):
+        bounds.append((0, svm.C))
+    x, f, d = scipy.optimize.fmin_l_bfgs_b(svm.svm_dual_obj, x0= numpy.zeros(svm.DTR.shape[1]), fprime=None,
+                                           bounds=bounds, factr=1.0)
+    alpha = x
+    scores = []
+    for i in range(svm.DTE.shape[1]):
+        tmp=0
+        for j in range(svm.DTR.shape[1]):
+            if alpha[j] > 0:
+                if svm.kernelFunction == polyKernelFunction:
+                    tmp = tmp + alpha[j] * svm.z[j] * svm.kernelFunction(DTR[:, j], DTE[:, i], svm.c, svm.d, svm.K)
+                elif svm.kernelFunction == radialBassKernelFunction:
+                    tmp=tmp+ alpha[j]*svm.z[j]* svm.kernelFunction(DTR[:,j], DTE[:, i], svm.gamma, svm.K)
+
+        scores.append(tmp)
+
+    predictions=[]
+    for score in scores:
+        if score > threshold:
+            predictions.append(1)
+        else:
+            predictions.append(0)
+
+    dualObjFunc = -f
+
+    print("Dual Obj Func %.6f" % dualObjFunc)
+    print("The error rate is %.3f" % (compute_error_rate(predictions, LTE)*100))
+
+
+def polyKernelFunction(x1, x2, c, d, K):
+    return  np.power((np.dot(x1.T, x2) + c), d) + K*K
+
+def radialBassKernelFunction(x1, x2, gamma, K):
+    return np.exp((-gamma)*np.power(np.linalg.norm(x1-x2), 2)) + K*K
