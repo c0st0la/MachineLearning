@@ -7,8 +7,8 @@ if __name__=="__main__":
     (DTR, LTR), (DTE, LTE) = split_db_2to1(D, L)
     DTRnew = numpy.vstack((DTR, numpy.ones((1,DTR.shape[1]))))
     DTEnew = numpy.vstack((DTE, numpy.ones((1,DTE.shape[1]))))
-    C = 1.0
-    K = 1.0
+    C = 10.0
+    K = 10.0
     c=1
     d=2
     gamma = 1.0

@@ -96,3 +96,15 @@ def compute_SVM_vector_accuracy(DTR, LTR, DTE, LTE, K, C, threshold=0):
         #print("Dual Obj Func %.6f" % dualObjFunc)
         #print("Duality gap is %.10f" % ((primalObjFunc + dualObjFunc) * 10 ** 5))
         print("The SVM accuracy is %.3f" % compute_prediction_accuracy(predictions, LTE))
+
+
+def compute_binary_LDA_accuracy(DTE, LTE, threshold=0):
+    predictions=list()
+    for index in range(DTE.shape[1]):
+        if DTE[:, index] > threshold:
+            predictions.append(1)
+        else:
+            predictions.append(0)
+
+    accuracy = compute_prediction_accuracy(predictions, LTE)
+    return accuracy

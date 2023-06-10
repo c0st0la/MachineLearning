@@ -20,16 +20,16 @@ if __name__ == "__main__":
     D, L = load_iris_datasets_from_file(FILEPATH)
     # DP_PCA is the reduced dimension dataset (using the PCA approach)
     DP_PCA = compute_PCA(D, m)
-    DP_PCA_setosa, DP_PCA_versicolor, DP_PCA_virginica = filter_dataset_by_labels(DP_PCA, L)
+    DP_PCA_setosa, DP_PCA_versicolor, DP_PCA_virginica = filter_iris_dataset_by_labels(DP_PCA, L)
     plot_scatter_attributes_X_label(DP_PCA_setosa, DP_PCA_versicolor, DP_PCA_virginica, title="PCA")
 
     DP_LDA1 = compute_LDA_generalized_eigenvalue(D, class_mapping, L, directions=2)
-    DP_LDA1_setosa, DP_LDA1_versicolor, DP_LDA1_virginica = filter_dataset_by_labels(DP_LDA1, L)
+    DP_LDA1_setosa, DP_LDA1_versicolor, DP_LDA1_virginica = filter_iris_dataset_by_labels(DP_LDA1, L)
     plot_scatter_attributes_X_label(DP_LDA1_setosa, DP_LDA1_versicolor,
                                     DP_LDA1_virginica, title="LDA Generalize Eigenvalue Problem")
 
     DP_LDA2 = compute_LDA_generalized_eigenvalue_by_joint_diagonalization(D, class_mapping, L, directions=2)
-    DP_LDA2_setosa, DP_LDA2_versicolor, DP_LDA2_virginica = filter_dataset_by_labels(DP_LDA2, L)
+    DP_LDA2_setosa, DP_LDA2_versicolor, DP_LDA2_virginica = filter_iris_dataset_by_labels(DP_LDA2, L)
     plot_scatter_attributes_X_label(DP_LDA2_setosa, DP_LDA2_versicolor, DP_LDA2_virginica,
                                     title="LDA Joint Diagonalization")
 

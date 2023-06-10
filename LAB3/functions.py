@@ -1,7 +1,8 @@
-import numpy
+import scipy
 import matplotlib.pyplot as plt
 from itertools import combinations
-import scipy
+import numpy
+import sklearn.datasets
 
 FILEPATH = 'Solution/iris.csv'
 
@@ -32,7 +33,7 @@ def load_iris_datasets_from_file(filename):
     return numpy.hstack(D_list), sample_mapping
 
 
-def filter_dataset_by_labels(D, labels):
+def filter_iris_dataset_by_labels(D, labels):
     """
 
     :param D: It is the dataset to filter
@@ -43,6 +44,19 @@ def filter_dataset_by_labels(D, labels):
     mask_versicolor = (labels == 1)
     mask_virginica = (labels == 2)
     return D[:, mask_setosa], D[:, mask_versicolor], D[:, mask_virginica]
+
+def filter_dataset_by_labels(D, L):
+    """
+
+    :param D: It is the dataset to filter
+    :param labels: It is the array containing the labels of the dataset
+    :return: the dataset D filtered by the labels provided
+    """
+    DsMasked = list()
+    labels = [i for i in range(0, numpy.amax(L) + 1)]
+    for label in labels:
+        mask = (L == 0)
+        DsMasked.append(D[:, mask])
 
 
 def plot_scatter_attributes_X_label(D_setosa, D_versicolor, D_virginica, title=""):

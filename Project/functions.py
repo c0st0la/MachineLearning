@@ -1,11 +1,11 @@
-import numpy
+import scipy
 import matplotlib.pyplot as plt
 from itertools import combinations
-import scipy
 import numpy
 import sklearn.datasets
 
 FILEPATH = 'Solution/iris.csv'
+pairs=list()
 
 
 def load_iris():
@@ -43,7 +43,15 @@ def load_iris_datasets_from_file(filename):
     return numpy.hstack(D_list), sample_mapping
 
 
-def filter_dataset_by_labels(D, labels):
+def matprint(mat, fmt="g"):
+    col_maxes = [max([len(("{:"+fmt+"}").format(x)) for x in col]) for col in mat.T]
+    for x in mat:
+        for i, y in enumerate(x):
+            print(("{:"+str(col_maxes[i])+fmt+"}").format(y), end="  ")
+        print("")
+
+
+def filter_dataset_by_labels(D, L):
     """
 
     :param D: It is the dataset to filter
@@ -51,17 +59,25 @@ def filter_dataset_by_labels(D, labels):
     :return: the dataset D filtered by the labels provided
     """
 
-    return D[:, labels == 0], D[:, labels == 1]
+    return D[:, L == 0], D[:, L == 1]
 
 
-def plot_scatter_attributes_X_label(D_setosa, D_versicolor, D_virginica, title=""):
-    plt.figure()
-    plt.scatter(D_setosa[0, :], D_setosa[1, :], label="Iris_setosa")
-    plt.scatter(D_versicolor[0, :], D_versicolor[1, :], label="Iris_versicolor")
-    plt.scatter(D_virginica[0, :], D_virginica[1, :], label="Iris_virginica")
-    plt.title(title)
-    plt.legend()
-    plt.show()
+def plot_scatter_attributes_X_label(D, title=""):
+    dimension = D.shape[0]
+    #color = iter(cm.rainbow(numpy.linspace(0, 1, dimension*dimension)))
+
+    for i in range(dimension):
+        for j in range(i+1, dimension):
+            if (i, j) not in pairs:
+                pairs.append((i ,j))
+                #c = next(color)
+                plt.scatter(D[i, :], D[j, :], s=4, label=f"Dimension {i+1}-{j+1}")
+                plt.title(title)
+                plt.legend()
+                plt.xlim([int(D.min()-1), int(D.max()+1)])
+                plt.ylim([int(D.min()-1), int(D.max()+1)])
+                plt.savefig(f"./FeaturesCorrelation/{title} Dimension {i+1}-{j+1}")
+                plt.clf()
 
 
 def plot_hist_attributes_X_label(D_setosa, D_versicolor, D_virginica, attributes):
@@ -113,24 +129,32 @@ def compute_PCA(D, sub_dimension):
     DC = center_data(D)
     # The dataset has D.shape=(n,m)
     # C is the covariance and will have a C.shape=(n,n)
-    C = compute_covariance(DC)
+    C, CNormalized = compute_covariance(DC)
     # These are two different but equivalent ways to compute the subspace given...
     # ...the covariance matrix C. You call one or the other depending on the...
     # ...features of the matrix C (see the description inside the function implementation)
-    P1 = compute_subspace(C, sub_dimension)
+    P = compute_subspace(C, sub_dimension)
     P2 = compute_subspace_svd(C, sub_dimension)
     # numpy.dot is a matrix multiplication. I am projecting the dataset on the subspace
-    DP = numpy.dot(P1.T, D)
-    return DP
+    DP = numpy.dot(P.T, D)
+    return DP, P
 
 
 def compute_covariance(D):
     """
     :param D: dataset
-    :return: the covariance of the dataset given as input
+    :return: the covariance and the normalized Covariance of the dataset given as input
     """
     covariance = numpy.dot(D, D.T) / float(D.shape[1])
-    return covariance
+    normalizedCovariance = numpy.identity(covariance.shape[1])
+    for i in range(normalizedCovariance.shape[0]):
+        for j in range(normalizedCovariance.shape[1]):
+            if i == j:
+                normalizedCovariance[i, j] = 1
+            else:
+                normalizedCovariance[i, j] = covariance[i, j] / (numpy.sqrt(covariance[i, i]) * numpy.sqrt(covariance[j, j]))
+
+    return covariance, normalizedCovariance
 
 
 def compute_empirical_covariance(D):
@@ -141,7 +165,16 @@ def compute_empirical_covariance(D):
      """
     D = center_data(D)
     covariance = numpy.dot(D, D.T) / float(D.shape[1])
-    return covariance
+    normalizedCovariance = numpy.identity(covariance.shape[1])
+    for i in range(normalizedCovariance.shape[0]):
+        for j in range(normalizedCovariance.shape[1]):
+            if i == j:
+                normalizedCovariance[i, j] = 1
+            else:
+                normalizedCovariance[i, j] = covariance[i, j] / (
+                            numpy.sqrt(covariance[i, i]) * numpy.sqrt(covariance[j, j]))
+
+    return covariance, normalizedCovariance
 
 
 def compute_mean(D):
@@ -213,7 +246,7 @@ def compute_LDA_generalized_eigenvalue(D, L, directions, labels):
     UW, _, _ = numpy.linalg.svd(W)
     U = UW[:, 0:directions]
     DP = numpy.dot(W.T, D)
-    return DP
+    return DP, W
 
 
 def compute_within_covariance(D, L, labels):
@@ -329,7 +362,7 @@ def maximum_likelihood_MVG_parameter_estimator(D):
     # ... the second param is the empirical covariance matrix
     mu = to_column(D.mean(1))
     DC = center_data(D)
-    C = compute_covariance(DC)
+    C, normalizedCaovariance = compute_covariance(DC)
     return mu, C
 
 
@@ -444,7 +477,7 @@ def maximum_likelihood_NB_parameter_estimator(D):
 
     mu = to_column(D.mean(1))
     DC = center_data(D)
-    C = compute_covariance(DC)
+    C, CNormalized = compute_covariance(DC)
     # The covariance matrix is the diagonal of the original covariance matrix obtained just before...
     # ...since the features are small we can compute it multiplying by the identity matrix.
     # Otherwise, you have to implement ad-hoc function
