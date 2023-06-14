@@ -14,6 +14,13 @@ if __name__ == "__main__":
     DTROriginalNormalized = (DTROriginal - compute_mean(DTROriginal))/ to_column(DTROriginal.std(axis=1))
     DTEOriginalNormalized = (DTEOriginal - compute_mean(DTEOriginal)) / to_column(DTEOriginal.std(axis=1))
 
+    DTRNormalizedOriginalFilteredTrue, DTRNormalizedOriginalFilteredFalse = filter_dataset_by_labels(
+        DTROriginalNormalized, LTR)
+
+    plot_scatter_attributes_X_label_True_False(DTRNormalizedOriginalFilteredTrue, DTRNormalizedOriginalFilteredFalse,
+                                               filepath="./FeatureCorrelation/", title="DTROriginalNormalized")
+
+
     print(f"No Pre-Processing")
 
     accuracyMVG = compute_MVG_accuracy(DTROriginalNormalized, LTR, DTEOriginalNormalized, LTE, labels,
@@ -41,9 +48,9 @@ if __name__ == "__main__":
         DTENormalizedPCAOriginal = numpy.dot(P.T, DTEOriginalNormalized)
         # DTENormalizedPCAOriginal, P = compute_PCA(DTEOriginalNormalized, subDimensionPCA)
         DTRNormalizedPCAOriginalFilteredTrue, DTRNormalizedPCAOriginalFilteredFalse = filter_dataset_by_labels(DTRNormalizedPCAOriginal, LTR)
-        #plot_scatter_attributes_X_label(DTRNormalizedPCAOriginalFilteredTrue, title="DTrue PCA")
+        plot_scatter_attributes_X_label(DTRNormalizedPCAOriginalFilteredTrue, filepath="./FeaturesCorrelationPCA/", title="DTrue PCA")
         pairs.clear()
-        #plot_scatter_attributes_X_label(DTRNormalizedPCAOriginalFilteredFalse, title="DFalse PCA")
+        plot_scatter_attributes_X_label(DTRNormalizedPCAOriginalFilteredFalse, filepath="./FeaturesCorrelationPCA/", title="DFalse PCA")
         pairs.clear()
 
         ### HERE I COMPUTE LDA ###
@@ -51,11 +58,11 @@ if __name__ == "__main__":
         DTENormalizedPCALDAOriginal = numpy.dot(W.T, DTENormalizedPCAOriginal)
         DTRNormalizedPCALDAOriginalFilteredTrue, DTRNormalizedPCALDAOriginalFilteredFalse = filter_dataset_by_labels(
         DTRNormalizedPCALDAOriginal, LTR)
-        #plot_scatter_attributes_X_label(DTRNormalizedPCALDAOriginalFilteredTrue, title="DTrue LDA")
+        plot_scatter_attributes_X_label(DTRNormalizedPCALDAOriginalFilteredTrue, filepath="./FeaturesCorrelationPCA/",title="DTrue LDA")
         pairs.clear()
-        #plot_scatter_attributes_X_label(DTRNormalizedPCALDAOriginalFilteredFalse, title="DFalse LDA")
+        plot_scatter_attributes_X_label(DTRNormalizedPCALDAOriginalFilteredFalse, filepath="./FeaturesCorrelationPCA/", title="DFalse LDA")
 
-        print(f"PCA with {subDimensionPCA} dimension + LDA")
+        print(f"PCA with {subDimensionPCA} dimension")
 
         accuracyMVG = compute_MVG_accuracy(DTRNormalizedPCAOriginal, LTR, DTENormalizedPCAOriginal, LTE, labels, classPriorProbabilities)
         print("The MVG accuracy is %.3f" % accuracyMVG)

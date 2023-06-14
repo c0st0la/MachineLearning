@@ -62,7 +62,19 @@ def filter_dataset_by_labels(D, L):
     return D[:, L == 0], D[:, L == 1]
 
 
-def plot_scatter_attributes_X_label(D, title=""):
+def compute_binary_index_array(L):
+    indexesTrue = list()
+    indexesFalse = list()
+
+    for position, item in enumerate((L==0).tolist()):
+        if item:
+            indexesTrue.append(position)
+        else:
+            indexesFalse.append(position)
+    return numpy.array(indexesTrue, dtype=numpy.int), numpy.array(indexesFalse, dtype=numpy.int)
+
+
+def plot_scatter_attributes_X_label(D, filepath, title=""):
     dimension = D.shape[0]
     #color = iter(cm.rainbow(numpy.linspace(0, 1, dimension*dimension)))
 
@@ -76,9 +88,26 @@ def plot_scatter_attributes_X_label(D, title=""):
                 plt.legend()
                 plt.xlim([int(D.min()-1), int(D.max()+1)])
                 plt.ylim([int(D.min()-1), int(D.max()+1)])
-                plt.savefig(f"./FeaturesCorrelation/{title} Dimension {i+1}-{j+1}")
+                plt.savefig(f"{filepath}{title} Dimension {i+1}-{j+1}")
                 plt.clf()
 
+def plot_scatter_attributes_X_label_True_False(D1, D2, filepath, title=""):
+    dimension = D1.shape[0]
+    #color = iter(cm.rainbow(numpy.linspace(0, 1, dimension*dimension)))
+
+    for i in range(dimension):
+        for j in range(i+1, dimension):
+            if (i, j) not in pairs:
+                pairs.append((i ,j))
+                #c = next(color)
+                plt.scatter(D1[i, :], D1[j, :], s=4, label=f"True Dimension {i+1}-{j+1}")
+                plt.scatter(D2[i, :], D2[j, :], s=4, label=f"False Dimension {i+1}-{j+1}")
+                plt.title(title)
+                plt.legend()
+                plt.xlim([min(int(D1.min()-1), int(D2.min()-1)), max(int(D2.max()+1), int(D2.max()+1))])
+                plt.ylim([min(int(D1.min()-1), int(D2.min()-1)), max(int(D2.max()+1), int(D2.max()+1))])
+                plt.savefig(f"{filepath}{title} Dimension {i+1}-{j+1}")
+                plt.clf()
 
 def plot_hist_attributes_X_label(D_setosa, D_versicolor, D_virginica, attributes):
     """
