@@ -56,3 +56,17 @@ Eigenvalues :  [246.28939646  80.41551003  42.48110727  32.59102424  18.19710433
 SubDimension :  9
 Eigenvalues :  [246.28939646  80.41551003  42.48110727  32.59102424  18.19710433 11.42811794   7.35012705   3.89874386   2.52197586   1.31668312]
 
+
+
+
+
+
+
+The LR accuracy (lambda=0.000010) is 0.667
+The QLR accuracy (lambda=0.000010) is 0.949
+The LR accuracy (lambda=0.000100) is 0.667
+The QLR accuracy (lambda=0.000100) is 0.946
+The LR accuracy (lambda=0.001000) is 0.667
+The QLR accuracy (lambda=0.001000) is 0.914
+The LR accuracy (lambda=0.010000) is 0.667
+

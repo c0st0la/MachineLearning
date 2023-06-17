@@ -11,6 +11,15 @@ def compute_MVG_accuracy(D, L, DTE, LTE, labels, class_prior_probability):
     return MVG_prediction_accuracy
 
 
+def compute_MVG_llr(D, L, DTE, labels):
+    log_MVG_class_conditional_probabilities = compute_MVG_log_likelihood_as_score_matrix(D, L, DTE,
+                                                                                         labels)
+    llr = numpy.zeros(log_MVG_class_conditional_probabilities.shape[1])
+    for i in range(log_MVG_class_conditional_probabilities.shape[1]):
+        llr[i] =   log_MVG_class_conditional_probabilities[1, i]/log_MVG_class_conditional_probabilities[0, i]
+
+    return llr
+
 def compute_NB_accuracy(D, L, DTE, LTE, labels, class_prior_probability):
     log_NB_class_conditional_probabilities = compute_NB_log_likelihood_as_score_matrix(D, L, DTE,
                                                                                        labels)
@@ -42,6 +51,17 @@ def compute_TNB_accuracy(D, L, DTE, LTE, labels, class_prior_probability):
     TNB_prediction_accuracy = compute_prediction_accuracy(TNB_predictions, LTE)
     return TNB_prediction_accuracy
 
+
+def compute_LR_accuracy(DTR, LTR, DTE, LTE, classPriorProbabilities,  lambd=1, threshold=0):
+    LRPredictions = logistic_regression_binary(DTR, LTR, DTE, lambd, classPriorProbabilities, threshold)
+    LRPredictionAccuracy = compute_prediction_accuracy(LRPredictions, LTE)
+    return LRPredictionAccuracy
+
+
+def compute_QLR_accuracy(DTR, LTR, DTE, LTE, classPriorProbabilities,  lambd=1, threshold=0):
+    QLRPredictions = logistic_regression_binary_quadratic_surface(DTR, LTR, DTE, lambd, classPriorProbabilities, threshold)
+    QLRPredictionAccuracy = compute_prediction_accuracy(QLRPredictions, LTE)
+    return QLRPredictionAccuracy
 
 def compute_PCA_data_and_test_merged(D, DTE, i):
     #train

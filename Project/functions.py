@@ -678,74 +678,74 @@ def merge_dataset(D):
 
 class logRegClass:
 
-    def __init__(self, DTR, LTR, l, class_prior_probability, feature_space_dimension=None, num_classes=None):
+    def __init__(self, DTR, LTR, lambd, class_prior_probability, feature_space_dimension=None, num_classes=None):
         self.DTR = DTR
         self.LTR = LTR
         self.class_prior_probability = class_prior_probability
         # This is lambda (the hyper parameter)
-        self.l = l
+        self.lambd = lambd
         self.feature_space_dimension = feature_space_dimension
         self.num_classes = num_classes
 
     def log_reg_obj_bin(self, v):
         w = v[0:-1]
         b = v[-1]
-        regularization_term = (self.l / 2) * (numpy.power(numpy.linalg.norm(w), 2))
+        regularization_term = (self.lambd / 2) * (numpy.power(numpy.linalg.norm(w), 2))
         objective_function_true = 0
         objective_function_false = 0
         DTR_false, DTR_true = filter_dataset_by_labels(self.DTR, self.LTR)
         for i in range(DTR_true.shape[1]):
             sample = DTR_true[:, i]
-            label = 1
+            #label = 1
             objective_function_true = objective_function_true + \
-                                 numpy.logaddexp(0, -(2 * label - 1) * (numpy.dot(w.T, sample) + b))
-        objective_function_true = ( objective_function_true / DTR_true.shape[1] ) * self.class_prior_probability[1]
+                                 numpy.logaddexp(0, -(1) * (numpy.dot(w.T, sample) + b))
+        objective_function_true = ( self.class_prior_probability[1] / DTR_true.shape[1] ) * objective_function_true
         for i in range(DTR_false.shape[1]):
             sample = DTR_false[:, i]
             label = 0
             objective_function_false = objective_function_false + \
-                                 numpy.logaddexp(0, -(2 * label - 1) * (numpy.dot(w.T, sample) + b))
-        objective_function_false = ( objective_function_false / DTR_false.shape[1] ) * self.class_prior_probability[0]
+                                 numpy.logaddexp(0, -(-1) * (numpy.dot(w.T, sample) + b))
+        objective_function_false = ( self.class_prior_probability[0] / DTR_false.shape[1] ) *  objective_function_false
         objective_function = regularization_term + objective_function_false + objective_function_true
         return objective_function
 
 
-def logistic_regression_binary(DTR, LTR, DTE, LTE, l, class_prior_probability):
-    # TRASFORMSRE QUDRATICO DTR, DTE
-    logReg = logRegClass(DTR, LTR, l, class_prior_probability)
+def logistic_regression_binary(DTR, LTR, DTE, lambd, class_prior_probability, threshold):
 
-    x, f, d = scipy.optimize.fmin_l_bfgs_b(logReg.log_reg_obj_bin, x0=numpy.zeros(DTR.shape[0] + 1), approx_grad=True)
+    logReg = logRegClass(DTR, LTR, lambd, class_prior_probability)
+
+    x, f, d = scipy.optimize.fmin_l_bfgs_b(logReg.log_reg_obj_bin, x0=numpy.zeros(DTR.shape[0] + 1), approx_grad=True,
+                                           factr=100)
     # print("The objective value at the minimum is %f" % f)
     w = x[0:-1]   ##phi(x) da applicare su DTR +DTE
     b = x[-1]
-    posterior_log_likelihood_ratio = numpy.dot(w.T, DTE) + b
+    DTR_false, DTR_true = filter_dataset_by_labels(DTR, LTR)
+    posterior_log_likelihood_ratio = (numpy.dot(w.T, DTE) + b) - numpy.log(DTR_true.shape[1]/DTR_false.shape[1])
     predictions = numpy.zeros(posterior_log_likelihood_ratio.size)
     for index in range(posterior_log_likelihood_ratio.size):
-        if posterior_log_likelihood_ratio[index] > 0:
+        if posterior_log_likelihood_ratio[index] > threshold:
             predictions[index] = 1
-    predictions_accuracy = compute_prediction_accuracy(predictions, LTE)
-    print("The  Logistic Regression accuracy is %.3f" % predictions_accuracy)
-    # print("The error rate is %.3f" % (1 - predictions_accuracy))
+    return predictions
 
 
-def logistic_regression_binary_quadratic_surface(DTR, LTR, DTE, LTE, l, class_prior_probability):
+def logistic_regression_binary_quadratic_surface(DTR, LTR, DTE, lambd, class_prior_probability, threshold):
     DTR=quadratic_expansion(DTR)
     DTE=quadratic_expansion(DTE)
 
-    logReg = logRegClass(DTR, LTR, l, class_prior_probability)
+    logReg = logRegClass(DTR, LTR, lambd, class_prior_probability)
 
-    x, f, d = scipy.optimize.fmin_l_bfgs_b(logReg.log_reg_obj_bin, x0=numpy.zeros(DTR.shape[0] + 1), approx_grad=True)
+    x, f, d = scipy.optimize.fmin_l_bfgs_b(logReg.log_reg_obj_bin, x0=numpy.zeros(DTR.shape[0] + 1), approx_grad=True,
+                                           factr=100)
     # print("The objective value at the minimum is %f" % f)
     w = x[0:-1]   ##phi(x) da applicare su DTR +DTE
     b = x[-1]
-    posterior_log_likelihood_ratio = numpy.dot(w.T, DTE) + b
+    DTR_false, DTR_true = filter_dataset_by_labels(DTR, LTR)
+    posterior_log_likelihood_ratio = (numpy.dot(w.T, DTE) + b) - numpy.log(DTR_true.shape[1] / DTR_false.shape[1])
     predictions = numpy.zeros(posterior_log_likelihood_ratio.size)
     for index in range(posterior_log_likelihood_ratio.size):
-        if posterior_log_likelihood_ratio[index] > 0:
+        if posterior_log_likelihood_ratio[index] > threshold:
             predictions[index] = 1
-    predictions_accuracy = compute_prediction_accuracy(predictions, LTE)
-    print("The  Logistic Regression accuracy with quadratic expansion is %.3f" % predictions_accuracy)
-    # print("The error rate is %.3f" % (1 - predictions_accuracy))
+    return predictions
 
 
 def quadratic_expansion(D):
@@ -802,3 +802,117 @@ class SVMClass:
             primalObjectiveFunction += max(0, 1-self.z[i]*numpy.dot(w_optimal.T, self.DTR[:, i]))
         primalObjectiveFunction = regularitazionTerm + self.C * primalObjectiveFunction
         return primalObjectiveFunction
+
+
+
+def withening_pre_processing(D):
+
+    C, CNormalized = compute_empirical_covariance(D)
+    CWhiten = C * numpy.identity(D.shape[0])
+    DWhiten = numpy.dot(CWhiten, D)
+    return DWhiten
+
+
+def length_normalization(D):
+    for j in range(D.shape[1]):
+        D[:, j] = D[:, j]/numpy.linalg.norm(D[:, j])
+    return D
+
+
+def compute_confusion_matrix(predictions, L):
+    numLabels = numpy.max(L)+1
+    matrix = numpy.zeros((numLabels, numLabels), dtype=numpy.int)
+    for index, prediction in list(enumerate(predictions.tolist())):
+        matrix[prediction, L[index]] += 1
+    return matrix
+
+
+def compute_optimal_bayes_decision(logLikelihoodRatios, priorsProbability, costs):
+    """
+
+    :param logLikelihoodRatio:  ll of class 1 over ll of class 0
+    :param priorsProbability: index 0 contains priors of class 0, index 1 contatins priors of class 1
+    :param costs: index 0 contains cost of false negative, index 1 contains cost of false postive
+    :return:
+    """
+    predictions = numpy.zeros((logLikelihoodRatios.size), dtype=numpy.int)
+    threshold = - numpy.log((priorsProbability[1]*costs[0])/(priorsProbability[0]*costs[1]))
+    for index, llr in enumerate(logLikelihoodRatios):
+        if llr > threshold:
+            # it is predicted as class 1
+            predictions[index] = 1
+        else:
+            # it is predicted as class 0
+            predictions[index] = 0
+    return predictions
+
+
+def compute_optimal_bayes_decision_given_threshold(logLikelihoodRatios, threshold):
+    """
+
+    :param logLikelihoodRatio:  ll of class 1 over ll of class 0
+    :param priorsProbability: index 0 contains priors of class 0, index 1 contatins priors of class 1
+    :param costs: index 0 contains cost of false negative, index 1 contains cost of false postive
+    :return:
+    """
+    predictions = numpy.zeros((logLikelihoodRatios.size), dtype=numpy.int)
+    for index, llr in enumerate(logLikelihoodRatios):
+        if llr > threshold:
+            # it is predicted as class 1
+            predictions[index] = 1
+        else:
+            # it is predicted as class 0
+            predictions[index] = 0
+    return predictions
+
+
+
+def compute_binary_prediction_rates(confusionMatrix):
+    FNR = confusionMatrix[0, 1]/(confusionMatrix[0, 1] + confusionMatrix[1, 1])
+    FPR = confusionMatrix[1, 0]/(confusionMatrix[0, 0] + confusionMatrix[1, 0])
+    TNR = confusionMatrix[0, 0]/(confusionMatrix[0, 0] + confusionMatrix[1, 0])
+    TPR = confusionMatrix[1, 1] / (confusionMatrix[0, 1] + confusionMatrix[1, 1])
+    return FNR, FPR, TNR, TPR
+
+
+def compute_detection_cost_function(confusionMatrix, classPriorsProbability, costs):
+    """
+
+    :param confusionMatrix: confusionMatrix
+    param priorsProbability: index 0 contains priors of class 0, index 1 contatins priors of class 1
+    :param costs: index 0 contains cost of false negative, index 1 contains cost of false postive
+    :return:
+    """
+    FNR, FPR, TNR, TPR = compute_binary_prediction_rates(confusionMatrix)
+    return classPriorsProbability[1]*costs[0]*FNR + (1-classPriorsProbability[1])*costs[1]*FPR
+
+
+def compute_normalized_detection_cost_function(confusionMatrix, classPriorsProbability, costs):
+    """
+
+    :param confusionMatrix: confusionMatrix
+    param priorsProbability: index 0 contains priors of class 0, index 1 contatins priors of class 1
+    :param costs: index 0 contains cost of false negative, index 1 contains cost of false postive
+    :return:
+    """
+    DCF = compute_detection_cost_function(confusionMatrix, classPriorsProbability, costs)
+    return DCF/min(classPriorsProbability[1]*costs[0], (1-classPriorsProbability[1])*costs[1])
+
+
+def compute_missclassification_ratios(confusionMatrix):
+    misClassification_ratios = numpy.zeros((confusionMatrix.shape[0],  confusionMatrix.shape[1]))
+    for i in range(confusionMatrix.shape[0]):
+            for j in range(confusionMatrix.shape[1]):
+                misClassification_ratios[i ,j] = confusionMatrix[i, j]/(numpy.sum(confusionMatrix[:, j]))
+    return misClassification_ratios
+
+
+def compute_detection_cost_functio_by_misclassificationRatio(costs, misClassificationRatios, classPriorsProbability):
+    DCF = 0
+    for j in range(classPriorsProbability.size):
+        sum = 0
+        for i in range(classPriorsProbability.size):
+            sum += costs[i, j]*misClassificationRatios[i, j]
+        DCF += classPriorsProbability[j] * sum
+    return DCF
+

@@ -17,8 +17,8 @@ if __name__ == "__main__":
     DTRNormalizedOriginalFilteredTrue, DTRNormalizedOriginalFilteredFalse = filter_dataset_by_labels(
         DTROriginalNormalized, LTR)
 
-    plot_scatter_attributes_X_label_True_False(DTRNormalizedOriginalFilteredTrue, DTRNormalizedOriginalFilteredFalse,
-                                               filepath="./FeatureCorrelation/", title="DTROriginalNormalized")
+    #plot_scatter_attributes_X_label_True_False(DTRNormalizedOriginalFilteredTrue, DTRNormalizedOriginalFilteredFalse,
+    # filepath="./FeatureCorrelation/", title="DTROriginalNormalized")
 
 
     print(f"No Pre-Processing")
@@ -37,7 +37,64 @@ if __name__ == "__main__":
 
     accuracyTNB = compute_TNB_accuracy(DTROriginalNormalized, LTR, DTEOriginalNormalized, LTE, labels,
                                        classPriorProbabilities)
-    print("The TNB accuracy is %.3f\n" % accuracyTNB)
+    print("The TNB accuracy is %.3f" % accuracyTNB)
+
+    MVGlogLikelihoodRatio = compute_MVG_llr(DTROriginalNormalized, LTR, DTEOriginalNormalized, labels)
+
+    optimalBayesDecisionPredictions = compute_optimal_bayes_decision(MVGlogLikelihoodRatio, classPriorProbabilities,
+                                                                     costs)
+    confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LTE)
+    DCF = compute_detection_cost_function(confusionMatrix, classPriorProbabilities, costs)
+    DCFNormalized = compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs)
+    print("The priors probabilities are : ", classPriorProbabilities, "\n")
+    print("The costs are :")
+    print("Costs of false negative (label a class to 0 when the real is 1) : ", classPriorProbabilities[0], "\n")
+    print("Costs of false positive (label a class to 1 when the real is 0) : ", classPriorProbabilities[1], "\n")
+    print("Confusion Matrix : \n", confusionMatrix, "\n")
+    print("DCF : %.3f\n" % DCF)
+    print("Normalized DCF : %.3f\n" % DCFNormalized)
+
+    # for lambd in [10**-8, 10**-5, 10**-4, 10**-1, 1, 10]:
+    #     threshold=0
+    #
+    #     accuracyLR = compute_LR_accuracy(DTROriginalNormalized, LTR, DTEOriginalNormalized, LTE, classPriorProbabilities,
+    #                                     lambd, threshold)
+    #     print("The LR accuracy {lambda=%f, threshold=%.5f} is %.3f" % (lambd, threshold, accuracyLR))
+    #
+    #     accuracyQLR = compute_QLR_accuracy(DTROriginalNormalized, LTR, DTEOriginalNormalized, LTE,
+    #                                      classPriorProbabilities,
+    #                                      lambd, threshold)
+    #     print("The QLR accuracy {lambda=%f, threshold=%.5f} is %.3f" % (lambd, threshold, accuracyQLR))
+    #
+    #     print("Whitening pre processing applied on LR/QLR")
+    #
+    #     accuracyLR = compute_LR_accuracy(withening_pre_processing(DTROriginalNormalized), LTR, DTEOriginalNormalized, LTE,
+    #                                      classPriorProbabilities,
+    #                                      lambd, threshold)
+    #     print("The LR accuracy {lambda=%f, threshold=%.5f} is %.3f" % (lambd, threshold, accuracyLR))
+    #
+    #     accuracyQLR = compute_QLR_accuracy(withening_pre_processing(DTROriginalNormalized), LTR, DTEOriginalNormalized, LTE,
+    #                                         classPriorProbabilities,
+    #                                         lambd, threshold)
+    #     print("The QLR accuracy {lambda=%f, threshold=%.5f} is %.3f" % (lambd, threshold, accuracyQLR))
+    #
+    #     print("Whitening and length pre processing applied on LR/QLR")
+    #
+    #     accuracyLR = compute_LR_accuracy(length_normalization(withening_pre_processing(DTROriginalNormalized)), LTR, DTEOriginalNormalized,
+    #                                      LTE,
+    #                                      classPriorProbabilities,
+    #                                      lambd, threshold)
+    #     print("The LR accuracy {lambda=%f, threshold=%.5f} is %.3f" % (lambd, threshold, accuracyLR))
+    #
+    #     accuracyQLR = compute_QLR_accuracy(length_normalization(withening_pre_processing(DTROriginalNormalized)), LTR, DTEOriginalNormalized,
+    #                                        LTE,
+    #                                        classPriorProbabilities,
+    #                                        lambd, threshold)
+    #     print("The QLR accuracy {lambda=%f, threshold=%.5f} is %.3f" % (lambd, threshold, accuracyQLR))
+    #
+    #
+    # print("\n")
+
 
     # WITH PCA I CAN TRY TO REDUCE THE DIMENSION OF THE FEATURE SPACE
     # ACTUALLY OUR FEATURE SPACE IS 10. SO PCA CAN TRY TO CREATE A SUBSPACE WHOSE DIMENSION
@@ -48,9 +105,9 @@ if __name__ == "__main__":
         DTENormalizedPCAOriginal = numpy.dot(P.T, DTEOriginalNormalized)
         # DTENormalizedPCAOriginal, P = compute_PCA(DTEOriginalNormalized, subDimensionPCA)
         DTRNormalizedPCAOriginalFilteredTrue, DTRNormalizedPCAOriginalFilteredFalse = filter_dataset_by_labels(DTRNormalizedPCAOriginal, LTR)
-        plot_scatter_attributes_X_label(DTRNormalizedPCAOriginalFilteredTrue, filepath="./FeaturesCorrelationPCA/", title="DTrue PCA")
+        #plot_scatter_attributes_X_label(DTRNormalizedPCAOriginalFilteredTrue, filepath="./FeaturesCorrelationPCA/", title="DTrue PCA")
         pairs.clear()
-        plot_scatter_attributes_X_label(DTRNormalizedPCAOriginalFilteredFalse, filepath="./FeaturesCorrelationPCA/", title="DFalse PCA")
+        #plot_scatter_attributes_X_label(DTRNormalizedPCAOriginalFilteredFalse, filepath="./FeaturesCorrelationPCA/", title="DFalse PCA")
         pairs.clear()
 
         ### HERE I COMPUTE LDA ###
@@ -58,9 +115,9 @@ if __name__ == "__main__":
         DTENormalizedPCALDAOriginal = numpy.dot(W.T, DTENormalizedPCAOriginal)
         DTRNormalizedPCALDAOriginalFilteredTrue, DTRNormalizedPCALDAOriginalFilteredFalse = filter_dataset_by_labels(
         DTRNormalizedPCALDAOriginal, LTR)
-        plot_scatter_attributes_X_label(DTRNormalizedPCALDAOriginalFilteredTrue, filepath="./FeaturesCorrelationPCA/",title="DTrue LDA")
+        #plot_scatter_attributes_X_label(DTRNormalizedPCALDAOriginalFilteredTrue, filepath="./FeaturesCorrelationPCA/",title="DTrue LDA")
         pairs.clear()
-        plot_scatter_attributes_X_label(DTRNormalizedPCALDAOriginalFilteredFalse, filepath="./FeaturesCorrelationPCA/", title="DFalse LDA")
+        #plot_scatter_attributes_X_label(DTRNormalizedPCALDAOriginalFilteredFalse, filepath="./FeaturesCorrelationPCA/", title="DFalse LDA")
 
         print(f"PCA with {subDimensionPCA} dimension")
 
@@ -80,6 +137,19 @@ if __name__ == "__main__":
         print("The TNB accuracy is %.3f" % accuracyTNB)
 
         accuracyLDA =compute_binary_LDA_accuracy(DTENormalizedPCALDAOriginal, LTE, threshold=0.5)
-        print("The LDA accuracy is %.3f\n" % accuracyLDA)
+        print("The LDA accuracy is %.3f" % accuracyLDA)
 
+        # for lambd in [10**-6, 10**-5, 10**-4, 10**-1, 1, 10]:
+        #     threshold = 0
+        #
+        #     accuracyLR = compute_LR_accuracy(DTRNormalizedPCAOriginal, LTR, DTENormalizedPCAOriginal, LTE,
+        #                                      classPriorProbabilities,
+        #                                      lambd, threshold)
+        #     print("The LR accuracy (lambda=%f) is %.3f" % (lambd, accuracyLR))
+        #
+        #     accuracyQLR = compute_QLR_accuracy(DTRNormalizedPCAOriginal, LTR, DTENormalizedPCAOriginal, LTE,
+        #                                        classPriorProbabilities,
+        #                                        lambd, threshold)
+        #     print("The QLR accuracy (lambda=%f) is %.3f" % (lambd, accuracyQLR))
+        # print("\n")
         1
