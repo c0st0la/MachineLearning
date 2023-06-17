@@ -1,12 +1,22 @@
+import numpy
+
 from functions import *
 
 
-def compute_MVG_accuracy(D, L, DTE, LTE, labels, class_prior_probability):
+def compute_MVG_accuracy(D, L, DTE, LTE, labels, class_prior_probability, threshold = 1):
     log_MVG_class_conditional_probabilities = compute_MVG_log_likelihood_as_score_matrix(D, L, DTE,
                                                                                          labels)
     log_MVG_posterior_probability = compute_log_posterior_probability(log_MVG_class_conditional_probabilities,
                                                                       class_prior_probability)
-    MVG_predictions = numpy.argmax(numpy.exp(log_MVG_posterior_probability), axis=0)
+    MVG_posterior_probability = numpy.exp(log_MVG_posterior_probability)
+    MVG_predictions = []
+    llrs = MVG_posterior_probability[1, :]/MVG_posterior_probability[0, :]
+    for llr in llrs:
+        if llr >= threshold:
+            MVG_predictions.append(1)
+        else:
+            MVG_predictions.append(0)
+    MVG_predictions = numpy.array(MVG_predictions)
     MVG_prediction_accuracy = compute_prediction_accuracy(MVG_predictions, LTE)
     return MVG_prediction_accuracy
 
@@ -128,3 +138,6 @@ def compute_binary_LDA_accuracy(DTE, LTE, threshold=0):
 
     accuracy = compute_prediction_accuracy(predictions, LTE)
     return accuracy
+
+
+

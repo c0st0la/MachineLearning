@@ -24,7 +24,7 @@ if __name__ == "__main__":
     print(f"No Pre-Processing")
 
     accuracyMVG = compute_MVG_accuracy(DTROriginalNormalized, LTR, DTEOriginalNormalized, LTE, labels,
-                                       classPriorProbabilities)
+                                       classPriorProbabilities, threshold=numpy.log(9.9))
     print("The MVG accuracy is %.3f" % accuracyMVG)
 
     accuracyNB = compute_NB_accuracy(DTROriginalNormalized, LTR, DTEOriginalNormalized, LTE, labels,
@@ -51,8 +51,20 @@ if __name__ == "__main__":
     print("Costs of false negative (label a class to 0 when the real is 1) : ", classPriorProbabilities[0], "\n")
     print("Costs of false positive (label a class to 1 when the real is 0) : ", classPriorProbabilities[1], "\n")
     print("Confusion Matrix : \n", confusionMatrix, "\n")
-    print("DCF : %.3f\n" % DCF)
+    print("DCF : %.3f" % DCF)
     print("Normalized DCF : %.3f\n" % DCFNormalized)
+
+    thresholds = [i for i in numpy.arange(-10,10, 0.1)]
+    DCFNormalizedMin = 1000
+    DCFthreshold = 0
+    for threshold in thresholds:
+        optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(MVGlogLikelihoodRatio, threshold)
+        confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LTE)
+        DCFtemp = compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs)
+        if DCFtemp < DCFNormalizedMin:
+            DCFNormalizedMin = DCFtemp
+            DCFthreshold = threshold
+    print("The min of the normalized DFC : %.3f with threshold %.3f" % (DCFNormalizedMin, DCFthreshold))
 
     # for lambd in [10**-8, 10**-5, 10**-4, 10**-1, 1, 10]:
     #     threshold=0
