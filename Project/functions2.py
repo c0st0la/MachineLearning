@@ -3,16 +3,11 @@ import numpy
 from functions import *
 
 
-def compute_MVG_accuracy(D, L, DTE, LTE, labels, class_prior_probability, threshold = 1):
-    log_MVG_class_conditional_probabilities = compute_MVG_log_likelihood_as_score_matrix(D, L, DTE,
-                                                                                         labels)
-    log_MVG_posterior_probability = compute_log_posterior_probability(log_MVG_class_conditional_probabilities,
-                                                                      class_prior_probability)
-    MVG_posterior_probability = numpy.exp(log_MVG_posterior_probability)
+def compute_MVG_accuracy_threshold(D, L, DTE, LTE, labels, threshold):
     MVG_predictions = []
-    llrs = MVG_posterior_probability[1, :]/MVG_posterior_probability[0, :]
+    llrs = compute_MVG_llrs(D, L, DTE, labels)
     for llr in llrs:
-        if llr >= threshold:
+        if llr > threshold:
             MVG_predictions.append(1)
         else:
             MVG_predictions.append(0)
@@ -21,22 +16,25 @@ def compute_MVG_accuracy(D, L, DTE, LTE, labels, class_prior_probability, thresh
     return MVG_prediction_accuracy
 
 
-def compute_MVG_llr(D, L, DTE, labels):
-    log_MVG_class_conditional_probabilities = compute_MVG_log_likelihood_as_score_matrix(D, L, DTE,
-                                                                                         labels)
-    llr = numpy.zeros(log_MVG_class_conditional_probabilities.shape[1])
-    for i in range(log_MVG_class_conditional_probabilities.shape[1]):
-        llr[i] =   log_MVG_class_conditional_probabilities[1, i]/log_MVG_class_conditional_probabilities[0, i]
+def compute_MVG_accuracy(D, L, DTE, LTE, labels, class_prior_probability):
+    log_MVG_posterior_probability = compute_MVG_log_likelihood_as_score_matrix(D, L, DTE, labels)
 
-    return llr
+    log_MVG_posterior_probability = compute_log_posterior_probability(log_MVG_posterior_probability,
+                                                             class_prior_probability)
+    MVG_predictions = numpy.argmax(numpy.exp(log_MVG_posterior_probability), axis=0)
+    MVG_prediction_accuracy = compute_prediction_accuracy(MVG_predictions, LTE)
+    return MVG_prediction_accuracy
+
+
+
 
 def compute_NB_accuracy(D, L, DTE, LTE, labels, class_prior_probability):
     log_NB_class_conditional_probabilities = compute_NB_log_likelihood_as_score_matrix(D, L, DTE,
                                                                                        labels)
 
-    NB_posterior_probability = compute_log_posterior_probability(log_NB_class_conditional_probabilities,
+    log_NB_posterior_probability = compute_log_posterior_probability(log_NB_class_conditional_probabilities,
                                                              class_prior_probability)
-    NB_predictions = numpy.argmax(numpy.exp(NB_posterior_probability), axis=0)
+    NB_predictions = numpy.argmax(numpy.exp(log_NB_posterior_probability), axis=0)
     NB_prediction_accuracy = compute_prediction_accuracy(NB_predictions, LTE)
     return NB_prediction_accuracy
 
@@ -45,9 +43,9 @@ def compute_TC_accuracy(D, L, DTE, LTE, labels, class_prior_probability):
     log_TC_class_conditional_probabilities = compute_TC_log_likelihood_as_score_matrix(D, L, DTE,
                                                                                        labels)
 
-    TC_posterior_probability = compute_log_posterior_probability(log_TC_class_conditional_probabilities,
+    log_TC_posterior_probability = compute_log_posterior_probability(log_TC_class_conditional_probabilities,
                                                              class_prior_probability)
-    TC_predictions = numpy.argmax(numpy.exp(TC_posterior_probability), axis=0)
+    TC_predictions = numpy.argmax(numpy.exp(log_TC_posterior_probability), axis=0)
     TC_prediction_accuracy = compute_prediction_accuracy(TC_predictions, LTE)
     return TC_prediction_accuracy
 
@@ -55,9 +53,9 @@ def compute_TC_accuracy(D, L, DTE, LTE, labels, class_prior_probability):
 def compute_TNB_accuracy(D, L, DTE, LTE, labels, class_prior_probability):
     log_TNB_class_conditional_probabilities = compute_TNB_log_likelihood_as_score_matrix(D, L, DTE,
                                                                                          labels)
-    TNB_posterior_probability = compute_log_posterior_probability(log_TNB_class_conditional_probabilities,
+    log_TNB_posterior_probability = compute_log_posterior_probability(log_TNB_class_conditional_probabilities,
                                                               class_prior_probability)
-    TNB_predictions = numpy.argmax(numpy.exp(TNB_posterior_probability), axis=0)
+    TNB_predictions = numpy.argmax(numpy.exp(log_TNB_posterior_probability), axis=0)
     TNB_prediction_accuracy = compute_prediction_accuracy(TNB_predictions, LTE)
     return TNB_prediction_accuracy
 
@@ -140,4 +138,42 @@ def compute_binary_LDA_accuracy(DTE, LTE, threshold=0):
     return accuracy
 
 
+def plot_ROC_curve(MVGlogLikelihoodRatio, LTE):
+    thresholds = [i for i in numpy.arange(-100, 100, 0.1)]
+    x = []
+    y = []
+    for threshold in thresholds:
+        optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(MVGlogLikelihoodRatio,
+                                                                                         threshold)
+        confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LTE)
+        FNR, FPR, TNR, TPR = compute_binary_prediction_rates(confusionMatrix)
+        x.append(FPR)
+        y.append(TPR)
+    plt.figure()
+    plt.plot(x, y)
+    plt.xlabel("FPR")
+    plt.ylabel("TPR")
+    plt.grid()
+    plt.show()
+
+
+def plot_error_rate_x_threshold(DTROriginalNormalized, LTR, DTEOriginalNormalized, LTE, labels):
+    thresholds = [i for i in numpy.arange(-5, 5, 0.1)]
+    MVGlogLikelihoodRatio = compute_MVG_llrs(DTROriginalNormalized, LTR, DTEOriginalNormalized, labels)
+    x = []
+    y1 = []
+    y2 = []
+    for threshold in thresholds:
+        x.append(threshold)
+        optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(MVGlogLikelihoodRatio, threshold)
+        confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LTE)
+        FNR, FPR, TNR, TPR = compute_binary_prediction_rates(confusionMatrix)
+        y1.append(FPR)
+        y2.append(FNR)
+    plt.figure()
+    plt.plot(x, y1, label='FPR')
+    plt.plot(x, y2, label='FNR')
+    plt.grid()
+    plt.legend()
+    plt.show()
 

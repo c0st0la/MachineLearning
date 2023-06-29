@@ -90,9 +90,35 @@ def plot_scatter_attributes_X_label(D, filepath, title=""):
                 plt.ylim([int(D.min()-1), int(D.max()+1)])
                 plt.savefig(f"{filepath}{title} Dimension {i+1}-{j+1}")
                 plt.clf()
+    pairs.clear()
 
-def plot_scatter_attributes_X_label_True_False(D1, D2, filepath, title=""):
-    dimension = D1.shape[0]
+def plot_hist_attributes_X_label_binary(DTrue, DFalse, filepath, title=""):
+
+    for i in range(DTrue.shape[0]):
+        plt.figure()
+        plt.hist(DTrue[i, :],bins=10, ec='black', density=True, alpha=0.3, label='DTrue')
+        plt.hist(DFalse[i, :], bins=10, ec='black', density=True, alpha=0.3, label='DFalse')
+        plt.legend()
+        plt.ylim([0, 0.5])
+        plt.xlabel(f"Values dimension {i}")
+        plt.savefig(f"{filepath}{title} Dimension {i}")
+        plt.clf()
+
+
+def plot_scatter_attributes_X_label_binary(DTrue, DFalse, filepath, title=""):
+
+    for i in range(DTrue.shape[0]):
+        plt.figure()
+        plt.scatter(DTrue[i, :], DFalse[i, :], label='DTrue')
+        plt.legend()
+        plt.xlabel(f"Values dimension {i}")
+        plt.savefig(f"{filepath}{title} Dimension {i}")
+        plt.clf()
+
+
+
+def plot_scatter_attributes_X_label_True_False(DTrue, DFalse, filepath, title=""):
+    dimension = DTrue.shape[0]
     #color = iter(cm.rainbow(numpy.linspace(0, 1, dimension*dimension)))
 
     for i in range(dimension):
@@ -100,33 +126,36 @@ def plot_scatter_attributes_X_label_True_False(D1, D2, filepath, title=""):
             if (i, j) not in pairs:
                 pairs.append((i ,j))
                 #c = next(color)
-                plt.scatter(D1[i, :], D1[j, :], s=4, label=f"True Dimension {i+1}-{j+1}")
-                plt.scatter(D2[i, :], D2[j, :], s=4, label=f"False Dimension {i+1}-{j+1}")
+                plt.scatter(DTrue[i, :], DTrue[j, :], s=4, label=f"True Dimension {i+1}-{j+1}")
+                plt.scatter(DFalse[i, :], DFalse[j, :], s=4, label=f"False Dimension {i+1}-{j+1}")
                 plt.title(title)
                 plt.legend()
-                plt.xlim([min(int(D1.min()-1), int(D2.min()-1)), max(int(D2.max()+1), int(D2.max()+1))])
-                plt.ylim([min(int(D1.min()-1), int(D2.min()-1)), max(int(D2.max()+1), int(D2.max()+1))])
+                plt.xlim([min(int(DTrue.min()-1), int(DFalse.min()-1)), max(int(DTrue.max()+1), int(DFalse.max()+1))])
+                plt.ylim([min(int(DTrue.min()-1), int(DFalse.min()-1)), max(int(DTrue.max()+1), int(DFalse.max()+1))])
                 plt.savefig(f"{filepath}{title} Dimension {i+1}-{j+1}")
                 plt.clf()
+    pairs.clear()
 
-def plot_hist_attributes_X_label(D_setosa, D_versicolor, D_virginica, attributes):
-    """
-    It plots the datasets using histograms plotting type for each of the attribute present in the
-    attributes parameter
-    :param D1_setosa:
-    :param D1_versicolor:
-    :param D1_virginica:
-    :param attributes: It contains the attribute of the dataset
-    :return: None
-    """
-    for i in range(len(attributes)):
-        plt.figure()
-        plt.hist(D_setosa[i, :], bins=10, ec='black', density=True, alpha=0.3, label='Iris_Setosa')
-        plt.hist(D_versicolor[i, :], bins=10, ec='black', density=True, alpha=0.3, label='Iris_Versicolor')
-        plt.hist(D_virginica[i, :], bins=10, ec='black', density=True, alpha=0.3, label='Iris_Virginica')
-        plt.legend()
-        plt.xlabel(attributes[i])
-        plt.show()
+
+def plot_hist_attributes_X_label_True_False(DTrue, DFalse, filepath, title=""):
+    dimension = DTrue.shape[0]
+    #color = iter(cm.rainbow(numpy.linspace(0, 1, dimension*dimension)))
+
+    for i in range(dimension):
+        for j in range(i+1, dimension):
+            if (i, j) not in pairs:
+                pairs.append((i ,j))
+                #c = next(color)
+                plt.hist(DTrue[i, :], bins=10, ec='black', density=True, alpha=0.3, label='DTrue')
+                plt.hist(DFalse[j, :], bins=10, ec='black', density=True, alpha=0.3, label='DFalse')
+                plt.title(title)
+                plt.legend()
+                plt.xlim([min(int(DTrue.min() - 1), int(DFalse.min() - 1)),
+                          max(int(DTrue.max() + 1), int(DFalse.max() + 1))])
+                plt.ylim([0, 0.5])
+                plt.savefig(f"{filepath}{title} Dimension {i+1}-{j+1}")
+                plt.clf()
+    pairs.clear()
 
 
 def plot_scatter_pair_attributes_values(D_setosa, D_versicolor, D_virginica, attributes):
@@ -431,6 +460,15 @@ def compute_MVG_log_likelihood_as_score_matrix(DTR, LTR, DTE, labels):
     return class_conditional_probabilities
 
 
+def compute_MVG_llrs(D, L, DTE, labels):
+    log_MVG_class_conditional_probabilities = compute_MVG_log_likelihood_as_score_matrix(D, L, DTE,
+                                                                                         labels)
+    llrs = numpy.zeros(log_MVG_class_conditional_probabilities.shape[1])
+    for i in range(log_MVG_class_conditional_probabilities.shape[1]):
+        llrs[i] =   log_MVG_class_conditional_probabilities[1, i] - log_MVG_class_conditional_probabilities[0, i]
+
+    return llrs
+
 def compute_posterior_probability(class_conditional_probabilities, class_prior_probability):
     """
         This function compute the posterior probability given the class conditional probabilities
@@ -536,7 +574,7 @@ def compute_TNB_log_likelihood_as_score_matrix(DTR, LTR, DTE, labels):
     return class_conditional_probabilities
 
 
-def K_fold_cross_validation(D, L, classifier, k, class_prior_probability, labels):
+def K_fold_cross_validation_accuracy(D, L, classifier, k, class_prior_probability, labels):
     """
         This function perform a K-fold cross validation.
         You have to indicate the name of the classifier you want to use between:
@@ -607,6 +645,43 @@ def K_fold_cross_validation(D, L, classifier, k, class_prior_probability, labels
     tot_error_rate = tot_error_rate / k
     return tot_accuracy, tot_error_rate
 
+
+def K_fold_cross_validation_DCF(D, L, classifier, k, classPriorProbabilities, costs, labels):
+    num_samples = int(D.shape[1] / k)
+    totDCF = 0
+    DCFsNormalized1 = []
+    thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
+    perm = numpy.random.permutation(D.shape[1])
+    D = D[:, perm]
+    L = L[perm]
+    if classifier == "MVG":
+        for i in range(k):
+            (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
+            llr_MVG = compute_MVG_llrs(DTR, LTR, DTE, labels)
+            for threshold in thresholds:
+                optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(llr_MVG, threshold)
+                confusionMatrix = compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
+                DCFsNormalized1.append(
+                    compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
+            totDCF += min(DCFsNormalized1)
+
+    elif classifier == "NB":
+        for i in range(k):
+            (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
+
+    elif classifier == "TC":
+        for i in range(k):
+            (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
+
+    elif classifier == "TNB":
+        for i in range(k):
+            (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
+
+    else:
+        print("The given classifier %s is not recognized!" % classifier)
+        exit(-1)
+
+    return totDCF/k
 
 def K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples, seed=0):
     numpy.random.seed(seed)
@@ -819,10 +894,10 @@ def length_normalization(D):
     return D
 
 
-def compute_confusion_matrix(predictions, L):
-    numLabels = numpy.max(L)+1
-    matrix = numpy.zeros((numLabels, numLabels), dtype=numpy.int)
-    for index, prediction in list(enumerate(predictions.tolist())):
+def compute_binary_confusion_matrix(predictions, L):
+    numLabels = 2
+    matrix = numpy.zeros((numLabels, numLabels), dtype=numpy.int32)
+    for index, prediction in enumerate(predictions.tolist()):
         matrix[prediction, L[index]] += 1
     return matrix
 
@@ -855,9 +930,9 @@ def compute_optimal_bayes_decision_given_threshold(logLikelihoodRatios, threshol
     :param costs: index 0 contains cost of false negative, index 1 contains cost of false postive
     :return:
     """
-    predictions = numpy.zeros((logLikelihoodRatios.size), dtype=numpy.int)
+    predictions = numpy.zeros((logLikelihoodRatios.size), dtype=numpy.int32)
     for index, llr in enumerate(logLikelihoodRatios):
-        if llr > threshold:
+        if llr >= threshold:
             # it is predicted as class 1
             predictions[index] = 1
         else:
@@ -891,9 +966,10 @@ def compute_normalized_detection_cost_function(confusionMatrix, classPriorsProba
     """
 
     :param confusionMatrix: confusionMatrix
-    param priorsProbability: index 0 contains priors of class 0, index 1 contatins priors of class 1
+    :param priorsProbability: index 0 contains priors of class 0, index 1 contatins priors of class 1
     :param costs: index 0 contains cost of false negative, index 1 contains cost of false postive
     :return:
+
     """
     DCF = compute_detection_cost_function(confusionMatrix, classPriorsProbability, costs)
     return DCF/min(classPriorsProbability[1]*costs[0], (1-classPriorsProbability[1])*costs[1])
@@ -915,4 +991,36 @@ def compute_detection_cost_functio_by_misclassificationRatio(costs, misClassific
             sum += costs[i, j]*misClassificationRatios[i, j]
         DCF += classPriorsProbability[j] * sum
     return DCF
+
+
+
+
+def compute_treshold_qlr(DTR, LTR, DTE,LTE, lambd, class_prior_probability, costs):
+    DTR = quadratic_expansion(DTR)
+    DTE = quadratic_expansion(DTE)
+
+    logReg = logRegClass(DTR, LTR, lambd, class_prior_probability)
+
+    x, f, d = scipy.optimize.fmin_l_bfgs_b(logReg.log_reg_obj_bin, x0=numpy.zeros(DTR.shape[0] + 1), approx_grad=True,
+                                           factr=100)
+    # print("The objective value at the minimum is %f" % f)
+    w = x[0:-1]  ##phi(x) da applicare su DTR +DTE
+    b = x[-1]
+    DTR_false, DTR_true = filter_dataset_by_labels(DTR, LTR)
+    posterior_log_likelihood_ratio = (numpy.dot(w.T, DTE) + b) - numpy.log(DTR_true.shape[1] / DTR_false.shape[1])
+
+
+    optimalBayesDecisionPredictions = compute_optimal_bayes_decision(posterior_log_likelihood_ratio, class_prior_probability,
+                                                                     costs)
+    confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LTE)
+    DCF = compute_detection_cost_function(confusionMatrix, class_prior_probability, costs)
+    DCFNormalized = compute_normalized_detection_cost_function(confusionMatrix, class_prior_probability, costs)
+    print("The priors probabilities are : ", class_prior_probability, "\n")
+    print("The costs are :")
+    print("Costs of false negative (label a class to 0 when the real is 1) : ", class_prior_probability[0], "\n")
+    print("Costs of false positive (label a class to 1 when the real is 0) : ", class_prior_probability[1], "\n")
+    print("Confusion Matrix : \n", confusionMatrix, "\n")
+    print("DCF : %.3f" % DCF)
+    print("Normalized DCF : %.3f\n" % DCFNormalized)
+
 
