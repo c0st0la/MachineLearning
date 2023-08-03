@@ -3,186 +3,53 @@ from functions import *
 from functions2 import *
 
 if __name__ == "__main__":
-
-
-    DTRSplitted, LTR, DTROriginal=read_file("Train.txt")
-    DTESplitted, LTE, DTEOriginal=read_file("Test.txt")
-    classPriorProbabilities = numpy.array([9/10, 1/10], dtype=float)
+    DTRSplitted, LTR, DTROriginal = read_file("Train.txt")
+    DTESplitted, LTE, DTEOriginal = read_file("Test.txt")
+    classPriorProbabilities1 = numpy.array([9 / 10, 1 / 10], dtype=float)
+    classPriorProbabilities2 = numpy.array([5 / 10, 5 / 10], dtype=float)
+    classPriorProbabilities3 = numpy.array([1 / 10, 9 / 10], dtype=float)
     costs = numpy.array([1.0, 1.0], dtype=float)
     labels = [i for i in range(0, numpy.amax(LTR) + 1)]
+    numFold = 5
+    thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
 
-    DTROriginalNormalized = (DTROriginal - compute_mean(DTROriginal))/ to_column(DTROriginal.std(axis=1))
+    DTROriginalNormalized = (DTROriginal - compute_mean(DTROriginal)) / to_column(DTROriginal.std(axis=1))
     DTEOriginalNormalized = (DTEOriginal - compute_mean(DTEOriginal)) / to_column(DTEOriginal.std(axis=1))
 
     DTRNormalizedOriginalFilteredTrue, DTRNormalizedOriginalFilteredFalse = filter_dataset_by_labels(DTROriginalNormalized, LTR)
+    DTROriginalNormalizedModified = numpy.delete(DTROriginalNormalized, [1, 3, 6, 8], axis=0)
+    DTEOriginalNormalizedModified = numpy.delete(DTEOriginalNormalized, [1, 3, 6, 8], axis=0)
 
-    # plot_scatter_attributes_X_label_True_False(DTRNormalizedOriginalFilteredTrue, DTRNormalizedOriginalFilteredFalse,
-    # filepath="./FeatureCorrelation/", title="DTROriginalNormalized")
-    #plot_hist_attributes_X_label_binary(DTRNormalizedOriginalFilteredTrue, DTRNormalizedOriginalFilteredFalse,
-    #                    filepath="./FeaturesValues/", title="")
+    dict1 = {1e-06: 0.9902173913043478, 1e-05: 0.9902173913043478, 0.0001: 0.988768115942029, 0.001: 0.988768115942029, 0.01: 0.988768115942029, 0.1: 0.988768115942029, 1: 0.988768115942029, 10: 0.988768115942029, 100: 0.988768115942029, 1000: 0.988768115942029, 10000: 0.988768115942029, 100000: 0.988768115942029}
+    dict2 = {1e-06: 0.8696090160741805, 1e-05: 0.8696090160741805, 0.0001: 0.8689575502761351, 0.001: 0.8686724303848784, 0.01: 0.8686724303848784, 0.1: 0.8686724303848784, 1: 0.8686724303848784, 10: 0.8686724303848784, 100: 0.8686724303848784, 1000: 0.8686724303848784, 10000: 0.8686724303848784, 100000: 0.8686724303848784}
+    dict3 = {1e-06: 0.9902173913043478, 1e-05: 0.9902173913043478, 0.0001: 0.988768115942029, 0.001: 0.988768115942029, 0.01: 0.988768115942029, 0.1: 0.988768115942029, 1: 0.988768115942029, 10: 0.988768115942029, 100: 0.988768115942029, 1000: 0.988768115942029, 10000: 0.988768115942029, 100000: 0.988768115942029}
 
-    print(f"No Pre-Processing")
+    min = 100000
+    lambd = 0
+    print("dict1")
+    for key in list(dict1.keys()):
+        if dict1[key]< min:
+            min = dict1[key]
+            lambd = key
+    print("lambda", lambd)
+    print("minDCF", min)
 
-    accuracyMVG = compute_MVG_accuracy(DTROriginalNormalized, LTR, DTEOriginalNormalized, LTE, labels,
-                                       classPriorProbabilities)
-    print("The MVG accuracy is %.3f" % accuracyMVG)
+    min = 100000
+    lambd = 0
+    print("dict2")
+    for key in list(dict2.keys()):
+        if dict2[key] < min:
+            min = dict2[key]
+            lambd = key
+    print("lambda", lambd)
+    print("minDCF", min)
 
-    thresholdMVG = -numpy.log(classPriorProbabilities[1]/classPriorProbabilities[0])
-    #thresholdMVG=2.4
-    accuracyMVGThreshold = compute_MVG_accuracy_threshold(DTROriginalNormalized, LTR, DTEOriginalNormalized, LTE, labels,
-                                       thresholdMVG)
-    print("The MVG accuracy (threshold %.3f) is %.3f" % (thresholdMVG, accuracyMVGThreshold))
-
-    accuracyNB = compute_NB_accuracy(DTROriginalNormalized, LTR, DTEOriginalNormalized, LTE, labels,
-                                     classPriorProbabilities)
-    print("The NB accuracy is %.3f" % accuracyNB)
-
-    accuracyTC = compute_TC_accuracy(DTROriginalNormalized, LTR, DTEOriginalNormalized, LTE, labels,
-                                     classPriorProbabilities)
-    print("The TC accuracy is %.3f" % accuracyTC)
-
-    accuracyTNB = compute_TNB_accuracy(DTROriginalNormalized, LTR, DTEOriginalNormalized, LTE, labels,
-                                       classPriorProbabilities)
-    print("The TNB accuracy is %.3f" % accuracyTNB)
-
-    MVGlogLikelihoodRatio = compute_MVG_llrs(DTROriginalNormalized, LTR, DTEOriginalNormalized, labels)
-
-    optimalBayesDecisionPredictions = compute_optimal_bayes_decision(MVGlogLikelihoodRatio, classPriorProbabilities,
-                                                                     costs)
-    confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LTE)
-    DCF = compute_detection_cost_function(confusionMatrix, classPriorProbabilities, costs)
-    DCFNormalized = compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs)
-    print("The costs are :")
-    print("Costs of false negative (label a class to 0 when the real is 1) : ", classPriorProbabilities[0])
-    print("Costs of false positive (label a class to 1 when the real is 0) : ", classPriorProbabilities[1], "\n")
-    print("Confusion Matrix :\n", confusionMatrix, "\n")
-    print("DCF : %.3f" % DCF)
-    print("Normalized DCF : %.3f\n" % DCFNormalized)
-
-    thresholds = [i for i in numpy.arange(-5,5, 0.1)]
-    DCFNormalizedMin = 1000
-    DCFthreshold = 0
-    accuracyMVG = 0
-    th = 0
-    # for threshold in thresholds:
-    #     temp = compute_MVG_accuracy_threshold(DTROriginalNormalized, LTR, DTEOriginalNormalized, LTE,
-    #                                                           labels, threshold)
-    #     if temp > accuracyMVG:
-    #         accuracyMVG = temp
-    #         th = threshold
-    #     optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(MVGlogLikelihoodRatio, threshold)
-    #     confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LTE)
-    #     DCFtemp = compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs)
-    #     if DCFtemp < DCFNormalizedMin:
-    #         DCFNormalizedMin = DCFtemp
-    #         DCFthreshold = threshold
-    # print("The min of the normalized DFC : %.3f with threshold %.3f" % (DCFNormalizedMin, DCFthreshold))
-    # print("The MVG accuracy (threshold %.3f) is %.3f" % (th, accuracyMVG))
-    #
-    plot_error_rate_x_threshold(DTROriginalNormalized, LTR, DTEOriginalNormalized, LTE, labels)
-    #
-    plot_ROC_curve(MVGlogLikelihoodRatio, LTE)
-# for threshold in thresholds:
-#     accuracyblabla=compute_QLR_accuracy(DTROriginalNormalized, LTR, DTEOriginalNormalized, LTE, classPriorProbabilities, lambd=l)
-#     print("The MVG accuracy (threshold %.3f) is %.3f" % (threshold, accuracyblabla))
-
-    #for lambd in [10**-8, 10**-5, 10**-4, 10**-1, 1, 10]:
-    # threshold=0
-    # lambd=10**-8
-    #
-    #     accuracyLR = compute_LR_accuracy(DTROriginalNormalized, LTR, DTEOriginalNormalized, LTE, classPriorProbabilities,
-    #                                     lambd, threshold)
-    #     print("The LR accuracy {lambda=%f, threshold=%.5f} is %.3f" % (lambd, threshold, accuracyLR))
-    # compute_treshold_qlr(DTROriginalNormalized, LTR, DTEOriginalNormalized, LTE, lambd, classPriorProbabilities, costs)
-    # accuracyQLR = compute_QLR_accuracy(DTROriginalNormalized, LTR, DTEOriginalNormalized, LTE,
-    #                                      classPriorProbabilities,
-    #                                       lambd, threshold)
-    # print("The QLR accuracy {lambda=%f, threshold=%.5f} is %.3f" % (lambd, threshold, accuracyQLR))
-    #
-    #     print("Whitening pre processing applied on LR/QLR")
-    #
-    #     accuracyLR = compute_LR_accuracy(withening_pre_processing(DTROriginalNormalized), LTR, DTEOriginalNormalized, LTE,
-    #                                      classPriorProbabilities,
-    #                                      lambd, threshold)
-    #     print("The LR accuracy {lambda=%f, threshold=%.5f} is %.3f" % (lambd, threshold, accuracyLR))
-    #
-    #     accuracyQLR = compute_QLR_accuracy(withening_pre_processing(DTROriginalNormalized), LTR, DTEOriginalNormalized, LTE,
-    #                                         classPriorProbabilities,
-    #                                         lambd, threshold)
-    #     print("The QLR accuracy {lambda=%f, threshold=%.5f} is %.3f" % (lambd, threshold, accuracyQLR))
-    #
-    #     print("Whitening and length pre processing applied on LR/QLR")
-    #
-    #     accuracyLR = compute_LR_accuracy(length_normalization(withening_pre_processing(DTROriginalNormalized)), LTR, DTEOriginalNormalized,
-    #                                      LTE,
-    #                                      classPriorProbabilities,
-    #                                      lambd, threshold)
-    #     print("The LR accuracy {lambda=%f, threshold=%.5f} is %.3f" % (lambd, threshold, accuracyLR))
-    #
-    #     accuracyQLR = compute_QLR_accuracy(length_normalization(withening_pre_processing(DTROriginalNormalized)), LTR, DTEOriginalNormalized,
-    #                                        LTE,
-    #                                        classPriorProbabilities,
-    #                                        lambd, threshold)
-    #     print("The QLR accuracy {lambda=%f, threshold=%.5f} is %.3f" % (lambd, threshold, accuracyQLR))
-    #
-    #
-    # print("\n")
-
-
-    # WITH PCA I CAN TRY TO REDUCE THE DIMENSION OF THE FEATURE SPACE
-    # ACTUALLY OUR FEATURE SPACE IS 10. SO PCA CAN TRY TO CREATE A SUBSPACE WHOSE DIMENSION
-    # IS IN THIS RANGE (1, 9)rns the varian
-    # for subDimensionPCA in range(1, DTROriginal.shape[0]):
-    #     DTRNormalizedPCAOriginal, P = compute_PCA(DTROriginalNormalized, subDimensionPCA)
-    #     # Come dovrei implementare la proiezione di DTE?
-    #     DTENormalizedPCAOriginal = numpy.dot(P.T, DTEOriginalNormalized)
-    #     # DTENormalizedPCAOriginal, P = compute_PCA(DTEOriginalNormalized, subDimensionPCA)
-    #     DTRNormalizedPCAOriginalFilteredTrue, DTRNormalizedPCAOriginalFilteredFalse = filter_dataset_by_labels(DTRNormalizedPCAOriginal, LTR)
-    #     #plot_scatter_attributes_X_label(DTRNormalizedPCAOriginalFilteredTrue, filepath="./FeaturesCorrelationPCA/", title="DTrue PCA")
-    #     pairs.clear()
-    #     #plot_scatter_attributes_X_label(DTRNormalizedPCAOriginalFilteredFalse, filepath="./FeaturesCorrelationPCA/", title="DFalse PCA")
-    #     pairs.clear()
-    #
-    #     ### HERE I COMPUTE LDA ###
-    #     DTRNormalizedPCALDAOriginal, W = compute_LDA_generalized_eigenvalue(DTRNormalizedPCAOriginal, LTR, 1, labels)
-    #     DTENormalizedPCALDAOriginal = numpy.dot(W.T, DTENormalizedPCAOriginal)
-    #     DTRNormalizedPCALDAOriginalFilteredTrue, DTRNormalizedPCALDAOriginalFilteredFalse = filter_dataset_by_labels(
-    #     DTRNormalizedPCALDAOriginal, LTR)
-    #     #plot_scatter_attributes_X_label(DTRNormalizedPCALDAOriginalFilteredTrue, filepath="./FeaturesCorrelationPCA/",title="DTrue LDA")
-    #     pairs.clear()
-    #     #plot_scatter_attributes_X_label(DTRNormalizedPCALDAOriginalFilteredFalse, filepath="./FeaturesCorrelationPCA/", title="DFalse LDA")
-    #
-    #     print(f"PCA with {subDimensionPCA} dimension")
-    #
-    #     accuracyMVG = compute_MVG_accuracy(DTRNormalizedPCAOriginal, LTR, DTENormalizedPCAOriginal, LTE, labels, classPriorProbabilities)
-    #     print("The MVG accuracy is %.3f" % accuracyMVG)
-    #
-    #     accuracyNB = compute_NB_accuracy(DTRNormalizedPCAOriginal, LTR, DTENormalizedPCAOriginal, LTE, labels,
-    #                                        classPriorProbabilities)
-    #     print("The NB accuracy is %.3f" % accuracyNB)
-    #
-    #     accuracyTC = compute_TC_accuracy(DTRNormalizedPCAOriginal, LTR, DTENormalizedPCAOriginal, LTE, labels,
-    #                                      classPriorProbabilities)
-    #     print("The TC accuracy is %.3f" % accuracyTC)
-    #
-    #     accuracyTNB = compute_TNB_accuracy(DTRNormalizedPCAOriginal, LTR, DTENormalizedPCAOriginal, LTE, labels,
-    #                                      classPriorProbabilities)
-    #     print("The TNB accuracy is %.3f" % accuracyTNB)
-    #
-    #     accuracyLDA =compute_binary_LDA_accuracy(DTENormalizedPCALDAOriginal, LTE, threshold=0.5)
-    #     print("The LDA accuracy is %.3f" % accuracyLDA)
-    #
-    #     # for lambd in [10**-6, 10**-5, 10**-4, 10**-1, 1, 10]:
-    #     #     threshold = 0
-    #     #
-    #     #     accuracyLR = compute_LR_accuracy(DTRNormalizedPCAOriginal, LTR, DTENormalizedPCAOriginal, LTE,
-    #     #                                      classPriorProbabilities,
-    #     #                                      lambd, threshold)
-    #     #     print("The LR accuracy (lambda=%f) is %.3f" % (lambd, accuracyLR))
-    #     #
-    #     #     accuracyQLR = compute_QLR_accuracy(DTRNormalizedPCAOriginal, LTR, DTENormalizedPCAOriginal, LTE,
-    #     #                                        classPriorProbabilities,
-    #     #                                        lambd, threshold)
-    #     #     print("The QLR accuracy (lambda=%f) is %.3f" % (lambd, accuracyQLR))
-    #     # print("\n")
-    #     1
+    min = 100000
+    lambd = 0
+    print("dict3")
+    for key in list(dict3.keys()):
+        if dict3[key] < min:
+            min = dict3[key]
+            lambd = key
+    print("lambda", lambd)
+    print("minDCF", min)

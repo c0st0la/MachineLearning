@@ -1,6 +1,6 @@
 import numpy
 
-from functions import *
+from Project.functions import *
 
 
 def compute_MVG_accuracy_threshold(D, L, DTE, LTE, labels, threshold):
@@ -145,7 +145,7 @@ def plot_ROC_curve(MVGlogLikelihoodRatio, LTE):
     for threshold in thresholds:
         optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(MVGlogLikelihoodRatio,
                                                                                          threshold)
-        confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LTE)
+        confusionMatrix = compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
         FNR, FPR, TNR, TPR = compute_binary_prediction_rates(confusionMatrix)
         x.append(FPR)
         y.append(TPR)
@@ -166,7 +166,7 @@ def plot_error_rate_x_threshold(DTROriginalNormalized, LTR, DTEOriginalNormalize
     for threshold in thresholds:
         x.append(threshold)
         optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(MVGlogLikelihoodRatio, threshold)
-        confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LTE)
+        confusionMatrix = compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
         FNR, FPR, TNR, TPR = compute_binary_prediction_rates(confusionMatrix)
         y1.append(FPR)
         y2.append(FNR)
@@ -176,4 +176,22 @@ def plot_error_rate_x_threshold(DTROriginalNormalized, LTR, DTEOriginalNormalize
     plt.grid()
     plt.legend()
     plt.show()
+
+
+def plot_fraction_explained_variance_pca(DTR):
+    DTRPCA, _ = compute_PCA(DTR, DTR.shape[0] + 1)
+    DC = center_data(DTRPCA)
+    # The dataset has D.shape=(n,m)
+    # C is the covariance and will have a C.shape=(n,n)
+    C, _ = compute_covariance(DC)
+    s, U = numpy.linalg.eigh(C)
+    s = s[::-1]
+    n_dimensions = s.size
+    total_variance = numpy.sum(s)
+    explained_variance_ratio = numpy.cumsum(s / total_variance)
+    plt.plot(range(1, n_dimensions + 1), explained_variance_ratio, marker='o')
+    plt.xlabel('Number of dimensions')
+    plt.ylabel('Fraction of explained variance')
+    plt.savefig("ExplainedVariance/explainedVariance.png")
+    plt.close()
 

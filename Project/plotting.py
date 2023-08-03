@@ -37,21 +37,24 @@ if __name__ == "__main__":
 
     pearsonCorrCoeff = numpy.corrcoef(DTROriginalNormalized)
     plt.figure()
-    seaborn.heatmap(pearsonCorrCoeff, cmap="Blues", annot=False)
-    plt.savefig("Pearson Correlation Coefficient")
+    seaborn.heatmap(pearsonCorrCoeff, cmap="Greys", annot=False)
+    plt.savefig("./CorrelationCoefficient/PearsonCorrelationCoefficient")
     plt.clf()
+    plt.close()
 
     pearsonCorrCoeff = numpy.corrcoef(DTRNormalizedOriginalFilteredTrue)
     plt.figure()
     seaborn.heatmap(pearsonCorrCoeff, cmap="Blues", annot=False)
-    plt.savefig("Pearson Correlation Coefficient True")
+    plt.savefig("./CorrelationCoefficient/PearsonCorrelationCoefficientTrue")
     plt.clf()
+    plt.close()
 
     pearsonCorrCoeff = numpy.corrcoef(DTRNormalizedOriginalFilteredFalse)
     plt.figure()
-    seaborn.heatmap(pearsonCorrCoeff, cmap="Blues", annot=False)
-    plt.savefig("Pearson Correlation Coefficient False")
+    seaborn.heatmap(pearsonCorrCoeff, cmap="Oranges", annot=False)
+    plt.savefig("./CorrelationCoefficient/PearsonCorrelationCoefficientFalse")
     plt.clf()
+    plt.close()
 
     for subDimensionPCA in range(6, DTROriginal.shape[0]):
         DTRNormalizedPCAOriginal, P = compute_PCA(DTROriginalNormalized, subDimensionPCA)
@@ -63,4 +66,6 @@ if __name__ == "__main__":
 
         plot_scatter_attributes_X_label(DTRNormalizedPCAOriginalFilteredFalse,
                                         filepath="./FeaturesCorrelationPCA/", title="DFalse PCA")
+
+    plot_fraction_explained_variance_pca(DTROriginalNormalized)
 
