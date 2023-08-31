@@ -13,7 +13,7 @@ if __name__ == "__main__":
     labels = [i for i in range(0, numpy.amax(LTR) + 1)]
     numFold = 5
     thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
-    lambdValues = [10 ** -5, 10 ** -4, 10 ** -3, 10 ** -2, 10 ** -1, 1, 10, 10 ** 2, 10 ** 3, 10 ** 4,
+    CList = [10 ** -5, 10 ** -4, 10 ** -3, 10 ** -2, 10 ** -1, 1, 10, 10 ** 2, 10 ** 3, 10 ** 4,
                    10 ** 5]
     keys = ['10^-5', '10^-4', '10^-3', '10^-2', '10^-1', '1', '10^1', '10^2', '10^3', '10^4', '10^5']
 
@@ -26,14 +26,14 @@ if __name__ == "__main__":
     DOriginal = numpy.concatenate((DTROriginal, DTEOriginal), axis=1)
     L = numpy.concatenate((LTR, LTE), axis=0)
 
-    dict1 = functions.K_fold_cross_validation_DCF(DOriginalNormalized, L, "QLR",
-                                                  numFold, classPriorProbabilities1, costs, labels, lambdValues)
+    dict1 = functions.K_fold_cross_validation_DCF(DOriginalNormalized, L, "SVM",
+                                                  numFold, classPriorProbabilities1, costs, labels, CList)
 
-    dict2 = functions.K_fold_cross_validation_DCF(DOriginalNormalized, L, "QLR",
-                                                  numFold, classPriorProbabilities2, costs, labels, lambdValues)
+    dict2 = functions.K_fold_cross_validation_DCF(DOriginalNormalized, L, "SVM",
+                                                  numFold, classPriorProbabilities2, costs, labels, CList)
 
-    dict3 = functions.K_fold_cross_validation_DCF(DOriginalNormalized, L, "QLR",
-                                                  numFold, classPriorProbabilities3, costs, labels, lambdValues)
+    dict3 = functions.K_fold_cross_validation_DCF(DOriginalNormalized, L, "SVM",
+                                                  numFold, classPriorProbabilities3, costs, labels, CList)
 
     dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}
     dict2 = {keys[i]: list(dict2.values())[i] for i in range(len(list(dict2.keys())))}
@@ -48,7 +48,7 @@ if __name__ == "__main__":
              label=f"minDCF(effPrior={classPriorProbabilities3[1]})")
     plt.tick_params(axis='x', labelsize=6)
     plt.legend()
-    plt.savefig("./figures/QLR_Zscore_DCFxLambda")
+    plt.savefig("./figures/SVM_Zscore_DCFxLambda")
     plt.clf()
 
     print(dict1)
@@ -64,32 +64,38 @@ if __name__ == "__main__":
     print("dict3")
     print("minDCF: ", dict3[min(dict3, key=dict3.get)])
 
-    with open("./dati/datiQLR_Zscore.txt", "w") as fp:
+    with open("./dati/datiSVM_Zscore.txt", "w") as fp:
         fp.write("dict1 :\n")
         fp.write(str(dict1))
         fp.write('\n')
-        fp.write("minDCF: " + str(dict1[min(dict1, key=dict3.get)]))
+        fp.write("minDCF: " + str(dict1[min(dict1, key=dict1.get)]))
+        fp.write('\n')
+        fp.write("minC: " + str(min(dict1, key=dict3.get)))
         fp.write('\n')
         fp.write("dict2 :")
         fp.write(str(dict2))
         fp.write('\n')
-        fp.write("minDCF: " + str(dict2[min(dict2, key=dict2.get)]))
+        fp.write("minDCF: " + str(dict2[min(dict2, key=dict1.get)]))
+        fp.write('\n')
+        fp.write("minC: " + str(min(dict2, key=dict2.get)))
         fp.write('\n')
         fp.write("dict3 :")
         fp.write(str(dict3))
         fp.write('\n')
-        fp.write("minDCF: " + str(dict3[min(dict3, key=dict3.get)]))
+        fp.write("minDCF: " + str(dict3[min(dict3, key=dict1.get)]))
+        fp.write('\n')
+        fp.write("minC: " + str(min(dict3, key=dict3.get)))
 
     ## RAW FEATURES
 
-    dict1 = functions.K_fold_cross_validation_DCF(DOriginal, L, "QLR",
-                                                  numFold, classPriorProbabilities1, costs, labels, lambdValues)
+    dict1 = functions.K_fold_cross_validation_DCF(DOriginal, L, "SVM",
+                                                  numFold, classPriorProbabilities1, costs, labels, CList)
 
-    dict2 = functions.K_fold_cross_validation_DCF(DOriginal, L, "QLR",
-                                                  numFold, classPriorProbabilities2, costs, labels, lambdValues)
+    dict2 = functions.K_fold_cross_validation_DCF(DOriginal, L, "SVM",
+                                                  numFold, classPriorProbabilities2, costs, labels, CList)
 
-    dict3 = functions.K_fold_cross_validation_DCF(DOriginal, L, "QLR",
-                                                  numFold, classPriorProbabilities3, costs, labels, lambdValues)
+    dict3 = functions.K_fold_cross_validation_DCF(DOriginal, L, "SVM",
+                                                  numFold, classPriorProbabilities3, costs, labels, CList)
 
     dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}
     dict2 = {keys[i]: list(dict2.values())[i] for i in range(len(list(dict2.keys())))}
@@ -104,7 +110,7 @@ if __name__ == "__main__":
              label=f"minDCF(effPrior={classPriorProbabilities3[1]})")
     plt.tick_params(axis='x', labelsize=6)
     plt.legend()
-    plt.savefig("./figures/QLR_Raw_DCFxLambda")
+    plt.savefig("./figures/SVM_Raw_DCFxLambda")
     plt.clf()
 
     print(dict1)
@@ -120,18 +126,24 @@ if __name__ == "__main__":
     print("dict3")
     print("minDCF: ", dict3[min(dict3, key=dict3.get)])
 
-    with open("./dati/datiQLR_Raw.txt", "w") as fp:
+    with open("./dati/datiSVM_Raw.txt", "w") as fp:
         fp.write("dict1 :\n")
         fp.write(str(dict1))
         fp.write('\n')
-        fp.write("minDCF: " + str(dict1[min(dict1, key=dict3.get)]))
+        fp.write("minDCF: " + str(dict1[min(dict1, key=dict1.get)]))
+        fp.write('\n')
+        fp.write("minC: " + str(min(dict1, key=dict3.get)))
         fp.write('\n')
         fp.write("dict2 :")
         fp.write(str(dict2))
         fp.write('\n')
-        fp.write("minDCF: " + str(dict2[min(dict2, key=dict2.get)]))
+        fp.write("minDCF: " + str(dict2[min(dict2, key=dict1.get)]))
+        fp.write('\n')
+        fp.write("minC: " + str(min(dict2, key=dict2.get)))
         fp.write('\n')
         fp.write("dict3 :")
         fp.write(str(dict3))
         fp.write('\n')
-        fp.write("minDCF: " + str(dict3[min(dict3, key=dict3.get)]))
+        fp.write("minDCF: " + str(dict3[min(dict3, key=dict1.get)]))
+        fp.write('\n')
+        fp.write("minC: " + str(min(dict3, key=dict3.get)))

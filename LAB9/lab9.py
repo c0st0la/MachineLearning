@@ -13,6 +13,6 @@ if __name__=="__main__":
     d=2
     gamma = 1.0
     svm = support_vector_machine(DTR, LTR, DTE, LTE, K, C)
-    #svm2 = support_vector_machine_kernel(DTR, LTR, DTE, LTE, K, C, 'r', c=None, d=None, gamma=gamma)
+    svm2 = support_vector_machine_kernel(DTR, LTR, DTE, LTE, K, C, 'r', c=None, d=None, gamma=gamma)
 
 

@@ -5,7 +5,7 @@ import numpy
 import sklearn.datasets
 
 FILEPATH = 'Solution/iris.csv'
-pairs=list()
+pairs = list()
 
 
 def load_iris():
@@ -44,10 +44,10 @@ def load_iris_datasets_from_file(filename):
 
 
 def matprint(mat, fmt="g"):
-    col_maxes = [max([len(("{:"+fmt+"}").format(x)) for x in col]) for col in mat.T]
+    col_maxes = [max([len(("{:" + fmt + "}").format(x)) for x in col]) for col in mat.T]
     for x in mat:
         for i, y in enumerate(x):
-            print(("{:"+str(col_maxes[i])+fmt+"}").format(y), end="  ")
+            print(("{:" + str(col_maxes[i]) + fmt + "}").format(y), end="  ")
         print("")
 
 
@@ -66,7 +66,7 @@ def compute_binary_index_array(L):
     indexesTrue = list()
     indexesFalse = list()
 
-    for position, item in enumerate((L==0).tolist()):
+    for position, item in enumerate((L == 0).tolist()):
         if item:
             indexesTrue.append(position)
         else:
@@ -76,27 +76,27 @@ def compute_binary_index_array(L):
 
 def plot_scatter_attributes_X_label(D, filepath, title=""):
     dimension = D.shape[0]
-    #color = iter(cm.rainbow(numpy.linspace(0, 1, dimension*dimension)))
+    # color = iter(cm.rainbow(numpy.linspace(0, 1, dimension*dimension)))
 
     for i in range(dimension):
-        for j in range(i+1, dimension):
+        for j in range(i + 1, dimension):
             if (i, j) not in pairs:
-                pairs.append((i ,j))
-                #c = next(color)
-                plt.scatter(D[i, :], D[j, :], s=4, label=f"Dimension {i+1}-{j+1}")
+                pairs.append((i, j))
+                # c = next(color)
+                plt.scatter(D[i, :], D[j, :], s=4, label=f"Dimension {i + 1}-{j + 1}")
                 plt.title(title)
                 plt.legend()
-                plt.xlim([int(D.min()-1), int(D.max()+1)])
-                plt.ylim([int(D.min()-1), int(D.max()+1)])
-                plt.savefig(f"{filepath}{title} Dimension {i+1}-{j+1}")
+                plt.xlim([int(D.min() - 1), int(D.max() + 1)])
+                plt.ylim([int(D.min() - 1), int(D.max() + 1)])
+                plt.savefig(f"{filepath}{title} Dimension {i + 1}-{j + 1}")
                 plt.clf()
     pairs.clear()
 
-def plot_hist_attributes_X_label_binary(DTrue, DFalse, filepath, title=""):
 
+def plot_hist_attributes_X_label_binary(DTrue, DFalse, filepath, title=""):
     for i in range(DTrue.shape[0]):
         plt.figure()
-        plt.hist(DTrue[i, :],bins=10, ec='black', density=True, alpha=0.3, label='DTrue')
+        plt.hist(DTrue[i, :], bins=10, ec='black', density=True, alpha=0.3, label='DTrue')
         plt.hist(DFalse[i, :], bins=10, ec='black', density=True, alpha=0.3, label='DFalse')
         plt.legend()
         plt.ylim([0, 0.5])
@@ -106,7 +106,6 @@ def plot_hist_attributes_X_label_binary(DTrue, DFalse, filepath, title=""):
 
 
 def plot_scatter_attributes_X_label_binary(DTrue, DFalse, filepath, title=""):
-
     for i in range(DTrue.shape[0]):
         plt.figure()
         plt.scatter(DTrue[i, :], DFalse[i, :], label='DTrue')
@@ -116,36 +115,37 @@ def plot_scatter_attributes_X_label_binary(DTrue, DFalse, filepath, title=""):
         plt.clf()
 
 
-
 def plot_scatter_attributes_X_label_True_False(DTrue, DFalse, filepath, title=""):
     dimension = DTrue.shape[0]
-    #color = iter(cm.rainbow(numpy.linspace(0, 1, dimension*dimension)))
+    # color = iter(cm.rainbow(numpy.linspace(0, 1, dimension*dimension)))
 
     for i in range(dimension):
-        for j in range(i+1, dimension):
+        for j in range(i + 1, dimension):
             if (i, j) not in pairs:
-                pairs.append((i ,j))
-                #c = next(color)
-                plt.scatter(DTrue[i, :], DTrue[j, :], s=4, label=f"True Dimension {i+1}-{j+1}")
-                plt.scatter(DFalse[i, :], DFalse[j, :], s=4, label=f"False Dimension {i+1}-{j+1}")
+                pairs.append((i, j))
+                # c = next(color)
+                plt.scatter(DTrue[i, :], DTrue[j, :], s=4, label=f"True Dimension {i + 1}-{j + 1}")
+                plt.scatter(DFalse[i, :], DFalse[j, :], s=4, label=f"False Dimension {i + 1}-{j + 1}")
                 plt.title(title)
                 plt.legend()
-                plt.xlim([min(int(DTrue.min()-1), int(DFalse.min()-1)), max(int(DTrue.max()+1), int(DFalse.max()+1))])
-                plt.ylim([min(int(DTrue.min()-1), int(DFalse.min()-1)), max(int(DTrue.max()+1), int(DFalse.max()+1))])
-                plt.savefig(f"{filepath}{title} Dimension {i+1}-{j+1}")
+                plt.xlim([min(int(DTrue.min() - 1), int(DFalse.min() - 1)),
+                          max(int(DTrue.max() + 1), int(DFalse.max() + 1))])
+                plt.ylim([min(int(DTrue.min() - 1), int(DFalse.min() - 1)),
+                          max(int(DTrue.max() + 1), int(DFalse.max() + 1))])
+                plt.savefig(f"{filepath}{title} Dimension {i + 1}-{j + 1}")
                 plt.clf()
     pairs.clear()
 
 
 def plot_hist_attributes_X_label_True_False(DTrue, DFalse, filepath, title=""):
     dimension = DTrue.shape[0]
-    #color = iter(cm.rainbow(numpy.linspace(0, 1, dimension*dimension)))
+    # color = iter(cm.rainbow(numpy.linspace(0, 1, dimension*dimension)))
 
     for i in range(dimension):
-        for j in range(i+1, dimension):
+        for j in range(i + 1, dimension):
             if (i, j) not in pairs:
-                pairs.append((i ,j))
-                #c = next(color)
+                pairs.append((i, j))
+                # c = next(color)
                 plt.hist(DTrue[i, :], bins=10, ec='black', density=True, alpha=0.3, label='DTrue')
                 plt.hist(DFalse[j, :], bins=10, ec='black', density=True, alpha=0.3, label='DFalse')
                 plt.title(title)
@@ -153,7 +153,7 @@ def plot_hist_attributes_X_label_True_False(DTrue, DFalse, filepath, title=""):
                 plt.xlim([min(int(DTrue.min() - 1), int(DFalse.min() - 1)),
                           max(int(DTrue.max() + 1), int(DFalse.max() + 1))])
                 plt.ylim([0, 0.5])
-                plt.savefig(f"{filepath}{title} Dimension {i+1}-{j+1}")
+                plt.savefig(f"{filepath}{title} Dimension {i + 1}-{j + 1}")
                 plt.clf()
     pairs.clear()
 
@@ -210,7 +210,8 @@ def compute_covariance(D):
             if i == j:
                 normalizedCovariance[i, j] = 1
             else:
-                normalizedCovariance[i, j] = covariance[i, j] / (numpy.sqrt(covariance[i, i]) * numpy.sqrt(covariance[j, j]))
+                normalizedCovariance[i, j] = covariance[i, j] / (
+                        numpy.sqrt(covariance[i, i]) * numpy.sqrt(covariance[j, j]))
 
     return covariance, normalizedCovariance
 
@@ -230,7 +231,7 @@ def compute_empirical_covariance(D):
                 normalizedCovariance[i, j] = 1
             else:
                 normalizedCovariance[i, j] = covariance[i, j] / (
-                            numpy.sqrt(covariance[i, i]) * numpy.sqrt(covariance[j, j]))
+                        numpy.sqrt(covariance[i, i]) * numpy.sqrt(covariance[j, j]))
 
     return covariance, normalizedCovariance
 
@@ -460,14 +461,45 @@ def compute_MVG_log_likelihood_as_score_matrix(DTR, LTR, DTE, labels):
     return class_conditional_probabilities
 
 
-def compute_MVG_llrs(D, L, DTE, labels):
-    log_MVG_class_conditional_probabilities = compute_MVG_log_likelihood_as_score_matrix(D, L, DTE,
+def compute_MVG_llrs(DTR, LTR, DTE, labels):
+    log_MVG_class_conditional_probabilities = compute_MVG_log_likelihood_as_score_matrix(DTR, LTR, DTE,
                                                                                          labels)
     llrs = numpy.zeros(log_MVG_class_conditional_probabilities.shape[1])
     for i in range(log_MVG_class_conditional_probabilities.shape[1]):
-        llrs[i] =   log_MVG_class_conditional_probabilities[1, i] - log_MVG_class_conditional_probabilities[0, i]
+        llrs[i] = log_MVG_class_conditional_probabilities[1, i] - log_MVG_class_conditional_probabilities[0, i]
 
     return llrs
+
+
+def compute_NB_llrs(DTR, LTR, DTE, labels):
+    log_NB_class_conditional_probabilities = compute_NB_log_likelihood_as_score_matrix(DTR, LTR, DTE,
+                                                                                       labels)
+    llrs = numpy.zeros(log_NB_class_conditional_probabilities.shape[1])
+    for i in range(log_NB_class_conditional_probabilities.shape[1]):
+        llrs[i] = log_NB_class_conditional_probabilities[1, i] - log_NB_class_conditional_probabilities[0, i]
+
+    return llrs
+
+
+def compute_TC_llrs(DTR, LTR, DTE, labels):
+    log_TC_class_conditional_probabilities = compute_TC_log_likelihood_as_score_matrix(DTR, LTR, DTE,
+                                                                                       labels)
+    llrs = numpy.zeros(log_TC_class_conditional_probabilities.shape[1])
+    for i in range(log_TC_class_conditional_probabilities.shape[1]):
+        llrs[i] = log_TC_class_conditional_probabilities[1, i] - log_TC_class_conditional_probabilities[0, i]
+
+    return llrs
+
+
+def compute_TNB_llrs(DTR, LTR, DTE, labels):
+    log_TNB_class_conditional_probabilities = compute_TNB_log_likelihood_as_score_matrix(DTR, LTR, DTE,
+                                                                                         labels)
+    llrs = numpy.zeros(log_TNB_class_conditional_probabilities.shape[1])
+    for i in range(log_TNB_class_conditional_probabilities.shape[1]):
+        llrs[i] = log_TNB_class_conditional_probabilities[1, i] - log_TNB_class_conditional_probabilities[0, i]
+
+    return llrs
+
 
 def compute_posterior_probability(class_conditional_probabilities, class_prior_probability):
     """
@@ -646,7 +678,7 @@ def K_fold_cross_validation_accuracy(D, L, classifier, k, class_prior_probabilit
     return tot_accuracy, tot_error_rate
 
 
-def K_fold_cross_validation_DCF(D, L, classifier, k, classPriorProbabilities, costs, labels):
+def K_fold_cross_validation_DCF(D, L, classifier, k, classPriorProbabilities, costs, labels, lambdaValues=[], K=1):
     num_samples = int(D.shape[1] / k)
     totDCF = 0
     DCFsNormalized1 = []
@@ -668,20 +700,131 @@ def K_fold_cross_validation_DCF(D, L, classifier, k, classPriorProbabilities, co
     elif classifier == "NB":
         for i in range(k):
             (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
+            llr_NB = compute_NB_llrs(DTR, LTR, DTE, labels)
+            for threshold in thresholds:
+                optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(llr_NB, threshold)
+                confusionMatrix = compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
+                DCFsNormalized1.append(
+                    compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
+            totDCF += min(DCFsNormalized1)
 
     elif classifier == "TC":
         for i in range(k):
             (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
+            llr_TC = compute_TC_llrs(DTR, LTR, DTE, labels)
+            for threshold in thresholds:
+                optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(llr_TC, threshold)
+                confusionMatrix = compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
+                DCFsNormalized1.append(
+                    compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
+            totDCF += min(DCFsNormalized1)
 
     elif classifier == "TNB":
         for i in range(k):
             (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
+            llr_TNB = compute_TNB_llrs(DTR, LTR, DTE, labels)
+            for threshold in thresholds:
+                optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(llr_TNB, threshold)
+                confusionMatrix = compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
+                DCFsNormalized1.append(
+                    compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
+            totDCF += min(DCFsNormalized1)
 
+    elif classifier == "LR":
+        if len(lambdaValues) == 0:
+            print("Insert a list of lambda values!")
+            exit(-1)
+        x = dict()
+        for i in range(k):
+            (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
+            for lambd in lambdaValues:
+                llr_LR = compute_logistic_regression_binary_llr(DTR, LTR, DTE, lambd, classPriorProbabilities)
+                for threshold in thresholds:
+                    optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(llr_LR, threshold)
+                    confusionMatrix = compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
+                    DCFsNormalized1.append(
+                        compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
+                if lambd not in list(x.keys()):
+                    x[lambd] = min(DCFsNormalized1)
+                else:
+                    x[lambd] = x[lambd] + min(DCFsNormalized1)
+        for key in list(x.keys()):
+            x[key] = x[key] / k
+        return x
+
+    elif classifier == "QLR":
+        if len(lambdaValues) == 0:
+            print("Insert a list of lambda values!")
+            exit(-1)
+        x = dict()
+        for i in range(k):
+            (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
+            DTR = quadratic_expansion(DTR)
+            DTE = quadratic_expansion(DTE)
+            for lambd in lambdaValues:
+                llr_QLR = compute_logistic_regression_binary_quadratic_llr(DTR, LTR, DTE, lambd,
+                                                                           classPriorProbabilities)
+                for threshold in thresholds:
+                    optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(llr_QLR, threshold)
+                    confusionMatrix = compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
+                    DCFsNormalized1.append(
+                        compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
+                if lambd not in list(x.keys()):
+                    x[lambd] = min(DCFsNormalized1)
+                else:
+                    x[lambd] = x[lambd] + min(DCFsNormalized1)
+        for key in list(x.keys()):
+            x[key] = x[key] / k
+        return x
+    elif classifier == "SVM":
+        CList = [10 ** -5, 10 ** -4, 10 ** -3, 10 ** -2, 10 ** -1, 1, 10, 10 ** 2, 10 ** 3, 10 ** 4, 10 ** 5]
+        x = dict()
+        for i in range(k):
+            (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
+            for C in CList:
+                llr_SVM = compute_support_vector_machine_llr(DTR, LTR, DTE, LTE, K, C, classPriorProbabilities)
+                for threshold in thresholds:
+                    optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(llr_SVM, threshold)
+                    confusionMatrix = compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
+                    DCFsNormalized1.append(
+                        compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
+                if C not in list(x.keys()):
+                    x[C] = min(DCFsNormalized1)
+                else:
+                    x[C] = x[C] + min(DCFsNormalized1)
+        for key in list(x.keys()):
+            x[key] = x[key] / k
+        return x
+    elif classifier == "KSVM":
+        CList = [10 ** -5, 10 ** -4, 10 ** -3, 10 ** -2, 10 ** -1, 1, 10, 10 ** 2, 10 ** 3, 10 ** 4, 10 ** 5]
+        gammaValues = [10 ** -3, 10 ** -2, 10 ** -1]
+        x = dict()
+        for i in range(k):
+            (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
+            for gamma in gammaValues:
+                for C in CList:
+                    llr_KSVM = compute_support_vector_machine_kernel_llr(DTR, LTR, DTE, LTE, K, C,
+                                                                         'r', classPriorProbabilities, c=None, d=None,
+                                                                         gamma=gamma)
+                    for threshold in thresholds:
+                        optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(llr_KSVM,
+                                                                                                         threshold)
+                        confusionMatrix = compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
+                        DCFsNormalized1.append(
+                            compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
+                    if (C, gamma) not in list(x.keys()):
+                        x[(C, gamma)] = min(DCFsNormalized1)
+                    else:
+                        x[(C, gamma)] = x[(C, gamma)] + min(DCFsNormalized1)
+        for key in list(x.keys()):
+            x[key] = x[key] / k
+        return x
     else:
         print("The given classifier %s is not recognized!" % classifier)
         exit(-1)
 
-    return totDCF/k
+    return totDCF / k
+
 
 def K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples, seed=0):
     numpy.random.seed(seed)
@@ -771,48 +914,70 @@ class logRegClass:
         DTR_false, DTR_true = filter_dataset_by_labels(self.DTR, self.LTR)
         for i in range(DTR_true.shape[1]):
             sample = DTR_true[:, i]
-            #label = 1
             objective_function_true = objective_function_true + \
-                                 numpy.logaddexp(0, -(1) * (numpy.dot(w.T, sample) + b))
-        objective_function_true = ( self.class_prior_probability[1] / DTR_true.shape[1] ) * objective_function_true
+                                      numpy.logaddexp(0, -1 * (numpy.dot(w.T, sample) + b))
+        objective_function_true = (self.class_prior_probability[1] / DTR_true.shape[1]) * objective_function_true
         for i in range(DTR_false.shape[1]):
             sample = DTR_false[:, i]
-            label = 0
             objective_function_false = objective_function_false + \
-                                 numpy.logaddexp(0, -(-1) * (numpy.dot(w.T, sample) + b))
-        objective_function_false = ( self.class_prior_probability[0] / DTR_false.shape[1] ) *  objective_function_false
+                                       numpy.logaddexp(0, -(-1) * (numpy.dot(w.T, sample) + b))
+        objective_function_false = (self.class_prior_probability[0] / DTR_false.shape[1]) * objective_function_false
         objective_function = regularization_term + objective_function_false + objective_function_true
         return objective_function
 
 
 def logistic_regression_binary(DTR, LTR, DTE, lambd, class_prior_probability, threshold):
-
     logReg = logRegClass(DTR, LTR, lambd, class_prior_probability)
 
     x, f, d = scipy.optimize.fmin_l_bfgs_b(logReg.log_reg_obj_bin, x0=numpy.zeros(DTR.shape[0] + 1), approx_grad=True,
                                            factr=100)
     # print("The objective value at the minimum is %f" % f)
-    w = x[0:-1]   ##phi(x) da applicare su DTR +DTE
+    w = x[0:-1]  ##phi(x) da applicare su DTR +DTE
     b = x[-1]
-    DTR_false, DTR_true = filter_dataset_by_labels(DTR, LTR)
-    posterior_log_likelihood_ratio = (numpy.dot(w.T, DTE) + b) - numpy.log(DTR_true.shape[1]/DTR_false.shape[1])
+    posterior_log_likelihood_ratio = (numpy.dot(w.T, DTE) + b)
     predictions = numpy.zeros(posterior_log_likelihood_ratio.size)
     for index in range(posterior_log_likelihood_ratio.size):
-        if posterior_log_likelihood_ratio[index] > threshold:
+        if posterior_log_likelihood_ratio[index] >= threshold:
             predictions[index] = 1
     return predictions
 
 
-def logistic_regression_binary_quadratic_surface(DTR, LTR, DTE, lambd, class_prior_probability, threshold):
-    DTR=quadratic_expansion(DTR)
-    DTE=quadratic_expansion(DTE)
-
+def compute_logistic_regression_binary_llr(DTR, LTR, DTE, lambd, class_prior_probability):
     logReg = logRegClass(DTR, LTR, lambd, class_prior_probability)
 
     x, f, d = scipy.optimize.fmin_l_bfgs_b(logReg.log_reg_obj_bin, x0=numpy.zeros(DTR.shape[0] + 1), approx_grad=True,
                                            factr=100)
     # print("The objective value at the minimum is %f" % f)
-    w = x[0:-1]   ##phi(x) da applicare su DTR +DTE
+    w = x[0:-1]  ##phi(x) da applicare su DTR +DTE
+    b = x[-1]
+    DTRFalse, DTRTrue = filter_dataset_by_labels(DTR, LTR)
+    llr = (numpy.dot(w.T, DTE) + b) - numpy.log(DTRTrue.shape[1] / DTRFalse.shape[1])
+    return llr
+
+
+def compute_logistic_regression_binary_quadratic_llr(DTR, LTR, DTE, lambd, class_prior_probability):
+    logReg = logRegClass(DTR, LTR, lambd, class_prior_probability)
+
+    x, f, d = scipy.optimize.fmin_l_bfgs_b(logReg.log_reg_obj_bin, x0=numpy.zeros(DTR.shape[0] + 1), approx_grad=True,
+                                           factr=100)
+    # print("The objective value at the minimum is %f" % f)
+    w = x[0:-1]  ##phi(x) da applicare su DTR +DTE
+    b = x[-1]
+    DTRFalse, DTRTrue = filter_dataset_by_labels(DTR, LTR)
+    llr = (numpy.dot(w.T, DTE) + b) - numpy.log(DTRTrue.shape[1] / DTRFalse.shape[1])
+    return llr
+
+
+def logistic_regression_binary_quadratic_surface(DTR, LTR, DTE, lambd, class_prior_probability, threshold):
+    DTR = quadratic_expansion(DTR)
+    DTE = quadratic_expansion(DTE)
+
+    logReg = logRegClass(DTR, LTR, lambd, class_prior_probability)
+
+    x, f, d = scipy.optimize.fmin_l_bfgs_b(logReg.log_reg_obj_bin, x0=numpy.zeros(DTR.shape[0] + 1), approx_grad=True,
+                                           factr=100)
+
+    w = x[0:-1]
     b = x[-1]
     DTR_false, DTR_true = filter_dataset_by_labels(DTR, LTR)
     posterior_log_likelihood_ratio = (numpy.dot(w.T, DTE) + b) - numpy.log(DTR_true.shape[1] / DTR_false.shape[1])
@@ -834,24 +999,19 @@ def quadratic_expansion(D):
             tmp = numpy.concatenate((x_3, x), axis=0)
             phi = numpy.concatenate((phi, tmp), axis=1)
 
-    # D_3 = numpy.hstack(x_2).reshape(-1, 1)
-    # vec_xxT = numpy.tile(D_3, (1, D.shape[1]))
-    # phi = numpy.concatenate((vec_xxT, D), axis=0)
-
-
-
     return phi
 
 
 class SVMClass:
 
     def __init__(self, DTR, LTR, DTE, K, C):
-        self.DTR = numpy.vstack((DTR,K*numpy.ones((1,DTR.shape[1]))))
+        self.DTR = numpy.vstack((DTR, K * numpy.ones((1, DTR.shape[1]))))
         self.LTR = LTR
-        self.DTE = numpy.vstack((DTE,K*numpy.ones((1, DTE.shape[1]))))
+        self.DTE = numpy.vstack((DTE, K * numpy.ones((1, DTE.shape[1]))))
         self.C = C
         self.K = K
         self.z = []
+        self.bounds = []
         for index in range(LTR.size):
             if LTR[index] == 1:
                 self.z.append(1)
@@ -862,10 +1022,9 @@ class SVMClass:
             for j in range(self.DTR.shape[1]):
                 self.H[i, j] = self.z[i] * self.z[j] * numpy.dot(self.DTR[:, i].T, self.DTR[:, j])
 
-
     def svm_dual_obj(self, alpha):
         ones = numpy.ones(self.DTR.shape[1])
-        dualObjectiveFunction = 1/2 * numpy.dot(numpy.dot(alpha.T, self.H), alpha) - numpy.dot(alpha.T, ones)
+        dualObjectiveFunction = 1 / 2 * numpy.dot(numpy.dot(alpha.T, self.H), alpha) - numpy.dot(alpha.T, ones)
         gradient = numpy.dot(self.H, alpha) - ones
         gradient = numpy.reshape(gradient, (alpha.size,))
         return dualObjectiveFunction, gradient
@@ -874,14 +1033,121 @@ class SVMClass:
         primalObjectiveFunction = 0
         regularitazionTerm = 0.5 * (numpy.power(numpy.linalg.norm(w_optimal), 2))
         for i in range(self.DTR.shape[1]):
-            primalObjectiveFunction += max(0, 1-self.z[i]*numpy.dot(w_optimal.T, self.DTR[:, i]))
-        primalObjectiveFunction = regularitazionTerm + self.C * primalObjectiveFunction
+            primalObjectiveFunction += self.bounds[i][1] * max(0,
+                                                               1 - self.z[i] * numpy.dot(w_optimal.T, self.DTR[:, i]))
+        primalObjectiveFunction = regularitazionTerm + primalObjectiveFunction
         return primalObjectiveFunction
 
 
+def compute_support_vector_machine_llr(DTR, LTR, DTE, LTE, K, C, classProbabilities, threshold=0):
+    # HERE CLASS BALANCING IS PERFORMED
+
+    svm = SVMClass(DTR, LTR, DTE, K, C)
+    svm.bounds = []
+    empPriorTrue = filter_dataset_by_labels(DTR, LTR)[1].shape[1] / DTR.shape[1]
+    empPriorFalse = filter_dataset_by_labels(DTR, LTR)[0].shape[1] / DTR.shape[1]
+    Ct = C * (classProbabilities[1] / empPriorTrue)
+    Cf = C * (classProbabilities[0] / empPriorFalse)
+    for i in range(DTR.shape[1]):
+        if LTR[i] == 0:
+            svm.bounds.append((0, Cf))
+        else:
+            svm.bounds.append((0, Ct))
+    x, f, d = scipy.optimize.fmin_l_bfgs_b(svm.svm_dual_obj, x0=numpy.zeros(svm.DTR.shape[1]), fprime=None,
+                                           bounds=svm.bounds, factr=1.0)
+    alpha = x
+    z = []
+    for index in range(svm.LTR.size):
+        if LTR[index] == 1:
+            z.append(1)
+        else:
+            z.append(-1)
+    w_optimal = 0
+    for i in range(svm.DTR.shape[1]):
+        # HERE I RECOVER THE PRIMAL SOLUTION
+        w_optimal += alpha[i] * z[i] * svm.DTR[:, i]
+    DTRFalse, DTRTrue = filter_dataset_by_labels(DTR, LTR)
+    llr = (numpy.dot(w_optimal.T, svm.DTE)) - numpy.log(DTRTrue.shape[1] / DTRFalse.shape[1])
+    return llr
+
+
+class SVMKernelClass:
+    def __init__(self, DTR, LTR, DTE, K, C, kernelFunction, c=None, d=None, gamma=None):
+        self.DTR = DTR
+        self.LTR = LTR
+        self.DTE = DTE
+        self.K = K
+        self.C = C
+        self.c = c
+        self.d = d
+        self.gamma = gamma
+        self.z = []
+        self.bounds = []
+        if kernelFunction == 'p':
+            self.kernelFunction = polyKernelFunction
+        elif kernelFunction == 'r':
+            self.kernelFunction = radialBassKernelFunction
+        for index in range(LTR.size):
+            if LTR[index] == 1:
+                self.z.append(1)
+            else:
+                self.z.append(-1)
+        self.H = numpy.zeros((self.DTR.shape[1], self.DTR.shape[1]))
+        for i in range(self.DTR.shape[1]):
+            for j in range(self.DTR.shape[1]):
+                if kernelFunction == 'p':
+                    self.H[i, j] = self.z[i] * self.z[j] * self.kernelFunction(DTR[:, i], DTR[:, j], self.c, self.d,
+                                                                               self.K)
+                elif kernelFunction == 'r':
+                    self.H[i, j] = self.z[i] * self.z[j] * self.kernelFunction(DTR[:, i], DTR[:, j], self.gamma, self.K)
+
+    def svm_dual_obj(self, alpha):
+        ones = numpy.ones(self.DTR.shape[1])
+        dualObjectiveFunction = 1 / 2 * numpy.dot(numpy.dot(alpha.T, self.H), alpha) - numpy.dot(alpha.T, ones)
+        gradient = numpy.dot(self.H, alpha) - ones
+        gradient = numpy.reshape(gradient, (alpha.size,))
+        return dualObjectiveFunction, gradient
+
+
+def compute_support_vector_machine_kernel_llr(DTR, LTR, DTE, LTE, K, C, kernelFunction, classProbabilities, c=None,
+                                              d=None, gamma=None):
+    svm = SVMKernelClass(DTR, LTR, DTE, K, C, kernelFunction, c, d, gamma)
+    svm.bounds = []
+    empPriorTrue = filter_dataset_by_labels(DTR, LTR)[1].shape[1] / DTR.shape[1]
+    empPriorFalse = filter_dataset_by_labels(DTR, LTR)[0].shape[1] / DTR.shape[1]
+    Ct = C * (classProbabilities[1] / empPriorTrue)
+    Cf = C * (classProbabilities[0] / empPriorFalse)
+    for i in range(DTR.shape[1]):
+        if LTR[i] == 0:
+            svm.bounds.append((0, Cf))
+        else:
+            svm.bounds.append((0, Ct))
+    x, f, d = scipy.optimize.fmin_l_bfgs_b(svm.svm_dual_obj, x0=numpy.zeros(svm.DTR.shape[1]), fprime=None,
+                                           bounds=svm.bounds, factr=1.0)
+    alpha = x
+    llr = []
+    DTRFalse, DTRTrue = filter_dataset_by_labels(DTR, LTR)
+    for i in range(svm.DTE.shape[1]):
+        tmp = 0
+        for j in range(svm.DTR.shape[1]):
+            if alpha[j] > 0:
+                if svm.kernelFunction == polyKernelFunction:
+                    tmp = tmp + alpha[j] * svm.z[j] * svm.kernelFunction(DTR[:, j], DTE[:, i], svm.c, svm.d, svm.K)
+                elif svm.kernelFunction == radialBassKernelFunction:
+                    tmp = tmp + alpha[j] * svm.z[j] * svm.kernelFunction(DTR[:, j], DTE[:, i], svm.gamma, svm.K)
+        llr.append(tmp - numpy.log(DTRTrue.shape[1] / DTRFalse.shape[1]))
+    return llr
+
+
+def polyKernelFunction(x1, x2, c, d, K):
+    return numpy.power((numpy.dot(x1.T, x2) + c), d) + K * K
+
+
+def radialBassKernelFunction(x1, x2, gamma, K):
+    return numpy.exp((-gamma) * numpy.power(numpy.linalg.norm(x1 - x2), 2)) + K * K
+
 
 def withening_pre_processing(D):
-
     C, CNormalized = compute_empirical_covariance(D)
     CWhiten = C * numpy.identity(D.shape[0])
     DWhiten = numpy.dot(CWhiten, D)
@@ -890,7 +1156,7 @@ def withening_pre_processing(D):
 
 def length_normalization(D):
     for j in range(D.shape[1]):
-        D[:, j] = D[:, j]/numpy.linalg.norm(D[:, j])
+        D[:, j] = D[:, j] / numpy.linalg.norm(D[:, j])
     return D
 
 
@@ -911,7 +1177,7 @@ def compute_optimal_bayes_decision(logLikelihoodRatios, priorsProbability, costs
     :return:
     """
     predictions = numpy.zeros((logLikelihoodRatios.size), dtype=numpy.int)
-    threshold = - numpy.log((priorsProbability[1]*costs[0])/(priorsProbability[0]*costs[1]))
+    threshold = - numpy.log((priorsProbability[1] * costs[0]) / (priorsProbability[0] * costs[1]))
     for index, llr in enumerate(logLikelihoodRatios):
         if llr > threshold:
             # it is predicted as class 1
@@ -930,7 +1196,7 @@ def compute_optimal_bayes_decision_given_threshold(logLikelihoodRatios, threshol
     :param costs: index 0 contains cost of false negative, index 1 contains cost of false postive
     :return:
     """
-    predictions = numpy.zeros((logLikelihoodRatios.size), dtype=numpy.int32)
+    predictions = numpy.zeros(len(logLikelihoodRatios), dtype=numpy.int32)
     for index, llr in enumerate(logLikelihoodRatios):
         if llr >= threshold:
             # it is predicted as class 1
@@ -941,11 +1207,10 @@ def compute_optimal_bayes_decision_given_threshold(logLikelihoodRatios, threshol
     return predictions
 
 
-
 def compute_binary_prediction_rates(confusionMatrix):
-    FNR = confusionMatrix[0, 1]/(confusionMatrix[0, 1] + confusionMatrix[1, 1])
-    FPR = confusionMatrix[1, 0]/(confusionMatrix[0, 0] + confusionMatrix[1, 0])
-    TNR = confusionMatrix[0, 0]/(confusionMatrix[0, 0] + confusionMatrix[1, 0])
+    FNR = confusionMatrix[0, 1] / (confusionMatrix[0, 1] + confusionMatrix[1, 1])
+    FPR = confusionMatrix[1, 0] / (confusionMatrix[0, 0] + confusionMatrix[1, 0])
+    TNR = confusionMatrix[0, 0] / (confusionMatrix[0, 0] + confusionMatrix[1, 0])
     TPR = confusionMatrix[1, 1] / (confusionMatrix[0, 1] + confusionMatrix[1, 1])
     return FNR, FPR, TNR, TPR
 
@@ -959,7 +1224,7 @@ def compute_detection_cost_function(confusionMatrix, classPriorsProbability, cos
     :return:
     """
     FNR, FPR, TNR, TPR = compute_binary_prediction_rates(confusionMatrix)
-    return classPriorsProbability[1]*costs[0]*FNR + (1-classPriorsProbability[1])*costs[1]*FPR
+    return classPriorsProbability[1] * costs[0] * FNR + (1 - classPriorsProbability[1]) * costs[1] * FPR
 
 
 def compute_normalized_detection_cost_function(confusionMatrix, classPriorsProbability, costs):
@@ -972,14 +1237,14 @@ def compute_normalized_detection_cost_function(confusionMatrix, classPriorsProba
 
     """
     DCF = compute_detection_cost_function(confusionMatrix, classPriorsProbability, costs)
-    return DCF/min(classPriorsProbability[1]*costs[0], (1-classPriorsProbability[1])*costs[1])
+    return DCF / min(classPriorsProbability[1] * costs[0], (1 - classPriorsProbability[1]) * costs[1])
 
 
 def compute_missclassification_ratios(confusionMatrix):
-    misClassification_ratios = numpy.zeros((confusionMatrix.shape[0],  confusionMatrix.shape[1]))
+    misClassification_ratios = numpy.zeros((confusionMatrix.shape[0], confusionMatrix.shape[1]))
     for i in range(confusionMatrix.shape[0]):
-            for j in range(confusionMatrix.shape[1]):
-                misClassification_ratios[i ,j] = confusionMatrix[i, j]/(numpy.sum(confusionMatrix[:, j]))
+        for j in range(confusionMatrix.shape[1]):
+            misClassification_ratios[i, j] = confusionMatrix[i, j] / (numpy.sum(confusionMatrix[:, j]))
     return misClassification_ratios
 
 
@@ -988,14 +1253,12 @@ def compute_detection_cost_functio_by_misclassificationRatio(costs, misClassific
     for j in range(classPriorsProbability.size):
         sum = 0
         for i in range(classPriorsProbability.size):
-            sum += costs[i, j]*misClassificationRatios[i, j]
+            sum += costs[i, j] * misClassificationRatios[i, j]
         DCF += classPriorsProbability[j] * sum
     return DCF
 
 
-
-
-def compute_treshold_qlr(DTR, LTR, DTE,LTE, lambd, class_prior_probability, costs):
+def compute_treshold_qlr(DTR, LTR, DTE, LTE, lambd, class_prior_probability, costs):
     DTR = quadratic_expansion(DTR)
     DTE = quadratic_expansion(DTE)
 
@@ -1009,10 +1272,10 @@ def compute_treshold_qlr(DTR, LTR, DTE,LTE, lambd, class_prior_probability, cost
     DTR_false, DTR_true = filter_dataset_by_labels(DTR, LTR)
     posterior_log_likelihood_ratio = (numpy.dot(w.T, DTE) + b) - numpy.log(DTR_true.shape[1] / DTR_false.shape[1])
 
-
-    optimalBayesDecisionPredictions = compute_optimal_bayes_decision(posterior_log_likelihood_ratio, class_prior_probability,
+    optimalBayesDecisionPredictions = compute_optimal_bayes_decision(posterior_log_likelihood_ratio,
+                                                                     class_prior_probability,
                                                                      costs)
-    confusionMatrix = compute_confusion_matrix(optimalBayesDecisionPredictions, LTE)
+    confusionMatrix = compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
     DCF = compute_detection_cost_function(confusionMatrix, class_prior_probability, costs)
     DCFNormalized = compute_normalized_detection_cost_function(confusionMatrix, class_prior_probability, costs)
     print("The priors probabilities are : ", class_prior_probability, "\n")
@@ -1022,5 +1285,3 @@ def compute_treshold_qlr(DTR, LTR, DTE,LTE, lambd, class_prior_probability, cost
     print("Confusion Matrix : \n", confusionMatrix, "\n")
     print("DCF : %.3f" % DCF)
     print("Normalized DCF : %.3f\n" % DCFNormalized)
-
-
