@@ -171,8 +171,39 @@ def compute_SVM_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, CList, 
     return x
 
 
-def compute_PolySVM_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, CList, K, gammaValues, d, c):
+def compute_PolySVM_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, CList, K, d, c):
     # CList = [10 ** -5, 10 ** -4, 10 ** -3, 10 ** -2, 10 ** -1, 1, 10, 10 ** 2, 10 ** 3, 10 ** 4, 10 ** 5]
+    num_samples = int(D.shape[1] / numFold)
+    DCFsNormalized1 = []
+    x = dict()
+    perm = numpy.random.permutation(D.shape[1])
+    D = D[:, perm]
+    L = L[perm]
+    thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
+    for i in range(numFold):
+        (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
+        for C in CList:
+            llr_PolySVM = functions.compute_support_vector_machine_kernel_llr(DTR, LTR, DTE, LTE, K, C,
+                                                                              'p', classPriorProbabilities, c=c,
+                                                                              d=d)
+            for threshold in thresholds:
+                optimalBayesDecisionPredictions = functions.compute_optimal_bayes_decision_given_threshold(
+                    llr_PolySVM,
+                    threshold)
+                confusionMatrix = functions.compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
+                DCFsNormalized1.append(functions.compute_normalized_detection_cost_function(confusionMatrix,
+                                                                                            classPriorProbabilities,
+                                                                                            costs))
+            if C not in list(x.keys()):
+                x[C] = min(DCFsNormalized1)
+            else:
+                x[C] = x[C] + min(DCFsNormalized1)
+    for key in list(x.keys()):
+        x[key] = x[key] / numFold
+    return x
+
+def compute_RadialBasisSVM_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, CList, K, gammaValues, d, c):
+    # CList = [10 ** -5, 10 ** -3, 10 ** -1, 10, 10 ** 3, 10 ** 5]
     # gammaValues = [10 ** -3, 10 ** -2, 10 ** -1]
     num_samples = int(D.shape[1] / numFold)
     DCFsNormalized1 = []
@@ -186,17 +217,16 @@ def compute_PolySVM_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, CLi
         for gamma in gammaValues:
             for C in CList:
                 llr_PolySVM = functions.compute_support_vector_machine_kernel_llr(DTR, LTR, DTE, LTE, K, C,
-                                                                                  'p', classPriorProbabilities, c=c,
-                                                                                  d=d,
-                                                                                  gamma=gamma)
+                                                                                  'r', classPriorProbabilities, c=c,
+                                                                                  d=d)
                 for threshold in thresholds:
                     optimalBayesDecisionPredictions = functions.compute_optimal_bayes_decision_given_threshold(
                         llr_PolySVM,
                         threshold)
                     confusionMatrix = functions.compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
-                    DCFsNormalized1.append(
-                        functions.compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities,
-                                                                             costs))
+                    DCFsNormalized1.append(functions.compute_normalized_detection_cost_function(confusionMatrix,
+                                                                                                classPriorProbabilities,
+                                                                                                costs))
                 if (C, gamma) not in list(x.keys()):
                     x[(C, gamma)] = min(DCFsNormalized1)
                 else:
