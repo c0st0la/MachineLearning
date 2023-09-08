@@ -218,7 +218,7 @@ def compute_RadialBasisSVM_KFold_DCF(D, L, numFold, classPriorProbabilities, cos
             for C in CList:
                 llr_PolySVM = functions.compute_support_vector_machine_kernel_llr(DTR, LTR, DTE, LTE, K, C,
                                                                                   'r', classPriorProbabilities, c=c,
-                                                                                  d=d)
+                                                                                  d=d, gamma=gamma)
                 for threshold in thresholds:
                     optimalBayesDecisionPredictions = functions.compute_optimal_bayes_decision_given_threshold(
                         llr_PolySVM,
