@@ -30,13 +30,13 @@ if __name__ == "__main__":
     DOriginal = numpy.concatenate((DTROriginal, DTEOriginal), axis=1)
     L = numpy.concatenate((LTR, LTE), axis=0)
 
-    dict1 = classifiers.compute_RadialBasisSVM_KFold_DCF(DOriginalNormalized, L, numFold, classPriorProbabilities1, costs,
+    dict1 = classifiers.compute_RadialBasisSVM_KFold_DCF(DTROriginalNormalized, L, numFold, classPriorProbabilities1, costs,
                                                   CList, K, gammaValues, d, c)
 
-    dict2 = classifiers.compute_RadialBasisSVM_KFold_DCF(DOriginalNormalized, L, numFold, classPriorProbabilities2, costs,
+    dict2 = classifiers.compute_RadialBasisSVM_KFold_DCF(DTROriginalNormalized, L, numFold, classPriorProbabilities2, costs,
                                                   CList, K, gammaValues, d, c)
 
-    dict3 = classifiers.compute_RadialBasisSVM_KFold_DCF(DOriginalNormalized, L, numFold, classPriorProbabilities3, costs,
+    dict3 = classifiers.compute_RadialBasisSVM_KFold_DCF(DTROriginalNormalized, L, numFold, classPriorProbabilities3, costs,
                                                   CList, K, gammaValues, d, c)
 
     keys = list(itertools.product(keys1, keys2))
