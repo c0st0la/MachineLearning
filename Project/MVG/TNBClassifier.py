@@ -42,11 +42,11 @@ if __name__ == "__main__":
     DFCmin2 = min(DCFsNormalized2)
     DFCmin3 = min(DCFsNormalized3)
 
-    kFoldDCFmin1 = functions2.K_fold_cross_validation_DCF(DOriginalNormalized, L, "TNB",
+    kFoldDCFmin1 = functions2.K_fold_cross_validation_DCF(DTROriginalNormalized, L, "TNB",
                                                numFold, classPriorProbabilities1, costs, labels)
-    kFoldDCFmin2 = functions2.K_fold_cross_validation_DCF(DOriginalNormalized, L, "TNB",
+    kFoldDCFmin2 = functions2.K_fold_cross_validation_DCF(DTROriginalNormalized, L, "TNB",
                                                numFold, classPriorProbabilities2, costs, labels)
-    kFoldDCFmin3 = functions2.K_fold_cross_validation_DCF(DOriginalNormalized, L, "TNB",
+    kFoldDCFmin3 = functions2.K_fold_cross_validation_DCF(DTROriginalNormalized, L, "TNB",
                                                numFold, classPriorProbabilities3, costs, labels)
 
     toPrint = ""
@@ -91,11 +91,11 @@ if __name__ == "__main__":
     DFCmin2 = min(DCFsNormalized2)
     DFCmin3 = min(DCFsNormalized3)
 
-    kFoldDCFmin1 = functions2.K_fold_cross_validation_DCF(DOriginal, L, "TNB",
+    kFoldDCFmin1 = functions2.K_fold_cross_validation_DCF(DTROriginal, L, "TNB",
                                                           numFold, classPriorProbabilities1, costs, labels)
-    kFoldDCFmin2 = functions2.K_fold_cross_validation_DCF(DOriginal, L, "TNB",
+    kFoldDCFmin2 = functions2.K_fold_cross_validation_DCF(DTROriginal, L, "TNB",
                                                           numFold, classPriorProbabilities2, costs, labels)
-    kFoldDCFmin3 = functions2.K_fold_cross_validation_DCF(DOriginal, L, "TNB",
+    kFoldDCFmin3 = functions2.K_fold_cross_validation_DCF(DTROriginal, L, "TNB",
                                                           numFold, classPriorProbabilities3, costs, labels)
 
     toPrint = ""

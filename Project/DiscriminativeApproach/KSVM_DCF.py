@@ -32,13 +32,13 @@ if __name__ == "__main__":
     L = numpy.concatenate((LTR, LTE), axis=0)
 
     dict1 = classifiers.compute_PolySVM_KFold_DCF(DOriginalNormalized, L, numFold, classPriorProbabilities1, costs,
-                                                  CList, K, gammaValues, d, c)
+                                                  CList, K, d, c)
 
     dict2 = classifiers.compute_PolySVM_KFold_DCF(DOriginalNormalized, L, numFold, classPriorProbabilities2, costs,
-                                                  CList, K, gammaValues, d, c)
+                                                  CList, K, d, c)
 
     dict3 = classifiers.compute_PolySVM_KFold_DCF(DOriginalNormalized, L, numFold, classPriorProbabilities3, costs,
-                                                  CList, K, gammaValues, d, c)
+                                                  CList, K, d, c)
 
     keys = list(itertools.product(keys1, keys2))
     dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}

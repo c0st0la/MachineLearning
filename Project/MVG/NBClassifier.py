@@ -6,8 +6,8 @@ from Project import functions2
 if __name__ == "__main__":
 
 
-    DTRSplitted, LTR, DTROriginal= functions2.read_file("../Train.txt")
-    DTESplitted, LTE, DTEOriginal= functions2.read_file("../Test.txt")
+    DTRSplitted, LTR, DTROriginal = functions2.read_file("../Train.txt")
+    DTESplitted, LTE, DTEOriginal = functions2.read_file("../Test.txt")
     classPriorProbabilities1 = numpy.array([9/10, 1/10], dtype=float)
     classPriorProbabilities2 = numpy.array([5/10, 5/10], dtype=float)
     classPriorProbabilities3 = numpy.array([1/10, 9/10], dtype=float)
@@ -44,11 +44,11 @@ if __name__ == "__main__":
     DFCmin2 = min(DCFsNormalized2)
     DFCmin3 = min(DCFsNormalized3)
 
-    kFoldDCFmin1 = functions2.K_fold_cross_validation_DCF(DOriginalNormalized, L, "NB",
+    kFoldDCFmin1 = functions2.K_fold_cross_validation_DCF(DTROriginalNormalized, L, "NB",
                                                numFold, classPriorProbabilities1, costs, labels)
-    kFoldDCFmin2 = functions2.K_fold_cross_validation_DCF(DOriginalNormalized, L, "NB",
+    kFoldDCFmin2 = functions2.K_fold_cross_validation_DCF(DTROriginalNormalized, L, "NB",
                                                numFold, classPriorProbabilities2, costs, labels)
-    kFoldDCFmin3 = functions2.K_fold_cross_validation_DCF(DOriginalNormalized, L, "NB",
+    kFoldDCFmin3 = functions2.K_fold_cross_validation_DCF(DTROriginalNormalized, L, "NB",
                                                numFold, classPriorProbabilities3, costs, labels)
 
     toPrint = ""
@@ -95,11 +95,11 @@ if __name__ == "__main__":
     DFCmin2 = min(DCFsNormalized2)
     DFCmin3 = min(DCFsNormalized3)
 
-    kFoldDCFmin1 = functions2.K_fold_cross_validation_DCF(DOriginal, L, "NB",
+    kFoldDCFmin1 = functions2.K_fold_cross_validation_DCF(DTROriginal, L, "NB",
                                                           numFold, classPriorProbabilities1, costs, labels)
-    kFoldDCFmin2 = functions2.K_fold_cross_validation_DCF(DOriginal, L, "NB",
+    kFoldDCFmin2 = functions2.K_fold_cross_validation_DCF(DTROriginal, L, "NB",
                                                           numFold, classPriorProbabilities2, costs, labels)
-    kFoldDCFmin3 = functions2.K_fold_cross_validation_DCF(DOriginal, L, "NB",
+    kFoldDCFmin3 = functions2.K_fold_cross_validation_DCF(DTROriginal, L, "NB",
                                                           numFold, classPriorProbabilities3, costs, labels)
 
     toPrint = ""

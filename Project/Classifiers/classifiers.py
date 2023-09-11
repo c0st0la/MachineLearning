@@ -20,7 +20,7 @@ def compute_MVG_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels)
             DCFsNormalized1.append(
                 functions.compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
         totDCF += min(DCFsNormalized1)
-
+    return totDCF / numFold
 
 def compute_NB_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels):
     num_samples = int(D.shape[1] / numFold)
@@ -40,7 +40,7 @@ def compute_NB_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels):
             DCFsNormalized1.append(
                 functions.compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
         totDCF += min(DCFsNormalized1)
-
+    return totDCF / numFold
 
 def compute_TC_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels):
     num_samples = int(D.shape[1] / numFold)
@@ -60,7 +60,7 @@ def compute_TC_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels):
             DCFsNormalized1.append(
                 functions.compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
         totDCF += min(DCFsNormalized1)
-
+    return totDCF / numFold
 
 def compute_TNB_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels):
     num_samples = int(D.shape[1] / numFold)
@@ -80,7 +80,7 @@ def compute_TNB_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels)
             DCFsNormalized1.append(
                 functions.compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
         totDCF += min(DCFsNormalized1)
-
+    return totDCF / numFold
 
 def compute_LR_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels, lambdaValues):
     num_samples = int(D.shape[1] / numFold)

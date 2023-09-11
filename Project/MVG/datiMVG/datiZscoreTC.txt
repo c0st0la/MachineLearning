@@ -6,10 +6,10 @@ The min of the normalized DCF for TC classifier with K-fold algo (5 fold): 1.000
 Prior probability for class 0 is : 0.5
 Prior probability for class 1 is : 0.5
 The min of the normalized DCF for TC classifier : 0.955
-The min of the normalized DCF for TC classifier with K-fold algo (5 fold): 0.942
+The min of the normalized DCF for TC classifier with K-fold algo (5 fold): 0.919
 
 Prior probability for class 0 is : 0.1
 Prior probability for class 1 is : 0.9
 The min of the normalized DCF for TC classifier : 0.999
-The min of the normalized DCF for TC classifier with K-fold algo (5 fold): 0.982
+The min of the normalized DCF for TC classifier with K-fold algo (5 fold): 0.981
 

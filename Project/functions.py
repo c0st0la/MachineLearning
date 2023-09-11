@@ -337,17 +337,17 @@ def compute_between_covariance(D, L, labels):
     return Covariance_between
 
 
-def compute_LDA_generalized_eigenvalue_by_joint_diagonalization(D, class_mapping, L, directions):
+def compute_LDA_generalized_eigenvalue_by_joint_diagonalization(D, labels, L, directions):
     """
     It solves the generalized eigenvalue by joint diagonalization of the betweeen and within covariance matrices
     :param D: Dataset
-    :param class_mapping: It is a dictionary where each class is mapped to a number
+    :param labels
     :param L: labels
     :param directions: the number of directions of reduction
     :return: the reduced database
     """
-    Covariance_between = compute_between_covariance(D, class_mapping, L)
-    Covariance_within = compute_within_covariance(D, class_mapping, L)
+    Covariance_between = compute_between_covariance(D, labels, L)
+    Covariance_within = compute_within_covariance(D, labels, L)
     # Since Covariance_within is semi-definitive positive we can use the Singular Value Decomposition
     # with linalg.svd the vector of eigenvalues is sorted in descending order
     Uw, sw, _ = numpy.linalg.svd(Covariance_within)

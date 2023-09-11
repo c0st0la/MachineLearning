@@ -26,13 +26,13 @@ if __name__ == "__main__":
     DOriginal = numpy.concatenate((DTROriginal, DTEOriginal), axis=1)
     L = numpy.concatenate((LTR, LTE), axis=0)
 
-    dict1 = functions.K_fold_cross_validation_DCF(DOriginalNormalized, L, "QLR",
+    dict1 = functions.K_fold_cross_validation_DCF(DTROriginalNormalized, L, "QLR",
                                                   numFold, classPriorProbabilities1, costs, labels, lambdValues)
 
-    dict2 = functions.K_fold_cross_validation_DCF(DOriginalNormalized, L, "QLR",
+    dict2 = functions.K_fold_cross_validation_DCF(DTROriginalNormalized, L, "QLR",
                                                   numFold, classPriorProbabilities2, costs, labels, lambdValues)
 
-    dict3 = functions.K_fold_cross_validation_DCF(DOriginalNormalized, L, "QLR",
+    dict3 = functions.K_fold_cross_validation_DCF(DTROriginalNormalized, L, "QLR",
                                                   numFold, classPriorProbabilities3, costs, labels, lambdValues)
 
     dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}
@@ -82,13 +82,13 @@ if __name__ == "__main__":
 
     ## RAW FEATURES
 
-    dict1 = functions.K_fold_cross_validation_DCF(DOriginal, L, "QLR",
+    dict1 = functions.K_fold_cross_validation_DCF(DTROriginal, L, "QLR",
                                                   numFold, classPriorProbabilities1, costs, labels, lambdValues)
 
-    dict2 = functions.K_fold_cross_validation_DCF(DOriginal, L, "QLR",
+    dict2 = functions.K_fold_cross_validation_DCF(DTROriginal, L, "QLR",
                                                   numFold, classPriorProbabilities2, costs, labels, lambdValues)
 
-    dict3 = functions.K_fold_cross_validation_DCF(DOriginal, L, "QLR",
+    dict3 = functions.K_fold_cross_validation_DCF(DTROriginal, L, "QLR",
                                                   numFold, classPriorProbabilities3, costs, labels, lambdValues)
 
     dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}
