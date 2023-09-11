@@ -1,7 +1,6 @@
-import matplotlib.pyplot as plt
 import numpy
 from Project import functions2
-import seaborn
+from Project.Classifiers import classifiers
 
 if __name__ == "__main__":
 
@@ -42,12 +41,14 @@ if __name__ == "__main__":
     DFCmin2 = min(DCFsNormalized2)
     DFCmin3 = min(DCFsNormalized3)
 
-    kFoldDCFmin1 = functions2.K_fold_cross_validation_DCF(DTROriginalNormalized, L, "TC",
-                                               numFold, classPriorProbabilities1, costs, labels)
-    kFoldDCFmin2 = functions2.K_fold_cross_validation_DCF(DTROriginalNormalized, L, "TC",
-                                               numFold, classPriorProbabilities2, costs, labels)
-    kFoldDCFmin3 = functions2.K_fold_cross_validation_DCF(DTROriginalNormalized, L, "TC",
-                                               numFold, classPriorProbabilities3, costs, labels)
+    kFoldDCFmin1 = classifiers.compute_TC_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities1,
+                                                     costs, labels)
+
+    kFoldDCFmin2 = classifiers.compute_TC_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities2,
+                                                     costs, labels)
+
+    kFoldDCFmin3 = classifiers.compute_TC_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities3,
+                                                     costs, labels)
 
     toPrint = ""
     toPrint += "Prior probability for class 0 is : " + str(classPriorProbabilities1[0]) + "\n"
@@ -91,12 +92,14 @@ if __name__ == "__main__":
     DFCmin2 = min(DCFsNormalized2)
     DFCmin3 = min(DCFsNormalized3)
 
-    kFoldDCFmin1 = functions2.K_fold_cross_validation_DCF(DTROriginal, L, "TC",
-                                               numFold, classPriorProbabilities1, costs, labels)
-    kFoldDCFmin2 = functions2.K_fold_cross_validation_DCF(DTROriginal, L, "TC",
-                                               numFold, classPriorProbabilities2, costs, labels)
-    kFoldDCFmin3 = functions2.K_fold_cross_validation_DCF(DTROriginal, L, "TC",
-                                               numFold, classPriorProbabilities3, costs, labels)
+    kFoldDCFmin1 = classifiers.compute_TC_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities1,
+                                                     costs, labels)
+
+    kFoldDCFmin2 = classifiers.compute_TC_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities2,
+                                                     costs, labels)
+
+    kFoldDCFmin3 = classifiers.compute_TC_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities3,
+                                                     costs, labels)
 
     toPrint = ""
     toPrint += "Prior probability for class 0 is : " + str(classPriorProbabilities1[0]) + "\n"

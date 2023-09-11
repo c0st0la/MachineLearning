@@ -82,7 +82,7 @@ def compute_TNB_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels)
         totDCF += min(DCFsNormalized1)
     return totDCF / numFold
 
-def compute_LR_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels, lambdaValues):
+def compute_LR_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, lambdaValues):
     num_samples = int(D.shape[1] / numFold)
     totDCF = 0
     DCFsNormalized1 = []

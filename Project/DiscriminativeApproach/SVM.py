@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from Project import functions
+from Project.Classifiers import classifiers
 import numpy
 
 if __name__ == "__main__":
@@ -13,6 +14,7 @@ if __name__ == "__main__":
     labels = [i for i in range(0, numpy.amax(LTR) + 1)]
     numFold = 5
     thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
+    K = 1
     CList = [10 ** -5, 10 ** -4, 10 ** -3, 10 ** -2, 10 ** -1, 1, 10, 10 ** 2, 10 ** 3, 10 ** 4,
                    10 ** 5]
     keys = ['10^-5', '10^-4', '10^-3', '10^-2', '10^-1', '1', '10^1', '10^2', '10^3', '10^4', '10^5']
@@ -26,14 +28,11 @@ if __name__ == "__main__":
     DOriginal = numpy.concatenate((DTROriginal, DTEOriginal), axis=1)
     L = numpy.concatenate((LTR, LTE), axis=0)
 
-    dict1 = functions.K_fold_cross_validation_DCF(DOriginalNormalized, L, "SVM",
-                                                  numFold, classPriorProbabilities1, costs, labels, CList)
+    dict1 = classifiers.compute_SVM_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities1, costs, CList, K)
 
-    dict2 = functions.K_fold_cross_validation_DCF(DOriginalNormalized, L, "SVM",
-                                                  numFold, classPriorProbabilities2, costs, labels, CList)
+    dict2 = classifiers.compute_SVM_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities2, costs, CList, K)
 
-    dict3 = functions.K_fold_cross_validation_DCF(DOriginalNormalized, L, "SVM",
-                                                  numFold, classPriorProbabilities3, costs, labels, CList)
+    dict3 = classifiers.compute_SVM_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities3, costs, CList, K)
 
     dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}
     dict2 = {keys[i]: list(dict2.values())[i] for i in range(len(list(dict2.keys())))}
@@ -88,14 +87,11 @@ if __name__ == "__main__":
 
     ## RAW FEATURES
 
-    dict1 = functions.K_fold_cross_validation_DCF(DOriginal, L, "SVM",
-                                                  numFold, classPriorProbabilities1, costs, labels, CList)
+    dict1 = classifiers.compute_SVM_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities1, costs, CList, K)
 
-    dict2 = functions.K_fold_cross_validation_DCF(DOriginal, L, "SVM",
-                                                  numFold, classPriorProbabilities2, costs, labels, CList)
+    dict2 = classifiers.compute_SVM_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities2, costs, CList, K)
 
-    dict3 = functions.K_fold_cross_validation_DCF(DOriginal, L, "SVM",
-                                                  numFold, classPriorProbabilities3, costs, labels, CList)
+    dict3 = classifiers.compute_SVM_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities3, costs, CList, K)
 
     dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}
     dict2 = {keys[i]: list(dict2.values())[i] for i in range(len(list(dict2.keys())))}

@@ -7,12 +7,12 @@ The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 1.00
 Prior probability for class 0 is : 0.5
 Prior probability for class 1 is : 0.5
 The min of the normalized DCF for TNB classifier : 0.873
-The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.958
+The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.889
 
 Prior probability for class 0 is : 0.1
 Prior probability for class 1 is : 0.9
 The min of the normalized DCF for TNB classifier : 0.983
-The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.977
+The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.965
 
 PCA with 8 dimension
 Prior probability for class 0 is : 0.9
@@ -23,12 +23,12 @@ The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 1.00
 Prior probability for class 0 is : 0.5
 Prior probability for class 1 is : 0.5
 The min of the normalized DCF for TNB classifier : 0.950
-The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.966
+The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.904
 
 Prior probability for class 0 is : 0.1
 Prior probability for class 1 is : 0.9
 The min of the normalized DCF for TNB classifier : 1.000
-The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.988
+The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.979
 
 PCA with 9 dimension
 Prior probability for class 0 is : 0.9
@@ -39,26 +39,26 @@ The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 1.00
 Prior probability for class 0 is : 0.5
 Prior probability for class 1 is : 0.5
 The min of the normalized DCF for TNB classifier : 0.950
-The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.951
+The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.918
 
 Prior probability for class 0 is : 0.1
 Prior probability for class 1 is : 0.9
 The min of the normalized DCF for TNB classifier : 1.000
-The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.983
+The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.981
 
 PCA with 9 dimension
 Prior probability for class 0 is : 0.9
 Prior probability for class 1 is : 0.1
 The min of the normalized DCF for TNB classifier: 1.000
-The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 1.000
+The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.998
 
 Prior probability for class 0 is : 0.5
 Prior probability for class 1 is : 0.5
 The min of the normalized DCF for TNB classifier : 0.953
-The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.956
+The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.936
 
 Prior probability for class 0 is : 0.1
 Prior probability for class 1 is : 0.9
 The min of the normalized DCF for TNB classifier : 0.998
-The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.983
+The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.979
 

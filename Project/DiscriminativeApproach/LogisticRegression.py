@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from Project import functions
+from Project.Classifiers import classifiers
 import numpy
 
 if __name__ == "__main__":
@@ -26,14 +27,11 @@ if __name__ == "__main__":
     DOriginal = numpy.concatenate((DTROriginal, DTEOriginal), axis=1)
     L = numpy.concatenate((LTR, LTE), axis=0)
 
-    dict1 = functions.K_fold_cross_validation_DCF(DTROriginalNormalized, L, "LR",
-                                                  numFold, classPriorProbabilities1, costs, labels, lambdValues)
+    dict1 = classifiers.compute_LR_KFold_DCF(DTROriginalNormalized, L, numFold, classPriorProbabilities1, costs, lambdValues)
 
-    dict2 = functions.K_fold_cross_validation_DCF(DTROriginalNormalized, L, "LR",
-                                                  numFold, classPriorProbabilities2, costs, labels, lambdValues)
+    dict2 = classifiers.compute_LR_KFold_DCF(DTROriginalNormalized, L, numFold, classPriorProbabilities2, costs, lambdValues)
 
-    dict3 = functions.K_fold_cross_validation_DCF(DTROriginalNormalized, L, "LR",
-                                                  numFold, classPriorProbabilities3, costs, labels, lambdValues)
+    dict3 = classifiers.compute_LR_KFold_DCF(DTROriginalNormalized, L, numFold, classPriorProbabilities3, costs, lambdValues)
 
     dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}
     dict2 = {keys[i]: list(dict2.values())[i] for i in range(len(list(dict2.keys())))}
@@ -82,14 +80,11 @@ if __name__ == "__main__":
 
     ## RAW FEATURES
 
-    dict1 = functions.K_fold_cross_validation_DCF(DTROriginal, L, "LR",
-                                                  numFold, classPriorProbabilities1, costs, labels, lambdValues)
+    dict1 = classifiers.compute_LR_KFold_DCF(DTROriginal, L, numFold, classPriorProbabilities1, costs, lambdValues)
 
-    dict2 = functions.K_fold_cross_validation_DCF(DTROriginal, L, "LR",
-                                                  numFold, classPriorProbabilities2, costs, labels, lambdValues)
+    dict2 = classifiers.compute_LR_KFold_DCF(DTROriginal, L, numFold, classPriorProbabilities2, costs, lambdValues)
 
-    dict3 = functions.K_fold_cross_validation_DCF(DTROriginal, L, "LR",
-                                                  numFold, classPriorProbabilities3, costs, labels, lambdValues)
+    dict3 = classifiers.compute_LR_KFold_DCF(DTROriginal, L, numFold, classPriorProbabilities3, costs, lambdValues)
 
     dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}
     dict2 = {keys[i]: list(dict2.values())[i] for i in range(len(list(dict2.keys())))}

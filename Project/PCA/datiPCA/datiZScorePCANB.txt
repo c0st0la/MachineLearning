@@ -2,63 +2,63 @@ PCA with 7 dimension
 Prior probability for class 0 is : 0.9
 Prior probability for class 1 is : 0.1
 The min of the normalized DCF for NB classifier: 0.314
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.291
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.229
 
 Prior probability for class 0 is : 0.5
 Prior probability for class 1 is : 0.5
 The min of the normalized DCF for NB classifier : 0.090
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.082
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.075
 
 Prior probability for class 0 is : 0.1
 Prior probability for class 1 is : 0.9
 The min of the normalized DCF for NB classifier : 0.196
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.167
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.147
 
 PCA with 8 dimension
 Prior probability for class 0 is : 0.9
 Prior probability for class 1 is : 0.1
 The min of the normalized DCF for NB classifier: 0.304
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.282
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.208
 
 Prior probability for class 0 is : 0.5
 Prior probability for class 1 is : 0.5
 The min of the normalized DCF for NB classifier : 0.088
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.081
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.071
 
 Prior probability for class 0 is : 0.1
 Prior probability for class 1 is : 0.9
 The min of the normalized DCF for NB classifier : 0.183
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.165
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.147
 
 PCA with 9 dimension
 Prior probability for class 0 is : 0.9
 Prior probability for class 1 is : 0.1
 The min of the normalized DCF for NB classifier: 0.294
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.287
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.209
 
 Prior probability for class 0 is : 0.5
 Prior probability for class 1 is : 0.5
 The min of the normalized DCF for NB classifier : 0.091
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.082
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.070
 
 Prior probability for class 0 is : 0.1
 Prior probability for class 1 is : 0.9
 The min of the normalized DCF for NB classifier : 0.192
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.169
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.137
 
 PCA with 9 dimension
 Prior probability for class 0 is : 0.9
 Prior probability for class 1 is : 0.1
 The min of the normalized DCF for NB classifier: 0.447
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.408
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.358
 
 Prior probability for class 0 is : 0.5
 Prior probability for class 1 is : 0.5
 The min of the normalized DCF for NB classifier : 0.136
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.129
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.141
 
 Prior probability for class 0 is : 0.1
 Prior probability for class 1 is : 0.9
 The min of the normalized DCF for NB classifier : 0.274
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.219
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.204
 

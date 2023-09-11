@@ -1,5 +1,6 @@
 import numpy
 from Project import functions
+from Project.Classifiers import classifiers
 
 if __name__ == "__main__":
 
@@ -28,7 +29,7 @@ if __name__ == "__main__":
         toPrint += "PCA with %d dimension" % subDimensionPCA + "\n"
         DTRNormalizedPCAOriginal, P = functions.compute_PCA(DTROriginalNormalized, subDimensionPCA)
         DTENormalizedPCAOriginal = numpy.dot(P.T, DTEOriginalNormalized)
-        DOriginalPCANormalized = numpy.concatenate((DTRNormalizedPCAOriginal, DTENormalizedPCAOriginal), axis=1)
+        # DOriginalPCANormalized = numpy.concatenate((DTRNormalizedPCAOriginal, DTENormalizedPCAOriginal), axis=1)
         DCFsNormalized1 = []
         DCFsNormalized2 = []
         DCFsNormalized3 = []
@@ -47,13 +48,14 @@ if __name__ == "__main__":
         DFCmin2 = min(DCFsNormalized2)
         DFCmin3 = min(DCFsNormalized3)
 
-        kFoldDCFmin1 = functions.K_fold_cross_validation_DCF(DOriginalPCANormalized, L, "MVG",
-                                                   numFold, classPriorProbabilities1, costs, labels)
-        kFoldDCFmin2 = functions.K_fold_cross_validation_DCF(DOriginalPCANormalized, L, "MVG",
-                                                   numFold, classPriorProbabilities2, costs, labels)
-        kFoldDCFmin3 = functions.K_fold_cross_validation_DCF(DOriginalPCANormalized, L, "MVG",
-                                                   numFold, classPriorProbabilities3, costs, labels)
+        kFoldDCFmin1 = classifiers.compute_MVG_KFold_DCF(DTRNormalizedPCAOriginal, LTR, numFold, classPriorProbabilities1,
+                                                         costs, labels)
 
+        kFoldDCFmin2 = classifiers.compute_MVG_KFold_DCF(DTRNormalizedPCAOriginal, LTR, numFold, classPriorProbabilities2,
+                                                         costs, labels)
+
+        kFoldDCFmin3 = classifiers.compute_MVG_KFold_DCF(DTRNormalizedPCAOriginal, LTR, numFold, classPriorProbabilities3,
+                                                         costs, labels)
 
         toPrint += "Prior probability for class 0 is : " + str(classPriorProbabilities1[0]) + "\n"
         toPrint += "Prior probability for class 1 is : " + str(classPriorProbabilities1[1]) + "\n"
@@ -83,7 +85,7 @@ if __name__ == "__main__":
             toPrint += "PCA with %d dimension" % subDimensionPCA + "\n"
             DTRPCAOriginal, P = functions.compute_PCA(DTROriginal, subDimensionPCA)
             DTEPCAOriginal = numpy.dot(P.T, DTEOriginal)
-            DPCAriginal = numpy.concatenate((DTRPCAOriginal, DTEPCAOriginal), axis=1)
+            # DPCAriginal = numpy.concatenate((DTRPCAOriginal, DTEPCAOriginal), axis=1)
             DCFsNormalized1 = []
             DCFsNormalized2 = []
             DCFsNormalized3 = []
@@ -106,12 +108,14 @@ if __name__ == "__main__":
             DFCmin2 = min(DCFsNormalized2)
             DFCmin3 = min(DCFsNormalized3)
 
-            kFoldDCFmin1 = functions.K_fold_cross_validation_DCF(DPCAriginal, L, "MVG",
-                                                                 numFold, classPriorProbabilities1, costs, labels)
-            kFoldDCFmin2 = functions.K_fold_cross_validation_DCF(DPCAriginal, L, "MVG",
-                                                                 numFold, classPriorProbabilities2, costs, labels)
-            kFoldDCFmin3 = functions.K_fold_cross_validation_DCF(DPCAriginal, L, "MVG",
-                                                                 numFold, classPriorProbabilities3, costs, labels)
+            kFoldDCFmin1 = classifiers.compute_MVG_KFold_DCF(DTRPCAOriginal, LTR, numFold,
+                                                             classPriorProbabilities1, costs, labels)
+
+            kFoldDCFmin2 = classifiers.compute_MVG_KFold_DCF(DTRPCAOriginal, LTR, numFold,
+                                                             classPriorProbabilities2, costs, labels)
+
+            kFoldDCFmin3 = classifiers.compute_MVG_KFold_DCF(DTRPCAOriginal, LTR, numFold,
+                                                             classPriorProbabilities3, costs, labels)
 
             toPrint += "Prior probability for class 0 is : " + str(classPriorProbabilities1[0]) + "\n"
             toPrint += "Prior probability for class 1 is : " + str(classPriorProbabilities1[1]) + "\n"
