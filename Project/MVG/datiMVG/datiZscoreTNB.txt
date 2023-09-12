@@ -1,15 +1,15 @@
 Prior probability for class 0 is : 0.9
 Prior probability for class 1 is : 0.1
 The min of the normalized DCF for TNB classifier: 1.000
-The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.997
+The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.998
 
 Prior probability for class 0 is : 0.5
 Prior probability for class 1 is : 0.5
 The min of the normalized DCF for TNB classifier : 0.972
-The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.953
+The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.963
 
 Prior probability for class 0 is : 0.1
 Prior probability for class 1 is : 0.9
 The min of the normalized DCF for TNB classifier : 1.000
-The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.998
+The min of the normalized DCF for TNB classifier with K-fold algo (5 fold): 0.999
 

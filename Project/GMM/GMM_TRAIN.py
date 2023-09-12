@@ -28,6 +28,19 @@ if __name__ == "__main__":
         print("========================================================")
         print("========================================================")
         print("========================================================")
+    thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
+    DCFsNormalized1 = []
+    totDCF = 0
+    minDCF=[]
+    for item in score:
+        for threshold in thresholds:
+            optimalBayesDecisionPredictions = functions.compute_optimal_bayes_decision_given_threshold(item,
+                                                                                                       threshold)
+            confusionMatrix = functions.compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
+            DCFsNormalized1.append(
+                functions.compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities1, costs))
+        minDCF.append(min(DCFsNormalized1))
+
 print("suca")
 
 

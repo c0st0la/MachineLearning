@@ -5,12 +5,12 @@ from Project import functions
 def compute_MVG_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels):
     num_samples = int(D.shape[1] / numFold)
     totDCF = 0
-    DCFsNormalized1 = []
     perm = numpy.random.permutation(D.shape[1])
     D = D[:, perm]
     L = L[perm]
     thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
     for i in range(numFold):
+        DCFsNormalized1 = []
         (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
         llr_MVG = functions.compute_MVG_llrs(DTR, LTR, DTE, labels)
         for threshold in thresholds:
@@ -25,12 +25,13 @@ def compute_MVG_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels)
 def compute_NB_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels):
     num_samples = int(D.shape[1] / numFold)
     totDCF = 0
-    DCFsNormalized1 = []
+
     perm = numpy.random.permutation(D.shape[1])
     D = D[:, perm]
     L = L[perm]
     thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
     for i in range(numFold):
+        DCFsNormalized1 = []
         (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
         llr_NB = functions.compute_NB_llrs(DTR, LTR, DTE, labels)
         for threshold in thresholds:
@@ -45,12 +46,13 @@ def compute_NB_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels):
 def compute_TC_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels):
     num_samples = int(D.shape[1] / numFold)
     totDCF = 0
-    DCFsNormalized1 = []
+
     perm = numpy.random.permutation(D.shape[1])
     D = D[:, perm]
     L = L[perm]
     thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
     for i in range(numFold):
+        DCFsNormalized1 = []
         (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
         llr_TC = functions.compute_TC_llrs(DTR, LTR, DTE, labels)
         for threshold in thresholds:
@@ -65,12 +67,13 @@ def compute_TC_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels):
 def compute_TNB_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels):
     num_samples = int(D.shape[1] / numFold)
     totDCF = 0
-    DCFsNormalized1 = []
+
     perm = numpy.random.permutation(D.shape[1])
     D = D[:, perm]
     L = L[perm]
     thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
     for i in range(numFold):
+        DCFsNormalized1 = []
         (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
         llr_TNB = functions.compute_TNB_llrs(DTR, LTR, DTE, labels)
         for threshold in thresholds:
@@ -84,13 +87,14 @@ def compute_TNB_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels)
 
 def compute_LR_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWorkingPoint, costs, lambdaValues):
     num_samples = int(D.shape[1] / numFold)
-    DCFsNormalized1 = []
+
     x = dict()
     perm = numpy.random.permutation(D.shape[1])
     D = D[:, perm]
     L = L[perm]
     thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
     for i in range(numFold):
+        DCFsNormalized1 = []
         (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
         for lambd in lambdaValues:
             llr_LR = functions.compute_logistic_regression_binary_llr(DTR, LTR, DTE, lambd, classPriorProbabilities)
@@ -113,13 +117,14 @@ def compute_LR_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWork
 def compute_QLR_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWorkingPoint, costs, lambdaValues):
     num_samples = int(D.shape[1] / numFold)
     totDCF = 0
-    DCFsNormalized1 = []
+
     x = dict()
     perm = numpy.random.permutation(D.shape[1])
     D = D[:, perm]
     L = L[perm]
     thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
     for i in range(numFold):
+        DCFsNormalized1 = []
         (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
         DTR = functions.quadratic_expansion(DTR)
         DTE = functions.quadratic_expansion(DTE)
@@ -144,13 +149,14 @@ def compute_QLR_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWor
 
 def compute_SVM_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWorkingPoint, costs, CList, K):
     num_samples = int(D.shape[1] / numFold)
-    DCFsNormalized1 = []
+
     x = dict()
     perm = numpy.random.permutation(D.shape[1])
     D = D[:, perm]
     L = L[perm]
     thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
     for i in range(numFold):
+        DCFsNormalized1 = []
         (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
         for C in CList:
             llr_SVM = functions.compute_support_vector_machine_llr(DTR, LTR, DTE, LTE, K, C, classPriorProbabilities)
@@ -173,13 +179,14 @@ def compute_SVM_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWor
 def compute_PolySVM_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWorkingPoint, costs, CList, K, d, c):
     # CList = [10 ** -5, 10 ** -4, 10 ** -3, 10 ** -2, 10 ** -1, 1, 10, 10 ** 2, 10 ** 3, 10 ** 4, 10 ** 5]
     num_samples = int(D.shape[1] / numFold)
-    DCFsNormalized1 = []
+
     x = dict()
     perm = numpy.random.permutation(D.shape[1])
     D = D[:, perm]
     L = L[perm]
     thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
     for i in range(numFold):
+        DCFsNormalized1 = []
         (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
         for C in CList:
             llr_PolySVM = functions.compute_support_vector_machine_kernel_llr(DTR, LTR, DTE, LTE, K, C,
@@ -205,13 +212,14 @@ def compute_RadialBasisSVM_KFold_DCF(D, L, numFold, classPriorProbabilities, cos
     # CList = [10 ** -5, 10 ** -3, 10 ** -1, 10, 10 ** 3, 10 ** 5]
     # gammaValues = [10 ** -3, 10 ** -2, 10 ** -1]
     num_samples = int(D.shape[1] / numFold)
-    DCFsNormalized1 = []
+
     x = dict()
     perm = numpy.random.permutation(D.shape[1])
     D = D[:, perm]
     L = L[perm]
     thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
     for i in range(numFold):
+        DCFsNormalized1 = []
         (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
         for gamma in gammaValues:
             for C in CList:

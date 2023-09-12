@@ -6,10 +6,10 @@ The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.998
 Prior probability for class 0 is : 0.5
 Prior probability for class 1 is : 0.5
 The min of the normalized DCF for NB classifier : 0.973
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.946
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.960
 
 Prior probability for class 0 is : 0.1
 Prior probability for class 1 is : 0.9
 The min of the normalized DCF for NB classifier : 1.000
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.992
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.996
 
