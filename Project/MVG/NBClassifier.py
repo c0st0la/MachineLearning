@@ -9,9 +9,9 @@ if __name__ == "__main__":
 
     DTRSplitted, LTR, DTROriginal = functions2.read_file("../Train.txt")
     DTESplitted, LTE, DTEOriginal = functions2.read_file("../Test.txt")
-    classPriorProbabilities1 = numpy.array([9/10, 1/10], dtype=float)
-    classPriorProbabilities2 = numpy.array([5/10, 5/10], dtype=float)
-    classPriorProbabilities3 = numpy.array([1/10, 9/10], dtype=float)
+    applicationWorkingPoint1 = numpy.array([9/10, 1/10], dtype=float)
+    applicationWorkingPoint2 = numpy.array([5/10, 5/10], dtype=float)
+    applicationWorkingPoint3 = numpy.array([1/10, 9/10], dtype=float)
     costs = numpy.array([1.0, 1.0], dtype=float)
     labels = [i for i in range(0, numpy.amax(LTR) + 1)]
     numFold = 5
@@ -34,41 +34,41 @@ if __name__ == "__main__":
         optimalBayesDecisionPredictions = functions2.compute_optimal_bayes_decision_given_threshold(llr_NB, threshold)
         confusionMatrix = functions2.compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
         DCFsNormalized1.append(
-            functions2.compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities1, costs))
+            functions2.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint1, costs))
         DCFsNormalized2.append(
-            functions2.compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities2, costs))
+            functions2.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint2, costs))
         DCFsNormalized3.append(
-            functions2.compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities3, costs))
+            functions2.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint3, costs))
 
 
     DFCmin1 = min(DCFsNormalized1)
     DFCmin2 = min(DCFsNormalized2)
     DFCmin3 = min(DCFsNormalized3)
 
-    kFoldDCFmin1 = classifiers.compute_NB_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities1,
+    kFoldDCFmin1 = classifiers.compute_NB_KFold_DCF(DTROriginalNormalized, LTR, numFold, applicationWorkingPoint1,
                                                      costs, labels)
 
-    kFoldDCFmin2 = classifiers.compute_NB_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities2,
+    kFoldDCFmin2 = classifiers.compute_NB_KFold_DCF(DTROriginalNormalized, LTR, numFold, applicationWorkingPoint2,
                                                      costs, labels)
 
-    kFoldDCFmin3 = classifiers.compute_NB_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities3,
+    kFoldDCFmin3 = classifiers.compute_NB_KFold_DCF(DTROriginalNormalized, LTR, numFold, applicationWorkingPoint3,
                                                      costs, labels)
 
     toPrint = ""
-    toPrint += "Prior probability for class 0 is : " + str(classPriorProbabilities1[0]) + "\n"
-    toPrint += "Prior probability for class 1 is : " + str(classPriorProbabilities1[1]) + "\n"
+    toPrint += "Prior probability for class 0 is : " + str(applicationWorkingPoint1[0]) + "\n"
+    toPrint += "Prior probability for class 1 is : " + str(applicationWorkingPoint1[1]) + "\n"
     toPrint += "The min of the normalized DCF for NB classifier: %.3f\n" % DFCmin1
     toPrint += "The min of the normalized DCF for NB classifier with K-fold algo (%d fold): %.3f\n" % (
         numFold, kFoldDCFmin1) + "\n"
 
-    toPrint += "Prior probability for class 0 is : " + str(classPriorProbabilities2[0]) + "\n"
-    toPrint += "Prior probability for class 1 is : " + str(classPriorProbabilities2[1]) + "\n"
+    toPrint += "Prior probability for class 0 is : " + str(applicationWorkingPoint2[0]) + "\n"
+    toPrint += "Prior probability for class 1 is : " + str(applicationWorkingPoint2[1]) + "\n"
     toPrint += "The min of the normalized DCF for NB classifier : %.3f\n" % DFCmin2
     toPrint += "The min of the normalized DCF for NB classifier with K-fold algo (%d fold): %.3f\n" % (
         numFold, kFoldDCFmin2) + "\n"
 
-    toPrint += "Prior probability for class 0 is : " + str(classPriorProbabilities3[0]) + "\n"
-    toPrint += "Prior probability for class 1 is : " + str(classPriorProbabilities3[1]) + "\n"
+    toPrint += "Prior probability for class 0 is : " + str(applicationWorkingPoint3[0]) + "\n"
+    toPrint += "Prior probability for class 1 is : " + str(applicationWorkingPoint3[1]) + "\n"
     toPrint += "The min of the normalized DCF for NB classifier : %.3f\n" % DFCmin3
     toPrint += "The min of the normalized DCF for NB classifier with K-fold algo (%d fold): %.3f\n" % (
         numFold, kFoldDCFmin3) + "\n"
@@ -88,39 +88,39 @@ if __name__ == "__main__":
         optimalBayesDecisionPredictions = functions2.compute_optimal_bayes_decision_given_threshold(llr_NB, threshold)
         confusionMatrix = functions2.compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
         DCFsNormalized1.append(
-            functions2.compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities1, costs))
+            functions2.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint1, costs))
         DCFsNormalized2.append(
-            functions2.compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities2, costs))
+            functions2.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint2, costs))
         DCFsNormalized3.append(
-            functions2.compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities3, costs))
+            functions2.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint3, costs))
 
     DFCmin1 = min(DCFsNormalized1)
     DFCmin2 = min(DCFsNormalized2)
     DFCmin3 = min(DCFsNormalized3)
 
-    kFoldDCFmin1 = classifiers.compute_NB_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities1,
+    kFoldDCFmin1 = classifiers.compute_NB_KFold_DCF(DTROriginal, LTR, numFold, applicationWorkingPoint1,
                                                     costs, labels)
 
-    kFoldDCFmin2 = classifiers.compute_NB_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities2,
+    kFoldDCFmin2 = classifiers.compute_NB_KFold_DCF(DTROriginal, LTR, numFold, applicationWorkingPoint2,
                                                     costs, labels)
 
-    kFoldDCFmin3 = classifiers.compute_NB_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities3,
+    kFoldDCFmin3 = classifiers.compute_NB_KFold_DCF(DTROriginal, LTR, numFold, applicationWorkingPoint3,
                                                     costs, labels)
     toPrint = ""
-    toPrint += "Prior probability for class 0 is : " + str(classPriorProbabilities1[0]) + "\n"
-    toPrint += "Prior probability for class 1 is : " + str(classPriorProbabilities1[1]) + "\n"
+    toPrint += "Prior probability for class 0 is : " + str(applicationWorkingPoint1[0]) + "\n"
+    toPrint += "Prior probability for class 1 is : " + str(applicationWorkingPoint1[1]) + "\n"
     toPrint += "The min of the normalized DCF for NB classifier: %.3f\n" % DFCmin1
     toPrint += "The min of the normalized DCF for NB classifier with K-fold algo (%d fold): %.3f\n" % (
         numFold, kFoldDCFmin1) + "\n"
 
-    toPrint += "Prior probability for class 0 is : " + str(classPriorProbabilities2[0]) + "\n"
-    toPrint += "Prior probability for class 1 is : " + str(classPriorProbabilities2[1]) + "\n"
+    toPrint += "Prior probability for class 0 is : " + str(applicationWorkingPoint2[0]) + "\n"
+    toPrint += "Prior probability for class 1 is : " + str(applicationWorkingPoint2[1]) + "\n"
     toPrint += "The min of the normalized DCF for NB classifier : %.3f\n" % DFCmin2
     toPrint += "The min of the normalized DCF for NB classifier with K-fold algo (%d fold): %.3f\n" % (
         numFold, kFoldDCFmin2) + "\n"
 
-    toPrint += "Prior probability for class 0 is : " + str(classPriorProbabilities3[0]) + "\n"
-    toPrint += "Prior probability for class 1 is : " + str(classPriorProbabilities3[1]) + "\n"
+    toPrint += "Prior probability for class 0 is : " + str(applicationWorkingPoint3[0]) + "\n"
+    toPrint += "Prior probability for class 1 is : " + str(applicationWorkingPoint3[1]) + "\n"
     toPrint += "The min of the normalized DCF for NB classifier : %.3f\n" % DFCmin3
     toPrint += "The min of the normalized DCF for NB classifier with K-fold algo (%d fold): %.3f\n" % (
         numFold, kFoldDCFmin3) + "\n"
