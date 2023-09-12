@@ -2,7 +2,7 @@ import numpy
 from Project import functions
 
 
-def compute_MVG_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels):
+def compute_MVG_KFold_DCF(D, L, numFold, applicationWorkingPoint, costs, labels):
     num_samples = int(D.shape[1] / numFold)
     totDCF = 0
     DCFsNormalized1 = []
@@ -18,11 +18,11 @@ def compute_MVG_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels)
                                                                                                        threshold)
             confusionMatrix = functions.compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
             DCFsNormalized1.append(
-                functions.compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
+                functions.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint, costs))
         totDCF += min(DCFsNormalized1)
     return totDCF / numFold
 
-def compute_NB_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels):
+def compute_NB_KFold_DCF(D, L, numFold, applicationWorkingPoint, costs, labels):
     num_samples = int(D.shape[1] / numFold)
     totDCF = 0
     DCFsNormalized1 = []
@@ -38,11 +38,11 @@ def compute_NB_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels):
                                                                                                        threshold)
             confusionMatrix = functions.compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
             DCFsNormalized1.append(
-                functions.compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
+                functions.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint, costs))
         totDCF += min(DCFsNormalized1)
     return totDCF / numFold
 
-def compute_TC_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels):
+def compute_TC_KFold_DCF(D, L, numFold, applicationWorkingPoint, costs, labels):
     num_samples = int(D.shape[1] / numFold)
     totDCF = 0
     DCFsNormalized1 = []
@@ -58,11 +58,11 @@ def compute_TC_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels):
                                                                                                        threshold)
             confusionMatrix = functions.compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
             DCFsNormalized1.append(
-                functions.compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
+                functions.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint, costs))
         totDCF += min(DCFsNormalized1)
     return totDCF / numFold
 
-def compute_TNB_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels):
+def compute_TNB_KFold_DCF(D, L, numFold, applicationWorkingPoint, costs, labels):
     num_samples = int(D.shape[1] / numFold)
     totDCF = 0
     DCFsNormalized1 = []
@@ -78,7 +78,7 @@ def compute_TNB_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels)
                                                                                                        threshold)
             confusionMatrix = functions.compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
             DCFsNormalized1.append(
-                functions.compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
+                functions.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint, costs))
         totDCF += min(DCFsNormalized1)
     return totDCF / numFold
 
@@ -224,7 +224,7 @@ def compute_RadialBasisSVM_KFold_DCF(D, L, numFold, classPriorProbabilities, cos
                         threshold)
                     confusionMatrix = functions.compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
                     DCFsNormalized1.append(functions.compute_normalized_detection_cost_function(confusionMatrix,
-                                                                                                classPriorProbabilities,
+                                                                                                applicationWorkingPoint,
                                                                                                 costs))
                 if (C, gamma) not in list(x.keys()):
                     x[(C, gamma)] = min(DCFsNormalized1)
