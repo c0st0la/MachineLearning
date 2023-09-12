@@ -42,4 +42,20 @@ def make_train_with_K_fold(DTR, LTR, DTE, LTE, iterations, K=5, seed=27, calibra
         scores[i * n_folds: (i + 1) * n_folds] = model.scores
         mask[i] = False
     model.scores = scores
+
+    debug_print_information(model, labels_training)
     return model.scores
+
+
+
+
+def debug_print_information(model, labels):
+    predicted_labels = np.where(model.scores > 0, 1, 0)
+    err = (1 - (labels == predicted_labels).sum() / labels.size) * 100
+    print("Error rate for this training is " + str(round(err, 2)) + "%" )
+    cost_0_5 = str(round(compute_minimum_NDCF(model.scores, labels, 0.5, 1, 1)[0], 3))
+    cost_0_1 = str(round(compute_minimum_NDCF(model.scores, labels, 0.1, 1, 1)[0], 3))
+    cost_0_9 = str(round(compute_minimum_NDCF(model.scores, labels, 0.9, 1, 1)[0], 3))
+    print("minDCF with π=0.5 " + cost_0_5 )
+    print("minDCF with π=0.1 "   + cost_0_1 )
+    print("minDCF with π=0.9 " + cost_0_9 )
