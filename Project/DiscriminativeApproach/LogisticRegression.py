@@ -7,6 +7,9 @@ if __name__ == "__main__":
 
     DTRSplitted, LTR, DTROriginal = functions.read_file("../Train.txt")
     DTESplitted, LTE, DTEOriginal = functions.read_file("../Test.txt")
+    applicationWorkingPoint1 = numpy.array([9 / 10, 1 / 10], dtype=float)
+    applicationWorkingPoint2 = numpy.array([5 / 10, 5 / 10], dtype=float)
+    applicationWorkingPoint3 = numpy.array([1 / 10, 9 / 10], dtype=float)
     classPriorProbabilities1 = numpy.array([9 / 10, 1 / 10], dtype=float)
     classPriorProbabilities2 = numpy.array([5 / 10, 5 / 10], dtype=float)
     classPriorProbabilities3 = numpy.array([1 / 10, 9 / 10], dtype=float)
@@ -27,11 +30,15 @@ if __name__ == "__main__":
     DOriginal = numpy.concatenate((DTROriginal, DTEOriginal), axis=1)
     L = numpy.concatenate((LTR, LTE), axis=0)
 
-    dict1 = classifiers.compute_LR_KFold_DCF(DTROriginalNormalized, L, numFold, classPriorProbabilities1, costs, lambdValues)
+    ## classPriorProbabilities 1 ZSCORE
+    dict1 = classifiers.compute_LR_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities1,
+                                             applicationWorkingPoint1, costs, lambdValues)
 
-    dict2 = classifiers.compute_LR_KFold_DCF(DTROriginalNormalized, L, numFold, classPriorProbabilities2, costs, lambdValues)
+    dict2 = classifiers.compute_LR_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities1,
+                                             applicationWorkingPoint2, costs, lambdValues)
 
-    dict3 = classifiers.compute_LR_KFold_DCF(DTROriginalNormalized, L, numFold, classPriorProbabilities3, costs, lambdValues)
+    dict3 = classifiers.compute_LR_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities1,
+                                             applicationWorkingPoint3, costs, lambdValues)
 
     dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}
     dict2 = {keys[i]: list(dict2.values())[i] for i in range(len(list(dict2.keys())))}
@@ -39,31 +46,30 @@ if __name__ == "__main__":
 
     plt.figure()
     plt.plot([var for var in list(dict1.keys())], [var for var in list(dict1.values())],
-             label=f"minDCF(effPrior={classPriorProbabilities1[1]})")
+             label=f"minDCF(effPrior={applicationWorkingPoint1[1]})")
     plt.plot([var for var in list(dict2.keys())], [var for var in list(dict2.values())],
-             label=f"minDCF(effPrior={classPriorProbabilities2[1]})")
+             label=f"minDCF(effPrior={applicationWorkingPoint2[1]})")
     plt.plot([var for var in list(dict3.keys())], [var for var in list(dict3.values())],
-             label=f"minDCF(effPrior={classPriorProbabilities3[1]})")
+             label=f"minDCF(effPrior={applicationWorkingPoint3[1]})")
     plt.tick_params(axis='x', labelsize=6)
     plt.legend()
-    plt.savefig("./figures/LR_Zscore_DCFxLambda")
+    plt.savefig("./figures/LR_Zscore_Pt0_1__DCFxLambda")
     plt.clf()
 
-    print(dict1)
-    print(dict2)
-    print(dict3)
-
-    print("dict1")
+    print("dict1: ", dict)
     print("minDCF: ", dict1[min(dict1, key=dict1.get)])
 
-    print("dict2")
+
+    print("dict2: ", dict2)
     print("minDCF: ", dict2[min(dict2, key=dict2.get)])
 
-    print("dict3")
+
+    print("dict3: ", dict3)
     print("minDCF: ", dict3[min(dict3, key=dict3.get)])
 
-    with open("./dati/datiLR_Zscore.txt", "w") as fp:
-        fp.write("dict1 :\n")
+
+    with open("./dati/datiLR_Zscore_Pt0_1.txt", "w") as fp:
+        fp.write("dict1 :")
         fp.write(str(dict1))
         fp.write('\n')
         fp.write("minDCF: " + str(dict1[min(dict1, key=dict3.get)]))
@@ -78,13 +84,16 @@ if __name__ == "__main__":
         fp.write('\n')
         fp.write("minDCF: " + str(dict3[min(dict3, key=dict3.get)]))
 
-    ## RAW FEATURES
+    ## classPriorProbabilities 1 RAW FEATURES
 
-    dict1 = classifiers.compute_LR_KFold_DCF(DTROriginal, L, numFold, classPriorProbabilities1, costs, lambdValues)
+    dict1 = classifiers.compute_LR_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities1,
+                                             applicationWorkingPoint1, costs, lambdValues)
 
-    dict2 = classifiers.compute_LR_KFold_DCF(DTROriginal, L, numFold, classPriorProbabilities2, costs, lambdValues)
+    dict2 = classifiers.compute_LR_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities1,
+                                             applicationWorkingPoint2, costs, lambdValues)
 
-    dict3 = classifiers.compute_LR_KFold_DCF(DTROriginal, L, numFold, classPriorProbabilities3, costs, lambdValues)
+    dict3 = classifiers.compute_LR_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities1,
+                                             applicationWorkingPoint3, costs, lambdValues)
 
     dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}
     dict2 = {keys[i]: list(dict2.values())[i] for i in range(len(list(dict2.keys())))}
@@ -92,31 +101,27 @@ if __name__ == "__main__":
 
     plt.figure()
     plt.plot([var for var in list(dict1.keys())], [var for var in list(dict1.values())],
-             label=f"minDCF(effPrior={classPriorProbabilities1[1]})")
+             label=f"minDCF(effPrior={applicationWorkingPoint1[1]})")
     plt.plot([var for var in list(dict2.keys())], [var for var in list(dict2.values())],
-             label=f"minDCF(effPrior={classPriorProbabilities2[1]})")
+             label=f"minDCF(effPrior={applicationWorkingPoint2[1]})")
     plt.plot([var for var in list(dict3.keys())], [var for var in list(dict3.values())],
-             label=f"minDCF(effPrior={classPriorProbabilities3[1]})")
+             label=f"minDCF(effPrior={applicationWorkingPoint3[1]})")
     plt.tick_params(axis='x', labelsize=6)
     plt.legend()
-    plt.savefig("./figures/LR_Raw_DCFxLambda")
+    plt.savefig("./figures/LR_Raw_Pt0_1__DCFxLambda")
     plt.clf()
 
-    print(dict1)
-    print(dict2)
-    print(dict3)
-
-    print("dict1")
+    print("dict1: ", dict)
     print("minDCF: ", dict1[min(dict1, key=dict1.get)])
 
-    print("dict2")
+    print("dict2: ", dict2)
     print("minDCF: ", dict2[min(dict2, key=dict2.get)])
 
-    print("dict3")
+    print("dict3: ", dict3)
     print("minDCF: ", dict3[min(dict3, key=dict3.get)])
 
-    with open("./dati/datiLR_Raw.txt", "w") as fp:
-        fp.write("dict1 :\n")
+    with open("./dati/datiLR_Raw_Pt0_1.txt", "w") as fp:
+        fp.write("dict1 :")
         fp.write(str(dict1))
         fp.write('\n')
         fp.write("minDCF: " + str(dict1[min(dict1, key=dict3.get)]))
@@ -130,3 +135,219 @@ if __name__ == "__main__":
         fp.write(str(dict3))
         fp.write('\n')
         fp.write("minDCF: " + str(dict3[min(dict3, key=dict3.get)]))
+
+
+#-------------------------------------------------------------#
+
+
+
+        ## classPriorProbabilities 2 ZSCORE
+        dict1 = classifiers.compute_LR_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities2,
+                                                 applicationWorkingPoint1, costs, lambdValues)
+
+        dict2 = classifiers.compute_LR_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities2,
+                                                 applicationWorkingPoint2, costs, lambdValues)
+
+        dict3 = classifiers.compute_LR_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities2,
+                                                 applicationWorkingPoint3, costs, lambdValues)
+
+        dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}
+        dict2 = {keys[i]: list(dict2.values())[i] for i in range(len(list(dict2.keys())))}
+        dict3 = {keys[i]: list(dict3.values())[i] for i in range(len(list(dict3.keys())))}
+
+        plt.figure()
+        plt.plot([var for var in list(dict1.keys())], [var for var in list(dict1.values())],
+                 label=f"minDCF(effPrior={applicationWorkingPoint1[1]})")
+        plt.plot([var for var in list(dict2.keys())], [var for var in list(dict2.values())],
+                 label=f"minDCF(effPrior={applicationWorkingPoint2[1]})")
+        plt.plot([var for var in list(dict3.keys())], [var for var in list(dict3.values())],
+                 label=f"minDCF(effPrior={applicationWorkingPoint3[1]})")
+        plt.tick_params(axis='x', labelsize=6)
+        plt.legend()
+        plt.savefig("./figures/LR_Zscore_Pt0_5__DCFxLambda")
+        plt.clf()
+
+        print("dict1: ", dict)
+        print("minDCF: ", dict1[min(dict1, key=dict1.get)])
+
+        print("dict2: ", dict2)
+        print("minDCF: ", dict2[min(dict2, key=dict2.get)])
+
+        print("dict3: ", dict3)
+        print("minDCF: ", dict3[min(dict3, key=dict3.get)])
+
+        with open("./dati/datiLR_Zscore_Pt0_5.txt", "w") as fp:
+            fp.write("dict1 :")
+            fp.write(str(dict1))
+            fp.write('\n')
+            fp.write("minDCF: " + str(dict1[min(dict1, key=dict3.get)]))
+            fp.write('\n')
+            fp.write("dict2 :")
+            fp.write(str(dict2))
+            fp.write('\n')
+            fp.write("minDCF: " + str(dict2[min(dict2, key=dict2.get)]))
+            fp.write('\n')
+            fp.write("dict3 :")
+            fp.write(str(dict3))
+            fp.write('\n')
+            fp.write("minDCF: " + str(dict3[min(dict3, key=dict3.get)]))
+
+        ## classPriorProbabilities 2 RAW FEATURES
+
+        dict1 = classifiers.compute_LR_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities2,
+                                                 applicationWorkingPoint1, costs, lambdValues)
+
+        dict2 = classifiers.compute_LR_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities2,
+                                                 applicationWorkingPoint2, costs, lambdValues)
+
+        dict3 = classifiers.compute_LR_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities2,
+                                                 applicationWorkingPoint3, costs, lambdValues)
+
+        dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}
+        dict2 = {keys[i]: list(dict2.values())[i] for i in range(len(list(dict2.keys())))}
+        dict3 = {keys[i]: list(dict3.values())[i] for i in range(len(list(dict3.keys())))}
+
+        plt.figure()
+        plt.plot([var for var in list(dict1.keys())], [var for var in list(dict1.values())],
+                 label=f"minDCF(effPrior={applicationWorkingPoint1[1]})")
+        plt.plot([var for var in list(dict2.keys())], [var for var in list(dict2.values())],
+                 label=f"minDCF(effPrior={applicationWorkingPoint2[1]})")
+        plt.plot([var for var in list(dict3.keys())], [var for var in list(dict3.values())],
+                 label=f"minDCF(effPrior={applicationWorkingPoint3[1]})")
+        plt.tick_params(axis='x', labelsize=6)
+        plt.legend()
+        plt.savefig("./figures/LR_Raw_Pt0_5__DCFxLambda")
+        plt.clf()
+
+        print("dict1: ", dict)
+        print("minDCF: ", dict1[min(dict1, key=dict1.get)])
+
+        print("dict2: ", dict2)
+        print("minDCF: ", dict2[min(dict2, key=dict2.get)])
+
+        print("dict3: ", dict3)
+        print("minDCF: ", dict3[min(dict3, key=dict3.get)])
+
+        with open("./dati/datiLR_Raw_Pt0_5.txt", "w") as fp:
+            fp.write("dict1 :")
+            fp.write(str(dict1))
+            fp.write('\n')
+            fp.write("minDCF: " + str(dict1[min(dict1, key=dict3.get)]))
+            fp.write('\n')
+            fp.write("dict2 :")
+            fp.write(str(dict2))
+            fp.write('\n')
+            fp.write("minDCF: " + str(dict2[min(dict2, key=dict2.get)]))
+            fp.write('\n')
+            fp.write("dict3 :")
+            fp.write(str(dict3))
+            fp.write('\n')
+            fp.write("minDCF: " + str(dict3[min(dict3, key=dict3.get)]))
+
+
+#------------------------------------------------------------#
+
+
+## classPriorProbabilities 3 ZSCORE
+
+        dict1 = classifiers.compute_LR_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities3,
+                                                 applicationWorkingPoint1, costs, lambdValues)
+
+        dict2 = classifiers.compute_LR_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities3,
+                                                 applicationWorkingPoint2, costs, lambdValues)
+
+        dict3 = classifiers.compute_LR_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities3,
+                                                 applicationWorkingPoint3, costs, lambdValues)
+
+        dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}
+        dict2 = {keys[i]: list(dict2.values())[i] for i in range(len(list(dict2.keys())))}
+        dict3 = {keys[i]: list(dict3.values())[i] for i in range(len(list(dict3.keys())))}
+
+        plt.figure()
+        plt.plot([var for var in list(dict1.keys())], [var for var in list(dict1.values())],
+                 label=f"minDCF(effPrior={applicationWorkingPoint1[1]})")
+        plt.plot([var for var in list(dict2.keys())], [var for var in list(dict2.values())],
+                 label=f"minDCF(effPrior={applicationWorkingPoint2[1]})")
+        plt.plot([var for var in list(dict3.keys())], [var for var in list(dict3.values())],
+                 label=f"minDCF(effPrior={applicationWorkingPoint3[1]})")
+        plt.tick_params(axis='x', labelsize=6)
+        plt.legend()
+        plt.savefig("./figures/LR_Zscore_Pt0_9__DCFxLambda")
+        plt.clf()
+
+        print("dict1: ", dict)
+        print("minDCF: ", dict1[min(dict1, key=dict1.get)])
+
+        print("dict2: ", dict2)
+        print("minDCF: ", dict2[min(dict2, key=dict2.get)])
+
+        print("dict3: ", dict3)
+        print("minDCF: ", dict3[min(dict3, key=dict3.get)])
+
+        with open("./dati/datiLR_Zscore_Pt0_9.txt", "w") as fp:
+            fp.write("dict1 :")
+            fp.write(str(dict1))
+            fp.write('\n')
+            fp.write("minDCF: " + str(dict1[min(dict1, key=dict3.get)]))
+            fp.write('\n')
+            fp.write("dict2 :")
+            fp.write(str(dict2))
+            fp.write('\n')
+            fp.write("minDCF: " + str(dict2[min(dict2, key=dict2.get)]))
+            fp.write('\n')
+            fp.write("dict3 :")
+            fp.write(str(dict3))
+            fp.write('\n')
+            fp.write("minDCF: " + str(dict3[min(dict3, key=dict3.get)]))
+
+        ## classPriorProbabilities 2 RAW FEATURES
+
+        dict1 = classifiers.compute_LR_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities3,
+                                                 applicationWorkingPoint1, costs, lambdValues)
+
+        dict2 = classifiers.compute_LR_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities3,
+                                                 applicationWorkingPoint2, costs, lambdValues)
+
+        dict3 = classifiers.compute_LR_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities3,
+                                                 applicationWorkingPoint3, costs, lambdValues)
+
+        dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}
+        dict2 = {keys[i]: list(dict2.values())[i] for i in range(len(list(dict2.keys())))}
+        dict3 = {keys[i]: list(dict3.values())[i] for i in range(len(list(dict3.keys())))}
+
+        plt.figure()
+        plt.plot([var for var in list(dict1.keys())], [var for var in list(dict1.values())],
+                 label=f"minDCF(effPrior={applicationWorkingPoint1[1]})")
+        plt.plot([var for var in list(dict2.keys())], [var for var in list(dict2.values())],
+                 label=f"minDCF(effPrior={applicationWorkingPoint2[1]})")
+        plt.plot([var for var in list(dict3.keys())], [var for var in list(dict3.values())],
+                 label=f"minDCF(effPrior={applicationWorkingPoint3[1]})")
+        plt.tick_params(axis='x', labelsize=6)
+        plt.legend()
+        plt.savefig("./figures/LR_Raw_Pt0_9__DCFxLambda")
+        plt.clf()
+
+        print("dict1: ", dict)
+        print("minDCF: ", dict1[min(dict1, key=dict1.get)])
+
+        print("dict2: ", dict2)
+        print("minDCF: ", dict2[min(dict2, key=dict2.get)])
+
+        print("dict3: ", dict3)
+        print("minDCF: ", dict3[min(dict3, key=dict3.get)])
+
+        with open("./dati/datiLR_Raw_Pt0_9.txt", "w") as fp:
+            fp.write("dict1 :")
+            fp.write(str(dict1))
+            fp.write('\n')
+            fp.write("minDCF: " + str(dict1[min(dict1, key=dict3.get)]))
+            fp.write('\n')
+            fp.write("dict2 :")
+            fp.write(str(dict2))
+            fp.write('\n')
+            fp.write("minDCF: " + str(dict2[min(dict2, key=dict2.get)]))
+            fp.write('\n')
+            fp.write("dict3 :")
+            fp.write(str(dict3))
+            fp.write('\n')
+            fp.write("minDCF: " + str(dict3[min(dict3, key=dict3.get)]))

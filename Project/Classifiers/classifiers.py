@@ -82,9 +82,8 @@ def compute_TNB_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels)
         totDCF += min(DCFsNormalized1)
     return totDCF / numFold
 
-def compute_LR_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, lambdaValues):
+def compute_LR_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWorkingPoint, costs, lambdaValues):
     num_samples = int(D.shape[1] / numFold)
-    totDCF = 0
     DCFsNormalized1 = []
     x = dict()
     perm = numpy.random.permutation(D.shape[1])
@@ -100,7 +99,7 @@ def compute_LR_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, lambdaVa
                                                                                                            threshold)
                 confusionMatrix = functions.compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
                 DCFsNormalized1.append(
-                    functions.compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities,
+                    functions.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint,
                                                                          costs))
             if lambd not in list(x.keys()):
                 x[lambd] = min(DCFsNormalized1)
@@ -111,7 +110,7 @@ def compute_LR_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, lambdaVa
     return x
 
 
-def compute_QLR_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels, lambdaValues):
+def compute_QLR_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWorkingPoint, costs, lambdaValues):
     num_samples = int(D.shape[1] / numFold)
     totDCF = 0
     DCFsNormalized1 = []
@@ -132,7 +131,7 @@ def compute_QLR_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels,
                                                                                                            threshold)
                 confusionMatrix = functions.compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
                 DCFsNormalized1.append(
-                    functions.compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities,
+                    functions.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint,
                                                                          costs))
             if lambd not in list(x.keys()):
                 x[lambd] = min(DCFsNormalized1)
@@ -143,7 +142,7 @@ def compute_QLR_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, labels,
     return x
 
 
-def compute_SVM_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, CList, K):
+def compute_SVM_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWorkingPoint, costs, CList, K):
     num_samples = int(D.shape[1] / numFold)
     DCFsNormalized1 = []
     x = dict()
@@ -160,7 +159,7 @@ def compute_SVM_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, CList, 
                                                                                                            threshold)
                 confusionMatrix = functions.compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
                 DCFsNormalized1.append(
-                    functions.compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities,
+                    functions.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint,
                                                                          costs))
             if C not in list(x.keys()):
                 x[C] = min(DCFsNormalized1)
@@ -171,7 +170,7 @@ def compute_SVM_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, CList, 
     return x
 
 
-def compute_PolySVM_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, CList, K, d, c):
+def compute_PolySVM_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWorkingPoint, costs, CList, K, d, c):
     # CList = [10 ** -5, 10 ** -4, 10 ** -3, 10 ** -2, 10 ** -1, 1, 10, 10 ** 2, 10 ** 3, 10 ** 4, 10 ** 5]
     num_samples = int(D.shape[1] / numFold)
     DCFsNormalized1 = []
@@ -192,7 +191,7 @@ def compute_PolySVM_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, CLi
                     threshold)
                 confusionMatrix = functions.compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
                 DCFsNormalized1.append(functions.compute_normalized_detection_cost_function(confusionMatrix,
-                                                                                            classPriorProbabilities,
+                                                                                            applicationWorkingPoint,
                                                                                             costs))
             if C not in list(x.keys()):
                 x[C] = min(DCFsNormalized1)
