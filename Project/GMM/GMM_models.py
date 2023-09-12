@@ -1,0 +1,133 @@
+import numpy as np
+import scipy.special
+from utils import *
+
+
+def logpdf_GAU_ND(X: np.ndarray, mu: np.ndarray, C: np.ndarray) -> np.ndarray:
+    M = X.shape[0]
+    _, det_C = np.linalg.slogdet(C)
+    inv_C = np.linalg.inv(C)
+    density_array = -0.5 * M * np.log(2 * np.pi) - 0.5 * det_C
+    density_array = density_array - 0.5 * ((X - mu) * np.dot(inv_C, (X - mu))).sum(0)
+    return density_array
+
+
+def lbg_algorithm(iterations, X, start_gmm, alpha, psi, fun_mod=None):
+
+    if fun_mod is not None:
+        start_gmm = fun_mod(start_gmm, [X.shape[1]], X.shape[1])
+    for i in range(len(start_gmm)):
+        transformed_sigma = start_gmm[i][2]
+        u, s, _ = np.linalg.svd(transformed_sigma)
+        s[s < psi] = psi
+        start_gmm[i] = (start_gmm[i][0], start_gmm[i]
+                        [1], np.dot(u, v_col(s)*u.T))
+    start_gmm = em_algorithm(X, start_gmm, psi, fun_mod)
+
+    for i in range(iterations):
+        gmm_new = list()
+        for g in start_gmm:
+            sigma_g = g[2]
+            u, s, _ = np.linalg.svd(sigma_g)
+            d = u[:, 0:1] * s[0]**0.5 * alpha
+            new_w = g[0]/2
+            gmm_new.append((new_w, g[1] + d, sigma_g))
+            gmm_new.append((new_w, g[1] - d, sigma_g))
+        start_gmm = em_algorithm(X, gmm_new, psi, fun_mod)
+    return start_gmm
+
+
+def em_algorithm(X, gmm, psi, fun_mod=None):
+    ll_new = None
+    ll_old = None
+    while ll_old is None or ll_new - ll_old > 1e-6:
+        ll_old = ll_new
+        s_joint = np.zeros((len(gmm), X.shape[1]))
+        for g in range(len(gmm)):
+            s_joint[g, :] = logpdf_GAU_ND(
+                X, gmm[g][1], gmm[g][2]) + np.log(gmm[g][0])
+        s_marginal = scipy.special.logsumexp(s_joint, axis=0)
+        ll_new = s_marginal.sum() / X.shape[1]
+        P = np.exp(s_joint - s_marginal)
+        gmm_new = []
+        z_vec = np.zeros(len(gmm))
+        for g in range(len(gmm)):
+            gamma = P[g, :]
+            zero_order = gamma.sum()
+            z_vec[g] = zero_order
+            first_order = (v_row(gamma) * X).sum(1)
+            second_order = np.dot(X, (v_row(gamma) * X).T)
+            w = zero_order / X.shape[1]
+            mu = v_col(first_order / zero_order)
+            sigma = second_order / zero_order - np.dot(mu, mu.T)
+            gmm_new.append((w, mu, sigma))
+
+        if fun_mod is not None:
+            gmm_new = fun_mod(gmm_new, z_vec, X.shape[1])
+
+        for i in range(len(gmm)):
+            transformed_sigma = gmm_new[i][2]
+            u, s, _ = np.linalg.svd(transformed_sigma)
+            s[s < psi] = psi
+            gmm_new[i] = (gmm_new[i][0], gmm_new[i][1], np.dot(u, v_col(s) * u.T))
+        gmm = gmm_new
+    return gmm
+
+
+def compute_gmm_scores(D, L, gmm):
+    scores = np.zeros((np.unique(L).size, D.shape[1]))
+    for classes in range(np.unique(L).size):
+        scores[classes, :] = np.exp(logpdf_gmm(D, gmm[classes]))
+    llr = np.zeros(scores.shape[1])
+    for i in range(scores.shape[1]):
+        llr[i] = np.log(scores[1, i] / scores[0, i])
+    return llr
+
+
+def logpdf_gmm(X, gmm):
+    s = np.zeros((len(gmm), X.shape[1]))
+    for i in range(X.shape[1]):
+        for (idx, component) in enumerate(gmm):
+            s[idx, i] = logpdf_GAU_ND(X[:, i:i+1], component[1], component[2]) + np.log(component[0])
+    return scipy.special.logsumexp(s, axis=0)
+
+
+class GMMclass:
+
+    def __init__(self,  iterations,priors=[], alpha=0.1, psi=0.01):
+        self.gmm = None
+        self.params = [('components', 2**iterations), ('alpha', alpha), ('psi', psi)]
+        self.iterations = iterations
+        self.alpha = alpha
+        self.psi = psi
+        self.priors = priors
+        self.scores = None
+        self.DTR = None
+        self.LTR = None
+        self.DTE = None
+        self.LTE = None
+
+    def compute_scores(self):
+        self.scores = compute_gmm_scores(self.DTE,  self.LTE, self.gmm)
+
+    def train(self):
+        gmm = list()
+        for classes in range(np.unique(self.LTR).size):
+            mu = compute_mean(self.DTR[:, self.LTR == classes])
+            cov = compute_covariance_matrix(self.DTR[:, self.LTR == classes])
+            gmm.append(lbg_algorithm(self.iterations, self.DTR[:, self.LTR == classes], [[1, mu, cov]], 0.1, 0.01))
+        self.gmm = gmm
+
+
+
+    def set_attributes(self, DTR: np.ndarray, LTR: np.ndarray, DTE: np.ndarray, LTE: np.ndarray):
+        self.DTR = DTR
+        self.LTR = LTR
+        self.DTE = DTE
+        self.LTE = LTE
+
+    def __str__(self):
+        return "GMM_"
+
+
+
