@@ -84,13 +84,13 @@ if __name__ == "__main__":
 
     ## classPriorProbabilities 1 RAW
     print("raw prior 1")
-    dict1 = classifiers.compute_RadialBasisSVM_KFold_DCF(DTROriginalNormalized, L, numFold, classPriorProbabilities1,
+    dict1 = classifiers.compute_RadialBasisSVM_KFold_DCF(DTROriginal, L, numFold, classPriorProbabilities1,
                                                          applicationWorkingPoint1, costs, CList, K, gammaValues, d, c)
 
-    dict2 = classifiers.compute_RadialBasisSVM_KFold_DCF(DTROriginalNormalized, L, numFold, classPriorProbabilities1,
+    dict2 = classifiers.compute_RadialBasisSVM_KFold_DCF(DTROriginal, L, numFold, classPriorProbabilities1,
                                                          applicationWorkingPoint2, costs, CList, K, gammaValues, d, c)
 
-    dict3 = classifiers.compute_RadialBasisSVM_KFold_DCF(DTROriginalNormalized, L, numFold, classPriorProbabilities1,
+    dict3 = classifiers.compute_RadialBasisSVM_KFold_DCF(DTROriginal, L, numFold, classPriorProbabilities1,
                                                          applicationWorkingPoint3, costs, CList, K, gammaValues, d, c)
 
     keys = list(itertools.product(keys1, keys2))
@@ -186,13 +186,13 @@ if __name__ == "__main__":
 
     ## classPriorProbabilities 2 RAW
     print("raw prior 2")
-    dict1 = classifiers.compute_RadialBasisSVM_KFold_DCF(DTROriginalNormalized, L, numFold, classPriorProbabilities1,
+    dict1 = classifiers.compute_RadialBasisSVM_KFold_DCF(DTROriginal, L, numFold, classPriorProbabilities1,
                                                          applicationWorkingPoint1, costs, CList, K, gammaValues, d, c)
 
-    dict2 = classifiers.compute_RadialBasisSVM_KFold_DCF(DTROriginalNormalized, L, numFold, classPriorProbabilities1,
+    dict2 = classifiers.compute_RadialBasisSVM_KFold_DCF(DTROriginal, L, numFold, classPriorProbabilities1,
                                                          applicationWorkingPoint2, costs, CList, K, gammaValues, d, c)
 
-    dict3 = classifiers.compute_RadialBasisSVM_KFold_DCF(DTROriginalNormalized, L, numFold, classPriorProbabilities1,
+    dict3 = classifiers.compute_RadialBasisSVM_KFold_DCF(DTROriginal, L, numFold, classPriorProbabilities1,
                                                          applicationWorkingPoint3, costs, CList, K, gammaValues, d, c)
 
     keys = list(itertools.product(keys1, keys2))
@@ -288,13 +288,13 @@ if __name__ == "__main__":
 
     ## classPriorProbabilities 3 RAW
     print("raw prior 3")
-    dict1 = classifiers.compute_RadialBasisSVM_KFold_DCF(DTROriginalNormalized, L, numFold, classPriorProbabilities1,
+    dict1 = classifiers.compute_RadialBasisSVM_KFold_DCF(DTROriginal, L, numFold, classPriorProbabilities1,
                                                          applicationWorkingPoint1, costs, CList, K, gammaValues, d, c)
 
-    dict2 = classifiers.compute_RadialBasisSVM_KFold_DCF(DTROriginalNormalized, L, numFold, classPriorProbabilities1,
+    dict2 = classifiers.compute_RadialBasisSVM_KFold_DCF(DTROriginal, L, numFold, classPriorProbabilities1,
                                                          applicationWorkingPoint2, costs, CList, K, gammaValues, d, c)
 
-    dict3 = classifiers.compute_RadialBasisSVM_KFold_DCF(DTROriginalNormalized, L, numFold, classPriorProbabilities1,
+    dict3 = classifiers.compute_RadialBasisSVM_KFold_DCF(DTROriginal, L, numFold, classPriorProbabilities1,
                                                          applicationWorkingPoint3, costs, CList, K, gammaValues, d, c)
 
     keys = list(itertools.product(keys1, keys2))
