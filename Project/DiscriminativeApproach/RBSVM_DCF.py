@@ -60,7 +60,7 @@ if __name__ == "__main__":
     print("minDCF: ", dict3[min(dict3, key=dict3.get)])
     print("minC: " + str(min(dict3, key=dict3.get)))
 
-    with open("./dati/dariRBSVM_Zscore_Pt0_1.txt", "w") as fp:
+    with open("./dati/datiRBSVM_Zscore_Pt0_1.txt", "w") as fp:
         fp.write("dict1 :")
         fp.write(str(dict1))
         fp.write('\n')
@@ -110,7 +110,7 @@ if __name__ == "__main__":
     print("minDCF: ", dict3[min(dict3, key=dict3.get)])
     print("minC: " + str(min(dict3, key=dict3.get)))
 
-    with open("./dati/dariRBSVM_Raw_Pt0_1.txt", "w") as fp:
+    with open("./dati/datiRBSVM_Raw_Pt0_1.txt", "w") as fp:
         fp.write("dict1 :")
         fp.write(str(dict1))
         fp.write('\n')
@@ -162,7 +162,7 @@ if __name__ == "__main__":
     print("minDCF: ", dict3[min(dict3, key=dict3.get)])
     print("minC: " + str(min(dict3, key=dict3.get)))
 
-    with open("./dati/dariRBSVM_Zscore_Pt0_5.txt", "w") as fp:
+    with open("./dati/datiRBSVM_Zscore_Pt0_5.txt", "w") as fp:
         fp.write("dict1 :")
         fp.write(str(dict1))
         fp.write('\n')
@@ -212,7 +212,7 @@ if __name__ == "__main__":
     print("minDCF: ", dict3[min(dict3, key=dict3.get)])
     print("minC: " + str(min(dict3, key=dict3.get)))
 
-    with open("./dati/dariRBSVM_Raw_Pt0_5.txt", "w") as fp:
+    with open("./dati/datiRBSVM_Raw_Pt0_5.txt", "w") as fp:
         fp.write("dict1 :")
         fp.write(str(dict1))
         fp.write('\n')
@@ -264,7 +264,7 @@ if __name__ == "__main__":
     print("minDCF: ", dict3[min(dict3, key=dict3.get)])
     print("minC: " + str(min(dict3, key=dict3.get)))
 
-    with open("./dati/dariRBSVM_Zscore_Pt0_9.txt", "w") as fp:
+    with open("./dati/datiRBSVM_Zscore_Pt0_9.txt", "w") as fp:
         fp.write("dict1 :")
         fp.write(str(dict1))
         fp.write('\n')
@@ -314,7 +314,7 @@ if __name__ == "__main__":
     print("minDCF: ", dict3[min(dict3, key=dict3.get)])
     print("minC: " + str(min(dict3, key=dict3.get)))
 
-    with open("./dati/dariRBSVM_Raw_Pt0_9.txt", "w") as fp:
+    with open("./dati/datiRBSVM_Raw_Pt0_9.txt", "w") as fp:
         fp.write("dict1 :")
         fp.write(str(dict1))
         fp.write('\n')
