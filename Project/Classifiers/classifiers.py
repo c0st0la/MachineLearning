@@ -22,6 +22,30 @@ def compute_MVG_KFold_DCF(D, L, numFold, applicationWorkingPoint, costs, labels)
         totDCF += min(DCFsNormalized1)
     return totDCF / numFold
 
+
+def compute_MVG_KFold_DCF2(D, L, numFold, applicationWorkingPoint, costs, labels):
+    num_samples = int(D.shape[1] / numFold)
+    DCFsNormalized = []
+    perm = numpy.random.permutation(D.shape[1])
+    D = D[:, perm]
+    L = L[perm]
+    scores = numpy.zeros(L.shape[0])
+    thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
+    for i in range(numFold):
+
+        (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
+        llr_MVG = functions.compute_MVG_llrs(DTR, LTR, DTE, labels)
+        scores[i * num_samples: (i + 1) * num_samples] = llr_MVG
+    for threshold in thresholds:
+        optimalBayesDecisionPredictions = functions.compute_optimal_bayes_decision_given_threshold(scores,
+                                                                                                   threshold)
+        confusionMatrix = functions.compute_binary_confusion_matrix(optimalBayesDecisionPredictions, L)
+        DCFsNormalized.append(
+            functions.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint, costs))
+    minDCF = min(DCFsNormalized)
+    return minDCF
+
+
 def compute_NB_KFold_DCF(D, L, numFold, applicationWorkingPoint, costs, labels):
     num_samples = int(D.shape[1] / numFold)
     totDCF = 0
@@ -67,15 +91,14 @@ def compute_TC_KFold_DCF(D, L, numFold, applicationWorkingPoint, costs, labels):
 def compute_TNB_KFold_DCF(D, L, numFold, applicationWorkingPoint, costs, labels):
     num_samples = int(D.shape[1] / numFold)
     totDCF = 0
-
     perm = numpy.random.permutation(D.shape[1])
     D = D[:, perm]
     L = L[perm]
     thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
     for i in range(numFold):
-        DCFsNormalized1 = []
         (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
         llr_TNB = functions.compute_TNB_llrs(DTR, LTR, DTE, labels)
+        DCFsNormalized1 = []
         for threshold in thresholds:
             optimalBayesDecisionPredictions = functions.compute_optimal_bayes_decision_given_threshold(llr_TNB,
                                                                                                        threshold)
@@ -85,19 +108,19 @@ def compute_TNB_KFold_DCF(D, L, numFold, applicationWorkingPoint, costs, labels)
         totDCF += min(DCFsNormalized1)
     return totDCF / numFold
 
+
 def compute_LR_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWorkingPoint, costs, lambdaValues):
     num_samples = int(D.shape[1] / numFold)
-
     x = dict()
     perm = numpy.random.permutation(D.shape[1])
     D = D[:, perm]
     L = L[perm]
     thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
     for i in range(numFold):
-        DCFsNormalized1 = []
         (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
         for lambd in lambdaValues:
             llr_LR = functions.compute_logistic_regression_binary_llr(DTR, LTR, DTE, lambd, classPriorProbabilities)
+            DCFsNormalized1 = []
             for threshold in thresholds:
                 optimalBayesDecisionPredictions = functions.compute_optimal_bayes_decision_given_threshold(llr_LR,
                                                                                                            threshold)
@@ -116,19 +139,17 @@ def compute_LR_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWork
 
 def compute_QLR_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWorkingPoint, costs, lambdaValues):
     num_samples = int(D.shape[1] / numFold)
-    totDCF = 0
-
     x = dict()
     perm = numpy.random.permutation(D.shape[1])
     D = D[:, perm]
     L = L[perm]
     thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
     for i in range(numFold):
-        DCFsNormalized1 = []
         (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
         DTR = functions.quadratic_expansion(DTR)
         DTE = functions.quadratic_expansion(DTE)
         for lambd in lambdaValues:
+            DCFsNormalized1 = []
             llr_QLR = functions.compute_logistic_regression_binary_quadratic_llr(DTR, LTR, DTE, lambd,
                                                                                  classPriorProbabilities)
             for threshold in thresholds:
@@ -156,10 +177,11 @@ def compute_SVM_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWor
     L = L[perm]
     thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
     for i in range(numFold):
-        DCFsNormalized1 = []
         (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
         for C in CList:
             llr_SVM = functions.compute_support_vector_machine_llr(DTR, LTR, DTE, LTE, K, C, classPriorProbabilities)
+
+            DCFsNormalized1 = []
             for threshold in thresholds:
                 optimalBayesDecisionPredictions = functions.compute_optimal_bayes_decision_given_threshold(llr_SVM,
                                                                                                            threshold)
@@ -186,12 +208,12 @@ def compute_PolySVM_KFold_DCF(D, L, numFold, classPriorProbabilities, applicatio
     L = L[perm]
     thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
     for i in range(numFold):
-        DCFsNormalized1 = []
         (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
         for C in CList:
             llr_PolySVM = functions.compute_support_vector_machine_kernel_llr(DTR, LTR, DTE, LTE, K, C,
                                                                               'p', classPriorProbabilities, c=c,
                                                                               d=d)
+            DCFsNormalized1 = []
             for threshold in thresholds:
                 optimalBayesDecisionPredictions = functions.compute_optimal_bayes_decision_given_threshold(
                     llr_PolySVM,
@@ -208,7 +230,7 @@ def compute_PolySVM_KFold_DCF(D, L, numFold, classPriorProbabilities, applicatio
         x[key] = x[key] / numFold
     return x
 
-def compute_RadialBasisSVM_KFold_DCF(D, L, numFold, classPriorProbabilities, costs, CList, K, gammaValues, d, c):
+def compute_RadialBasisSVM_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWorkingPoint, costs, CList, K, gammaValues, d, c):
     # CList = [10 ** -5, 10 ** -3, 10 ** -1, 10, 10 ** 3, 10 ** 5]
     # gammaValues = [10 ** -3, 10 ** -2, 10 ** -1]
     num_samples = int(D.shape[1] / numFold)
@@ -219,13 +241,14 @@ def compute_RadialBasisSVM_KFold_DCF(D, L, numFold, classPriorProbabilities, cos
     L = L[perm]
     thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
     for i in range(numFold):
-        DCFsNormalized1 = []
+
         (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
         for gamma in gammaValues:
             for C in CList:
                 llr_PolySVM = functions.compute_support_vector_machine_kernel_llr(DTR, LTR, DTE, LTE, K, C,
                                                                                   'r', classPriorProbabilities, c=c,
                                                                                   d=d, gamma=gamma)
+                DCFsNormalized1 = []
                 for threshold in thresholds:
                     optimalBayesDecisionPredictions = functions.compute_optimal_bayes_decision_given_threshold(
                         llr_PolySVM,
