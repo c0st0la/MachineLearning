@@ -18,7 +18,7 @@ if __name__ == "__main__":
     costs = numpy.array([1.0, 1.0], dtype=float)
     score=[]
     print("========================================================")
-    for iteration in range(3):
+    for iteration in range(7):
         print("========================================================")
         print("========================================================")
         print("Training for GMM Model with " + str(2 ** iteration) + " components for all pre process in report...")
