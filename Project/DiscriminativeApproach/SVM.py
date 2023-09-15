@@ -16,6 +16,7 @@ if __name__ == "__main__":
     costs = numpy.array([1.0, 1.0], dtype=float)
     labels = [i for i in range(0, numpy.amax(LTR) + 1)]
     numFold = 5
+    K = 1
     thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
     lambdValues = [10 ** -5, 10 ** -4, 10 ** -3, 10 ** -2, 10 ** -1, 1, 10, 10 ** 2, 10 ** 3, 10 ** 4,
                    10 ** 5]
@@ -31,14 +32,15 @@ if __name__ == "__main__":
     L = numpy.concatenate((LTR, LTE), axis=0)
 
     ## classPriorProbabilities 1 ZSCORE
+    print("Computing Zscore, classPriorTrue: " + str(classPriorProbabilities1[1]))
     dict1 = classifiers.compute_SVM_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities1,
-                                             applicationWorkingPoint1, costs, lambdValues)
+                                             applicationWorkingPoint1, costs, lambdValues, K)
 
     dict2 = classifiers.compute_SVM_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities1,
-                                             applicationWorkingPoint2, costs, lambdValues)
+                                             applicationWorkingPoint2, costs, lambdValues, K)
 
     dict3 = classifiers.compute_SVM_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities1,
-                                             applicationWorkingPoint3, costs, lambdValues)
+                                             applicationWorkingPoint3, costs, lambdValues, K)
 
     dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}
     dict2 = {keys[i]: list(dict2.values())[i] for i in range(len(list(dict2.keys())))}
@@ -57,7 +59,7 @@ if __name__ == "__main__":
     plt.savefig("./figures/SVM_Zscore_Pt0_1__DCFxLambda")
     plt.clf()
 
-    print("dict1: ", dict)
+    print("dict1: ", dict1)
     print("minDCF: ", dict1[min(dict1, key=dict1.get)])
     print("minC: " + str(min(dict1, key=dict1.get)))
 
@@ -86,15 +88,15 @@ if __name__ == "__main__":
         fp.write("minDCF: " + str(dict3[min(dict3, key=dict3.get)]))
 
     ## classPriorProbabilities 1 RAW FEATURES
-
+    print("Computing Raw, classPriorTrue: " + str(classPriorProbabilities1[1]))
     dict1 = classifiers.compute_SVM_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities1,
-                                                 applicationWorkingPoint1, costs, lambdValues)
+                                                 applicationWorkingPoint1, costs, lambdValues, K)
 
     dict2 = classifiers.compute_SVM_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities1,
-                                                 applicationWorkingPoint2, costs, lambdValues)
+                                                 applicationWorkingPoint2, costs, lambdValues, K)
 
     dict3 = classifiers.compute_SVM_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities1,
-                                                 applicationWorkingPoint3, costs, lambdValues)
+                                                 applicationWorkingPoint3, costs, lambdValues, K)
 
     dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}
     dict2 = {keys[i]: list(dict2.values())[i] for i in range(len(list(dict2.keys())))}
@@ -112,7 +114,7 @@ if __name__ == "__main__":
     plt.savefig("./figures/SVM_Raw_Pt0_1__DCFxLambda")
     plt.clf()
 
-    print("dict1: ", dict)
+    print("dict1: ", dict1)
     print("minDCF: ", dict1[min(dict1, key=dict1.get)])
     print("minC: " + str(min(dict1, key=dict1.get)))
 
@@ -145,14 +147,15 @@ if __name__ == "__main__":
 #-------------------------------------------------------------#
 
         ## classPriorProbabilities 2 ZSCORE
+        print("Computing Zscore, classPriorTrue: " + str(classPriorProbabilities2[1]))
         dict1 = classifiers.compute_SVM_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities2,
-                                                 applicationWorkingPoint1, costs, lambdValues)
+                                                 applicationWorkingPoint1, costs, lambdValues, K)
 
         dict2 = classifiers.compute_SVM_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities2,
-                                                 applicationWorkingPoint2, costs, lambdValues)
+                                                 applicationWorkingPoint2, costs, lambdValues, K)
 
         dict3 = classifiers.compute_SVM_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities2,
-                                                 applicationWorkingPoint3, costs, lambdValues)
+                                                 applicationWorkingPoint3, costs, lambdValues, K)
 
         dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}
         dict2 = {keys[i]: list(dict2.values())[i] for i in range(len(list(dict2.keys())))}
@@ -199,15 +202,15 @@ if __name__ == "__main__":
             fp.write("minDCF: " + str(dict3[min(dict3, key=dict3.get)]))
 
         ## classPriorProbabilities 2 RAW FEATURES
-
+        print("Computing Raw, classPriorTrue: " + str(classPriorProbabilities2[1]))
         dict1 = classifiers.compute_SVM_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities2,
-                                                 applicationWorkingPoint1, costs, lambdValues)
+                                                 applicationWorkingPoint1, costs, lambdValues, K)
 
         dict2 = classifiers.compute_SVM_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities2,
-                                                 applicationWorkingPoint2, costs, lambdValues)
+                                                 applicationWorkingPoint2, costs, lambdValues, K)
 
         dict3 = classifiers.compute_SVM_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities2,
-                                                 applicationWorkingPoint3, costs, lambdValues)
+                                                 applicationWorkingPoint3, costs, lambdValues, K)
 
         dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}
         dict2 = {keys[i]: list(dict2.values())[i] for i in range(len(list(dict2.keys())))}
@@ -259,14 +262,15 @@ if __name__ == "__main__":
 #-------------------------------------------------------------#
 
         ## classPriorProbabilities 3 ZSCORE
+        print("Computing Zscore, classPriorTrue: " + str(classPriorProbabilities3[1]))
         dict1 = classifiers.compute_SVM_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities3,
-                                                 applicationWorkingPoint1, costs, lambdValues)
+                                                 applicationWorkingPoint1, costs, lambdValues, K)
 
         dict2 = classifiers.compute_SVM_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities3,
-                                                 applicationWorkingPoint2, costs, lambdValues)
+                                                 applicationWorkingPoint2, costs, lambdValues, K)
 
         dict3 = classifiers.compute_SVM_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities3,
-                                                 applicationWorkingPoint3, costs, lambdValues)
+                                                 applicationWorkingPoint3, costs, lambdValues, K)
 
         dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}
         dict2 = {keys[i]: list(dict2.values())[i] for i in range(len(list(dict2.keys())))}
@@ -313,15 +317,15 @@ if __name__ == "__main__":
             fp.write("minDCF: " + str(dict3[min(dict3, key=dict3.get)]))
 
         ## classPriorProbabilities 3 RAW FEATURES
-
+        print("Computing Raw, classPriorTrue: " + str(classPriorProbabilities3[1]))
         dict1 = classifiers.compute_SVM_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities3,
-                                                 applicationWorkingPoint1, costs, lambdValues)
+                                                 applicationWorkingPoint1, costs, lambdValues, K)
 
         dict2 = classifiers.compute_SVM_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities3,
-                                                 applicationWorkingPoint2, costs, lambdValues)
+                                                 applicationWorkingPoint2, costs, lambdValues, K)
 
         dict3 = classifiers.compute_SVM_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities3,
-                                                 applicationWorkingPoint3, costs, lambdValues)
+                                                 applicationWorkingPoint3, costs, lambdValues, K)
 
         dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}
         dict2 = {keys[i]: list(dict2.values())[i] for i in range(len(list(dict2.keys())))}

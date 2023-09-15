@@ -31,6 +31,7 @@ if __name__ == "__main__":
     L = numpy.concatenate((LTR, LTE), axis=0)
 
     ## classPriorProbabilities 1 ZSCORE
+    print("Zscore prior1")
     dict1 = classifiers.compute_LR_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities1,
                                              applicationWorkingPoint1, costs, lambdValues)
 
@@ -56,17 +57,14 @@ if __name__ == "__main__":
     plt.savefig("./figures/LR_Zscore_Pt0_1__DCFxLambda")
     plt.clf()
 
-    print("dict1: ", dict)
+    print("dict1: ", dict1)
     print("minDCF: ", dict1[min(dict1, key=dict1.get)])
-
 
     print("dict2: ", dict2)
     print("minDCF: ", dict2[min(dict2, key=dict2.get)])
 
-
     print("dict3: ", dict3)
     print("minDCF: ", dict3[min(dict3, key=dict3.get)])
-
 
     with open("./dati/datiLR_Zscore_Pt0_1.txt", "w") as fp:
         fp.write("dict1 :")
@@ -85,7 +83,7 @@ if __name__ == "__main__":
         fp.write("minDCF: " + str(dict3[min(dict3, key=dict3.get)]))
 
     ## classPriorProbabilities 1 RAW FEATURES
-
+    print("Raw prior1")
     dict1 = classifiers.compute_LR_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities1,
                                              applicationWorkingPoint1, costs, lambdValues)
 
@@ -111,7 +109,7 @@ if __name__ == "__main__":
     plt.savefig("./figures/LR_Raw_Pt0_1__DCFxLambda")
     plt.clf()
 
-    print("dict1: ", dict)
+    print("dict1: ", dict1)
     print("minDCF: ", dict1[min(dict1, key=dict1.get)])
 
     print("dict2: ", dict2)
@@ -142,6 +140,7 @@ if __name__ == "__main__":
 
 
         ## classPriorProbabilities 2 ZSCORE
+        print("Zscore prior2")
         dict1 = classifiers.compute_LR_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities2,
                                                  applicationWorkingPoint1, costs, lambdValues)
 
@@ -167,7 +166,7 @@ if __name__ == "__main__":
         plt.savefig("./figures/LR_Zscore_Pt0_5__DCFxLambda")
         plt.clf()
 
-        print("dict1: ", dict)
+        print("dict1: ", dict1)
         print("minDCF: ", dict1[min(dict1, key=dict1.get)])
 
         print("dict2: ", dict2)
@@ -193,7 +192,7 @@ if __name__ == "__main__":
             fp.write("minDCF: " + str(dict3[min(dict3, key=dict3.get)]))
 
         ## classPriorProbabilities 2 RAW FEATURES
-
+        print("Raw prior2")
         dict1 = classifiers.compute_LR_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities2,
                                                  applicationWorkingPoint1, costs, lambdValues)
 
@@ -219,7 +218,7 @@ if __name__ == "__main__":
         plt.savefig("./figures/LR_Raw_Pt0_5__DCFxLambda")
         plt.clf()
 
-        print("dict1: ", dict)
+        print("dict1: ", dict1)
         print("minDCF: ", dict1[min(dict1, key=dict1.get)])
 
         print("dict2: ", dict2)
@@ -249,7 +248,7 @@ if __name__ == "__main__":
 
 
 ## classPriorProbabilities 3 ZSCORE
-
+        print("Zscore prior3")
         dict1 = classifiers.compute_LR_KFold_DCF(DTROriginalNormalized, LTR, numFold, classPriorProbabilities3,
                                                  applicationWorkingPoint1, costs, lambdValues)
 
@@ -275,7 +274,7 @@ if __name__ == "__main__":
         plt.savefig("./figures/LR_Zscore_Pt0_9__DCFxLambda")
         plt.clf()
 
-        print("dict1: ", dict)
+        print("dict1: ", dict1)
         print("minDCF: ", dict1[min(dict1, key=dict1.get)])
 
         print("dict2: ", dict2)
@@ -301,7 +300,7 @@ if __name__ == "__main__":
             fp.write("minDCF: " + str(dict3[min(dict3, key=dict3.get)]))
 
         ## classPriorProbabilities 2 RAW FEATURES
-
+        print("Raw prior3")
         dict1 = classifiers.compute_LR_KFold_DCF(DTROriginal, LTR, numFold, classPriorProbabilities3,
                                                  applicationWorkingPoint1, costs, lambdValues)
 
@@ -327,7 +326,7 @@ if __name__ == "__main__":
         plt.savefig("./figures/LR_Raw_Pt0_9__DCFxLambda")
         plt.clf()
 
-        print("dict1: ", dict)
+        print("dict1: ", dict1)
         print("minDCF: ", dict1[min(dict1, key=dict1.get)])
 
         print("dict2: ", dict2)

@@ -1,64 +1,48 @@
-PCA with 7 dimension
-Prior probability for class 0 is : 0.9
-Prior probability for class 1 is : 0.1
-The min of the normalized DCF for MVG classifier: 0.308
-The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.212
-
-Prior probability for class 0 is : 0.5
-Prior probability for class 1 is : 0.5
-The min of the normalized DCF for MVG classifier : 0.088
-The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.074
-
-Prior probability for class 0 is : 0.1
-Prior probability for class 1 is : 0.9
-The min of the normalized DCF for MVG classifier : 0.185
-The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.141
-
 PCA with 8 dimension
 Prior probability for class 0 is : 0.9
 Prior probability for class 1 is : 0.1
-The min of the normalized DCF for MVG classifier: 0.302
-The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.218
+The min of the normalized DCF for MVG classifier: 0.356
+The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.304
 
 Prior probability for class 0 is : 0.5
 Prior probability for class 1 is : 0.5
-The min of the normalized DCF for MVG classifier : 0.087
-The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.070
+The min of the normalized DCF for MVG classifier : 0.103
+The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.099
 
 Prior probability for class 0 is : 0.1
 Prior probability for class 1 is : 0.9
-The min of the normalized DCF for MVG classifier : 0.177
-The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.141
-
-PCA with 9 dimension
-Prior probability for class 0 is : 0.9
-Prior probability for class 1 is : 0.1
-The min of the normalized DCF for MVG classifier: 0.281
-The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.189
-
-Prior probability for class 0 is : 0.5
-Prior probability for class 1 is : 0.5
-The min of the normalized DCF for MVG classifier : 0.087
-The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.071
-
-Prior probability for class 0 is : 0.1
-Prior probability for class 1 is : 0.9
-The min of the normalized DCF for MVG classifier : 0.185
-The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.135
+The min of the normalized DCF for MVG classifier : 0.223
+The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.184
 
 PCA with 9 dimension
 Prior probability for class 0 is : 0.9
 Prior probability for class 1 is : 0.1
 The min of the normalized DCF for MVG classifier: 0.341
-The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.303
+The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.308
 
 Prior probability for class 0 is : 0.5
 Prior probability for class 1 is : 0.5
 The min of the normalized DCF for MVG classifier : 0.098
-The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.087
+The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.098
 
 Prior probability for class 0 is : 0.1
 Prior probability for class 1 is : 0.9
 The min of the normalized DCF for MVG classifier : 0.215
-The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.161
+The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.170
+
+PCA with 10 dimension
+Prior probability for class 0 is : 0.9
+Prior probability for class 1 is : 0.1
+The min of the normalized DCF for MVG classifier: 0.287
+The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.255
+
+Prior probability for class 0 is : 0.5
+Prior probability for class 1 is : 0.5
+The min of the normalized DCF for MVG classifier : 0.091
+The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.078
+
+Prior probability for class 0 is : 0.1
+Prior probability for class 1 is : 0.9
+The min of the normalized DCF for MVG classifier : 0.186
+The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.140
 

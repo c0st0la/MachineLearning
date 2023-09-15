@@ -22,34 +22,18 @@ if __name__ == "__main__":
 
     dict1 = {1e-06: 0.9902173913043478, 1e-05: 0.9902173913043478, 0.0001: 0.988768115942029, 0.001: 0.988768115942029, 0.01: 0.988768115942029, 0.1: 0.988768115942029, 1: 0.988768115942029, 10: 0.988768115942029, 100: 0.988768115942029, 1000: 0.988768115942029, 10000: 0.988768115942029, 100000: 0.988768115942029}
     dict2 = {1e-06: 0.8696090160741805, 1e-05: 0.8696090160741805, 0.0001: 0.8689575502761351, 0.001: 0.8686724303848784, 0.01: 0.8686724303848784, 0.1: 0.8686724303848784, 1: 0.8686724303848784, 10: 0.8686724303848784, 100: 0.8686724303848784, 1000: 0.8686724303848784, 10000: 0.8686724303848784, 100000: 0.8686724303848784}
-    dict3 = {1e-06: 0.9902173913043478, 1e-05: 0.9902173913043478, 0.0001: 0.988768115942029, 0.001: 0.988768115942029, 0.01: 0.988768115942029, 0.1: 0.988768115942029, 1: 0.988768115942029, 10: 0.988768115942029, 100: 0.988768115942029, 1000: 0.988768115942029, 10000: 0.988768115942029, 100000: 0.988768115942029}
 
-    min = 100000
-    lambd = 0
-    print("dict1")
-    for key in list(dict1.keys()):
-        if dict1[key]< min:
-            min = dict1[key]
-            lambd = key
-    print("lambda", lambd)
-    print("minDCF", min)
+    scores = numpy.zeros(10)
+    numSamples=2
+    for i in range(5):
+        toSave=numpy.array([1, 2])
+        scores[i * numSamples: (i + 1) * numSamples] = toSave
+    print(scores)
 
-    min = 100000
-    lambd = 0
-    print("dict2")
-    for key in list(dict2.keys()):
-        if dict2[key] < min:
-            min = dict2[key]
-            lambd = key
-    print("lambda", lambd)
-    print("minDCF", min)
 
-    min = 100000
-    lambd = 0
-    print("dict3")
-    for key in list(dict3.keys()):
-        if dict3[key] < min:
-            min = dict3[key]
-            lambd = key
-    print("lambda", lambd)
-    print("minDCF", min)
+    scores = []
+    numSamples=2
+    for i in range(5):
+        toSave=numpy.array([1, 2])
+        scores.append(toSave.tolist())
+    print(scores)

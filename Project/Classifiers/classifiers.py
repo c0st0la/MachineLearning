@@ -180,7 +180,6 @@ def compute_SVM_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWor
         (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
         for C in CList:
             llr_SVM = functions.compute_support_vector_machine_llr(DTR, LTR, DTE, LTE, K, C, classPriorProbabilities)
-
             DCFsNormalized1 = []
             for threshold in thresholds:
                 optimalBayesDecisionPredictions = functions.compute_optimal_bayes_decision_given_threshold(llr_SVM,

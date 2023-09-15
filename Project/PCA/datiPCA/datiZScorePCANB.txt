@@ -1,64 +1,48 @@
-PCA with 7 dimension
-Prior probability for class 0 is : 0.9
-Prior probability for class 1 is : 0.1
-The min of the normalized DCF for NB classifier: 0.314
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.229
-
-Prior probability for class 0 is : 0.5
-Prior probability for class 1 is : 0.5
-The min of the normalized DCF for NB classifier : 0.090
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.075
-
-Prior probability for class 0 is : 0.1
-Prior probability for class 1 is : 0.9
-The min of the normalized DCF for NB classifier : 0.196
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.147
-
 PCA with 8 dimension
 Prior probability for class 0 is : 0.9
 Prior probability for class 1 is : 0.1
-The min of the normalized DCF for NB classifier: 0.304
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.208
+The min of the normalized DCF for NB classifier: 0.464
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.421
 
 Prior probability for class 0 is : 0.5
 Prior probability for class 1 is : 0.5
-The min of the normalized DCF for NB classifier : 0.088
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.071
+The min of the normalized DCF for NB classifier : 0.131
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.144
 
 Prior probability for class 0 is : 0.1
 Prior probability for class 1 is : 0.9
-The min of the normalized DCF for NB classifier : 0.183
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.147
-
-PCA with 9 dimension
-Prior probability for class 0 is : 0.9
-Prior probability for class 1 is : 0.1
-The min of the normalized DCF for NB classifier: 0.294
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.209
-
-Prior probability for class 0 is : 0.5
-Prior probability for class 1 is : 0.5
-The min of the normalized DCF for NB classifier : 0.091
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.070
-
-Prior probability for class 0 is : 0.1
-Prior probability for class 1 is : 0.9
-The min of the normalized DCF for NB classifier : 0.192
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.137
+The min of the normalized DCF for NB classifier : 0.252
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.229
 
 PCA with 9 dimension
 Prior probability for class 0 is : 0.9
 Prior probability for class 1 is : 0.1
 The min of the normalized DCF for NB classifier: 0.447
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.358
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.414
 
 Prior probability for class 0 is : 0.5
 Prior probability for class 1 is : 0.5
 The min of the normalized DCF for NB classifier : 0.136
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.141
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.145
 
 Prior probability for class 0 is : 0.1
 Prior probability for class 1 is : 0.9
 The min of the normalized DCF for NB classifier : 0.274
-The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.204
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.232
+
+PCA with 10 dimension
+Prior probability for class 0 is : 0.9
+Prior probability for class 1 is : 0.1
+The min of the normalized DCF for NB classifier: 0.436
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.425
+
+Prior probability for class 0 is : 0.5
+Prior probability for class 1 is : 0.5
+The min of the normalized DCF for NB classifier : 0.141
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.141
+
+Prior probability for class 0 is : 0.1
+Prior probability for class 1 is : 0.9
+The min of the normalized DCF for NB classifier : 0.299
+The min of the normalized DCF for NB classifier with K-fold algo (5 fold): 0.253
 
