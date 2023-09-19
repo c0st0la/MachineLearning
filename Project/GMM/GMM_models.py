@@ -131,3 +131,136 @@ class GMMclass:
 
 
 
+class GMMTied:
+
+    def __init__(self, iterations, priors=[], alpha=0.1, psi=0.01):
+        self.gmm = None
+        self.params = [('components', 2 ** iterations), ('alpha', alpha), ('psi', psi)]
+        self.iterations = iterations
+        self.alpha = alpha
+        self.psi = psi
+        self.priors = priors
+        self.scores = None
+        self.DTR = None
+        self.LTR = None
+        self.DTE = None
+        self.LTE = None
+
+    def compute_scores(self):
+        self.scores = compute_gmm_scores(self.DTE, self.LTE, self.gmm)
+
+    @staticmethod
+    def gmm_tied_function(gmm, z_vec, n):
+        tied_sigma = np.zeros((gmm[0][2].shape[0], gmm[0][2].shape[0]))
+        for g in range((len(gmm))):
+            tied_sigma += gmm[g][2] * z_vec[g]
+        tied_sigma = (1 / n) * tied_sigma
+        for g in range((len(gmm))):
+            gmm[g] = (gmm[g][0], gmm[g][1], tied_sigma)
+        return gmm
+
+    def train(self):
+        gmm = list()
+        for classes in range(np.unique(self.LTR).size):
+            mu = compute_mean(self.DTR[:, self.LTR == classes])
+            cov = compute_covariance_matrix(self.DTR[:, self.LTR == classes])
+            gmm.append(lbg_algorithm(self.iterations, self.DTR[:, self.LTR == classes], [[1, mu, cov]], 0.1, 0.01,
+                                     self.gmm_tied_function))
+        self.gmm = gmm
+
+    def set_attributes(self, DTR: np.ndarray, LTR: np.ndarray, DTE: np.ndarray, LTE: np.ndarray):
+        self.DTR = DTR
+        self.LTR = LTR
+        self.DTE = DTE
+        self.LTE = LTE
+
+    def __str__(self):
+        return "GMMTied_"
+
+
+class GMMDiagonal:
+
+    def __init__(self, iterations, priors=[], alpha=0.1, psi=0.01):
+        self.gmm = None
+        self.params = [('components', 2 ** iterations), ('alpha', alpha), ('psi', psi)]
+        self.iterations = iterations
+        self.alpha = alpha
+        self.psi = psi
+        self.priors = priors
+        self.scores = None
+        self.DTR = None
+        self.LTR = None
+        self.DTE = None
+        self.LTE = None
+
+    def compute_scores(self):
+        self.scores = compute_gmm_scores(self.DTE, self.LTE, self.gmm)
+
+    @staticmethod
+    def gmm_diagonal_function(gmm, _z_vec, _n):
+        for g in range((len(gmm))):
+            sigma = gmm[g][2] * np.eye(gmm[g][2].shape[0])
+            gmm[g] = (gmm[g][0], gmm[g][1], sigma)
+        return gmm
+
+    def train(self):
+        gmm = list()
+        for classes in range(np.unique(self.LTR).size):
+            mu = compute_mean(self.DTR[:, self.LTR == classes])
+            cov = compute_covariance_matrix(self.DTR[:, self.LTR == classes])
+            gmm.append(lbg_algorithm(self.iterations, self.DTR[:, self.LTR == classes], [[1, mu, cov]], 0.1, 0.01,
+                                     self.gmm_diagonal_function))
+        self.gmm = gmm
+
+    def set_attributes(self, DTR: np.ndarray, LTR: np.ndarray, DTE: np.ndarray, LTE: np.ndarray):
+        self.DTR = DTR
+        self.LTR = LTR
+        self.DTE = DTE
+        self.LTE = LTE
+
+    def __str__(self):
+        return "GMMDiagonal_"
+
+
+class GMMTiedDiagonal:
+
+    def __init__(self, iterations, priors=[], alpha=0.1, psi=0.01):
+        self.gmm = None
+        self.params = [('components', 2 ** iterations), ('alpha', alpha), ('psi', psi)]
+        self.iterations = iterations
+        self.alpha = alpha
+        self.psi = psi
+        self.priors = priors
+        self.scores = None
+        self.DTR = None
+        self.LTR = None
+        self.DTE = None
+        self.LTE = None
+
+    def compute_scores(self):
+        self.scores = compute_gmm_scores(self.DTE, self.LTE, self.gmm)
+
+    @staticmethod
+    def __gmm_tied_diagonal_function(gmm, z_vec, n):
+        tied_gmm = GMMTied.gmm_tied_function(gmm, z_vec, n)
+        tied_diagonal_gmm = GMMDiagonal.gmm_diagonal_function(tied_gmm, z_vec, n)
+        return tied_diagonal_gmm
+
+    def train(self):
+        gmm = list()
+        for classes in range(np.unique(self.LTR).size):
+            mu = compute_mean(self.DTR[:, self.LTR == classes])
+            cov = compute_covariance_matrix(self.DTR[:, self.LTR == classes])
+            gmm.append(lbg_algorithm(self.iterations, self.DTR[:, self.LTR == classes], [[1, mu, cov]], 0.1, 0.01,
+                                     self.__gmm_tied_diagonal_function))
+        self.gmm = gmm
+
+    def set_attributes(self, DTR: np.ndarray, LTR: np.ndarray, DTE: np.ndarray, LTE: np.ndarray):
+        self.DTR = DTR
+        self.LTR = LTR
+        self.DTE = DTE
+        self.LTE = LTE
+
+    def __str__(self):
+        return "GMMTiedDiagonal_"
+

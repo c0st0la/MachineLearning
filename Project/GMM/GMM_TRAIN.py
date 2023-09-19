@@ -22,9 +22,9 @@ if __name__ == "__main__":
         print("========================================================")
         print("========================================================")
         print("Training for GMM Model with " + str(2 ** iteration) + " components for all pre process in report...")
-        #train_single_gmm(DTROriginal, LTR, DTEOriginal, LTE, iteration)
 
-        score.append(make_train_with_K_fold(DTROriginal, LTR, DTEOriginal, LTE, iteration))
+
+        score.append(GMM_train_with_K_fold(DTROriginal, LTR,iteration,"Gmm"))
         print("========================================================")
         print("========================================================")
         print("========================================================")

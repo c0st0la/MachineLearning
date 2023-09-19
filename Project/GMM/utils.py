@@ -13,6 +13,9 @@ def v_row(x: np.ndarray) -> np.ndarray:
 def compute_mean(d: np.ndarray) -> np.ndarray:
     return v_col(d.mean(1))
 
+def to_column(array):
+    return array.reshape((array.size, 1))
+
 
 def computes_mean_classes(d: np.ndarray, ltr: np.ndarray) -> list:
     n_classes = np.unique(ltr).size
@@ -27,6 +30,23 @@ def compute_std(d: np.ndarray) -> np.ndarray:
 def compute_covariance_matrix(d: np.ndarray) -> np.ndarray:
     mu = compute_mean(d)
     return (1 / d.shape[1]) * np.dot((d - mu), (d - mu).T)
+
+def center_data(D):
+    mu = to_column(D.mean(axis=1))
+    DC = D - mu
+    return DC
+def compute_within_covariance(D, L, labels):
+    Covariance_within = 0
+    tot_samples = 0
+    for label in labels:
+        # D_class is the dataset filtered by class
+        D_class = D[:, L == label]
+        DC_class = center_data(D_class)
+        num_samples = D_class.shape[1]
+        tot_samples += num_samples
+        Covariance_within = Covariance_within + np.dot(DC_class, DC_class.T)
+    Covariance_within = Covariance_within / float(tot_samples)
+    return Covariance_within
 
 
 def compute_covariance_matrices_for_classes(dt: np.ndarray, lt: np.ndarray) -> list:
