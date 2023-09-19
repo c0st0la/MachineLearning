@@ -21,7 +21,7 @@ if __name__ == "__main__":
                    10 ** 5]
     gammaValues = [10 ** -3, 10 ** -2, 10 ** -1]
     keys1 = ['10^-5', '10^-4', '10^-3', '10^-2', '10^-1', '1', '10^1', '10^2', '10^3', '10^4', '10^5']
-    keys2 = ['10^-3', '10^-2', '10^-1']
+    #keys2 = ['10^-3', '10^-2', '10^-1']
     K = 1
     c = 1
     d = 2
@@ -42,7 +42,7 @@ if __name__ == "__main__":
                                              applicationWorkingPoint3, costs, CList, K, d, c)
 
 
-    keys = list(itertools.product(keys1, keys2))
+    #keys = list(itertools.product(keys1, keys2))
     dict1 = {keys[i]: list(dict1.values())[i] for i in range(len(list(dict1.keys())))}
     dict2 = {keys[i]: list(dict2.values())[i] for i in range(len(list(dict2.keys())))}
     dict3 = {keys[i]: list(dict3.values())[i] for i in range(len(list(dict3.keys())))}
