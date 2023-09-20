@@ -1,6 +1,6 @@
 import numpy as np
 import os
-
+from Project import functions, functions2
 
 def v_col(x: np.ndarray) -> np.ndarray:
     return x.reshape((x.size, 1))
@@ -168,5 +168,15 @@ def compute_det_points(llr, L):
         FNR_points[idx] = FNR
         FPR_points[idx] = FPR
     return FNR_points, FPR_points
+
+def compute_calibration(scores, labels, prior):
+    DTRc = functions.to_row(scores[:int(len(scores) * 0.7)])
+    DTEc = functions.to_row(scores[int(len(scores) * 0.7):])
+    LTRc = functions.to_row(labels[:int(len(labels) * 0.7)])
+    LTEc = functions.to_row(labels[int(len(labels) * 0.7):])
+
+    estimatedW, estimatedB = functions.compute_logistic_regression_binary_hyperparameter(DTRc, LTRc, DTEc, 10**-5, prior)
+    scoreCalibrated = np.dot(estimatedW.T, scores.reshape((1, scores.size))) + estimatedB
+    return scoreCalibrated
 
 

@@ -32,10 +32,10 @@ def compute_MVG_KFold_DCF2(D, L, numFold, applicationWorkingPoint, costs, labels
     scores = numpy.zeros(L.shape[0])
     thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
     for i in range(numFold):
-
         (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
         llr_MVG = functions.compute_MVG_llrs(DTR, LTR, DTE, labels)
         scores[i * num_samples: (i + 1) * num_samples] = llr_MVG
+        DCFsNormalized = []
     for threshold in thresholds:
         optimalBayesDecisionPredictions = functions.compute_optimal_bayes_decision_given_threshold(scores,
                                                                                                    threshold)
@@ -44,6 +44,18 @@ def compute_MVG_KFold_DCF2(D, L, numFold, applicationWorkingPoint, costs, labels
             functions.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint, costs))
     minDCF = min(DCFsNormalized)
     return minDCF
+
+def compute_MVG_KFold_score(D, L, numFold, labels):
+    num_samples = int(D.shape[1] / numFold)
+    perm = numpy.random.permutation(D.shape[1])
+    D = D[:, perm]
+    L = L[perm]
+    scores = numpy.zeros(L.shape[0])
+    for i in range(numFold):
+        (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
+        llr_MVG = functions.compute_MVG_llrs(DTR, LTR, DTE, labels)
+        scores[i * num_samples: (i + 1) * num_samples] = llr_MVG
+    return (scores, L)
 
 
 def compute_NB_KFold_DCF(D, L, numFold, applicationWorkingPoint, costs, labels):
@@ -135,6 +147,19 @@ def compute_LR_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWork
     for key in list(x.keys()):
         x[key] = x[key] / numFold
     return x
+
+
+def compute_LR_KFold_scores(D, L, numFold, classPriorProbabilities, applicationWorkingPoint, costs, lambdaValues):
+    num_samples = int(D.shape[1] / numFold)
+    x = dict()
+    perm = numpy.random.permutation(D.shape[1])
+    D = D[:, perm]
+    L = L[perm]
+    thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
+    for i in range(numFold):
+        (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
+        for lambd in lambdaValues:
+            llr_LR = functions.compute_logistic_regression_binary_llr(DTR, LTR, DTE, lambd, classPriorProbabilities)
 
 
 def compute_QLR_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWorkingPoint, costs, lambdaValues):

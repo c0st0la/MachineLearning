@@ -58,8 +58,10 @@ def filter_dataset_by_labels(D, L):
     :param labels: It is the array containing the labels of the dataset
     :return: the dataset D filtered by the labels provided
     """
-
-    return D[:, L == 0], D[:, L == 1]
+    if (D.shape[0] >1):
+        return D[ :,L == 0], D[:, L == 1]
+    else:
+        return to_row(D[L == 0]), to_row(D[L == 1])
 
 
 def compute_binary_index_array(L):
@@ -843,6 +845,7 @@ def K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples, seed=0
     DTE = D[:, idxTest]
     LTR = L[idxTrain]
     LTE = L[idxTest]
+    labels_training = L[idx]
     return (DTR, LTR), (DTE, LTE)
 
 
@@ -952,6 +955,16 @@ def compute_logistic_regression_binary_llr(DTR, LTR, DTE, lambd, class_prior_pro
     DTRFalse, DTRTrue = filter_dataset_by_labels(DTR, LTR)
     llr = (numpy.dot(w.T, DTE) + b) - numpy.log(DTRTrue.shape[1] / DTRFalse.shape[1])
     return llr
+
+def compute_logistic_regression_binary_hyperparameter(DTR, LTR, DTE, lambd, class_prior_probability):
+    logReg = logRegClass(DTR, LTR, lambd, class_prior_probability)
+
+    x, f, d = scipy.optimize.fmin_l_bfgs_b(logReg.log_reg_obj_bin, x0=numpy.zeros(DTR.shape[0] + 1), approx_grad=True,
+                                           factr=100)
+    # print("The objective value at the minimum is %f" % f)
+    w = x[0:-1]  ##phi(x) da applicare su DTR +DTE
+    b = x[-1]
+    return (w, b)
 
 
 def compute_logistic_regression_binary_quadratic_llr(DTR, LTR, DTE, lambd, class_prior_probability):
