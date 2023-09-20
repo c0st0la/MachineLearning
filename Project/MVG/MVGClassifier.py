@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy
 from Project import functions2
 from Project.Classifiers import classifiers
-import seaborn
+
 
 if __name__ == "__main__":
 

@@ -1,0 +1,4 @@
+Error rate for this training is 8.8%
+minDCF with pi=0.5 0.141
+minDCF with pi=0.1 0.51
+minDCF with pi=0.9 0.272

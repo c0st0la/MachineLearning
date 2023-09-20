@@ -467,7 +467,6 @@ def compute_MVG_llrs(DTR, LTR, DTE, labels):
     llrs = numpy.zeros(log_MVG_class_conditional_probabilities.shape[1])
     for i in range(log_MVG_class_conditional_probabilities.shape[1]):
         llrs[i] = log_MVG_class_conditional_probabilities[1, i] - log_MVG_class_conditional_probabilities[0, i]
-
     return llrs
 
 
@@ -1176,7 +1175,7 @@ def compute_optimal_bayes_decision(logLikelihoodRatios, priorsProbability, costs
     :param costs: index 0 contains cost of false negative, index 1 contains cost of false postive
     :return:
     """
-    predictions = numpy.zeros((logLikelihoodRatios.size), dtype=numpy.int)
+    predictions = numpy.zeros((logLikelihoodRatios.size), dtype=numpy.int32)
     threshold = - numpy.log((priorsProbability[1] * costs[0]) / (priorsProbability[0] * costs[1]))
     for index, llr in enumerate(logLikelihoodRatios):
         if llr > threshold:

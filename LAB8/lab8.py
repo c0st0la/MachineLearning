@@ -196,8 +196,8 @@ if __name__ == "__main__":
     #             compute_normalized_detection_cost_function(confusionMatrix, classPriorProbability, costs))
     #     DCFsNormalizedMinEps1.append(min(DCFsNormalized2))
     #     DCFsNormalized2 = []
-    # plt.plot(effPriorLogOdds, DCFsNormalizedEps1, label='DCFEps1', color ='y')
-    # plt.plot(effPriorLogOdds, DCFsNormalizedMinEps1, label='minDCFEps1', color ='g')
+    # plt.plot.py(effPriorLogOdds, DCFsNormalizedEps1, label='DCFEps1', color ='y')
+    # plt.plot.py(effPriorLogOdds, DCFsNormalizedMinEps1, label='minDCFEps1', color ='g')
     # plt.ylim([0, 1.1])
     # plt.xlim([-3, 3])
     # plt.legend()

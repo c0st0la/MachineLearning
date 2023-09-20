@@ -134,6 +134,7 @@ def GMMTiedDiagonal_train_with_K_fold(DTR, LTR,iterations,path, K=5, seed=27):
 
     debug_print_information(model, labels_training, path, iterations)
     return model.scores
+
 def debug_print_information(model, labels,path,iterations):
     predicted_labels = np.where(model.scores > 0, 1, 0)
     err = (1 - (labels == predicted_labels).sum() / labels.size) * 100
@@ -149,3 +150,12 @@ def debug_print_information(model, labels,path,iterations):
         fp.write("minDCF with pi=0.1 "+ cost_0_1)
         fp.write('\n')
         fp.write("minDCF with pi=0.9 "+ cost_0_9 )
+
+
+def plot_graph(scores, labels):
+
+    cost_0_5 = str(round(compute_minimum_NDCF(scores, labels, 0.5, 1, 1)[0], 3))
+    cost_0_1 = str(round(compute_minimum_NDCF(scores, labels, 0.1, 1, 1)[0], 3))
+    cost_0_9 = str(round(compute_minimum_NDCF(scores, labels, 0.9, 1, 1)[0], 3))
+
+
