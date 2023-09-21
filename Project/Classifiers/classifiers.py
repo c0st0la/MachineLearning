@@ -25,7 +25,7 @@ def compute_MVG_KFold_DCF(D, L, numFold, applicationWorkingPoint, costs, labels)
 
 def compute_MVG_KFold_DCF2(D, L, numFold, applicationWorkingPoint, costs, labels):
     num_samples = int(D.shape[1] / numFold)
-    DCFsNormalized = []
+
     perm = numpy.random.permutation(D.shape[1])
     D = D[:, perm]
     L = L[perm]
@@ -35,7 +35,7 @@ def compute_MVG_KFold_DCF2(D, L, numFold, applicationWorkingPoint, costs, labels
         (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
         llr_MVG = functions.compute_MVG_llrs(DTR, LTR, DTE, labels)
         scores[i * num_samples: (i + 1) * num_samples] = llr_MVG
-        DCFsNormalized = []
+    DCFsNormalized = []
     for threshold in thresholds:
         optimalBayesDecisionPredictions = functions.compute_optimal_bayes_decision_given_threshold(scores,
                                                                                                    threshold)
@@ -47,6 +47,7 @@ def compute_MVG_KFold_DCF2(D, L, numFold, applicationWorkingPoint, costs, labels
 
 def compute_MVG_KFold_score(D, L, numFold, labels):
     num_samples = int(D.shape[1] / numFold)
+    numpy.random.seed(27)
     perm = numpy.random.permutation(D.shape[1])
     D = D[:, perm]
     L = L[perm]
@@ -55,7 +56,7 @@ def compute_MVG_KFold_score(D, L, numFold, labels):
         (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
         llr_MVG = functions.compute_MVG_llrs(DTR, LTR, DTE, labels)
         scores[i * num_samples: (i + 1) * num_samples] = llr_MVG
-    return (scores, L)
+    return scores, L
 
 
 def compute_NB_KFold_DCF(D, L, numFold, applicationWorkingPoint, costs, labels):
@@ -173,6 +174,7 @@ def compute_QLR_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWor
         (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
         DTR = functions.quadratic_expansion(DTR)
         DTE = functions.quadratic_expansion(DTE)
+
         for lambd in lambdaValues:
             DCFsNormalized1 = []
             llr_QLR = functions.compute_logistic_regression_binary_quadratic_llr(DTR, LTR, DTE, lambd,
@@ -191,6 +193,23 @@ def compute_QLR_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWor
     for key in list(x.keys()):
         x[key] = x[key] / numFold
     return x
+
+
+def compute_QLR_KFold_scores(D, L, numFold, lambd, classPriorProbabilities):
+    num_samples = int(D.shape[1] / numFold)
+    numpy.random.seed(27)
+    perm = numpy.random.permutation(D.shape[1])
+    D = D[:, perm]
+    L = L[perm]
+    scores = numpy.zeros(L.shape[0])
+    for i in range(numFold):
+        (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
+        DTR = functions.quadratic_expansion(DTR)
+        DTE = functions.quadratic_expansion(DTE)
+        estimatedW, estimatedB = functions.compute_logistic_regression_binary_quadratic_hyperparameters(DTR, LTR,
+                                                                                        lambd, classPriorProbabilities)
+        scores[i * num_samples: (i + 1) * num_samples] = numpy.dot(estimatedW.T, DTE) + estimatedB
+    return scores, L
 
 
 def compute_SVM_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWorkingPoint, costs, CList, K):
@@ -253,6 +272,22 @@ def compute_PolySVM_KFold_DCF(D, L, numFold, classPriorProbabilities, applicatio
     for key in list(x.keys()):
         x[key] = x[key] / numFold
     return x
+
+
+def compute_PolySVM_KFold_scores(D, L, numFold, classPriorProbabilities, C, K, d, c):
+    num_samples = int(D.shape[1] / numFold)
+    numpy.random.seed(27)
+    perm = numpy.random.permutation(D.shape[1])
+    D = D[:, perm]
+    L = L[perm]
+    scores = numpy.zeros(L.shape[0])
+    for i in range(numFold):
+        (DTR, LTR), (DTE, LTE) = functions.K_fold_generate_Training_and_Testing_samples(D, L, i, numFold, num_samples)
+        scores[i * num_samples: (i + 1) * num_samples] = functions.compute_support_vector_machine_kernel_scores(DTR, LTR,
+                                                                DTE, LTE, K, C, 'p', classPriorProbabilities, c=c, d=d)
+    return scores, L
+
+
 
 def compute_RadialBasisSVM_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWorkingPoint, costs, CList, K, gammaValues, d, c):
     # CList = [10 ** -5, 10 ** -3, 10 ** -1, 10, 10 ** 3, 10 ** 5]

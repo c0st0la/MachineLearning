@@ -32,9 +32,10 @@ def save_bayes_error_plot(scores, L, costs, path):
         DCFsNormalizedMin.append(min(DCFsNormalized2))
         DCFsNormalized2 = []
     mass = max(max(DCFsNormalizedMin), max(DCFsNormalized))
-    with open("./DCFs/" + path, "w") as fp:
-        fp.write("minDCF: "+str(min(DCFsNormalized))+"\n")
-        fp.write("actDCF: " + str(min(DCFsNormalized)) + "\n")
+    with open("./DCFs/minDCF_" + path, "w") as fp:
+        fp.write(str(min(DCFsNormalizedMin)))
+    with open("./DCFs/actDCF_" + path, "w") as fp:
+        fp.write(str(min(DCFsNormalized)))
     plt.figure()
     plt.plot(effPriorLogOdds, DCFsNormalized, label='actDCF', color='b')
     plt.plot(effPriorLogOdds, DCFsNormalizedMin,':', label='minDCF', color='r')
@@ -71,10 +72,84 @@ if __name__ == "__main__":
     ## MVG
 
     scores_mvg, ltr = classifiers.compute_MVG_KFold_score(DTROriginalNormalized, LTR, numFold, labels)
-    save_bayes_error_plot(scores_mvg, ltr, costs, "MVG")
+    save_bayes_error_plot(scores_mvg, ltr, costs, "MVGZscoreUncalibrated_pi_"+str(applicationWorkingPointsPrint[1]))
+    with open("./Scores/" + "MVGZscoreUncalibrated_pi_" + str(applicationWorkingPointsPrint[1]), "w") as fp:
+        fp.write("")
+    with open("./Scores/" + "MVGZscoreUncalibrated_pi_" + str(applicationWorkingPointsPrint[1]), "a") as fp:
+        for score in scores_mvg.tolist():
+            fp.write(str(score) + " ")
+        fp.write("\n")
+        for label in list(ltr):
+            fp.write(str(label) + " ")
+    print("sto calibrando...")
+    calibratedScore = compute_calibration(scores_mvg, ltr, applicationWorkingPoints[1])
+    with open("./Scores/" + "MVGZscoreCalibrated_pi_" + str(applicationWorkingPointsPrint[1]), "w") as fp:
+        fp.write("")
+    with open("./Scores/" + "MVGZscoreCalibrated_pi_" + str(applicationWorkingPointsPrint[1]), "a") as fp:
+        for score in list(calibratedScore):
+            fp.write(str(score) + " ")
+        fp.write("\n")
+        for label in list(ltr):
+            fp.write(str(label) + " ")
 
-    for i, applicationWorkingPoint in enumerate(applicationWorkingPoints):
-        print("sto calibrando...")
-        calibratedScore = compute_calibration(scores_mvg, ltr, applicationWorkingPoint)
-        save_bayes_error_plot(calibratedScore, ltr, costs, "MVG_pi_"+str(applicationWorkingPointsPrint[i]))
+    save_bayes_error_plot(calibratedScore, ltr, costs, "MVGZscoreCalibrated_pi_"+str(applicationWorkingPointsPrint[1]))
+
+
+    ## QLR zscore 0_5
+
+    scores_qlr, ltr = classifiers.compute_QLR_KFold_scores(DTROriginalNormalized, LTR, numFold, 10**-5,
+                                                           applicationWorkingPoints[1])
+    with open("./Scores/" + "QLRZscoreUncalibrated_pi_" + str(applicationWorkingPointsPrint[1]), "w") as fp:
+        fp.write("")
+    with open("./Scores/" + "QLRZscoreUncalibrated_pi_" + str(applicationWorkingPointsPrint[1]), "a") as fp:
+        for score in scores_qlr.tolist():
+            fp.write(str(score) + " ")
+        fp.write("\n")
+        for label in list(ltr):
+            fp.write(str(label) + " ")
+    save_bayes_error_plot(scores_qlr, ltr, costs, "QLRZscoreUncalibrated_pi_" + str(applicationWorkingPointsPrint[1]))
+
+
+    print("sto calibrando...")
+    calibratedScore = compute_calibration(scores_qlr, ltr, applicationWorkingPoints[1])
+    with open("./Scores/" + "QLRZscoreCalibrated_pi_" + str(applicationWorkingPointsPrint[1]), "w") as fp:
+        fp.write("")
+    with open("./Scores/" + "QLRZscoreCalibrated_pi_" + str(applicationWorkingPointsPrint[1]), "a") as fp:
+        for score in list(calibratedScore):
+            fp.write(str(score) + " ")
+        fp.write("\n")
+        for label in list(ltr):
+            fp.write(str(label) + " ")
+    save_bayes_error_plot(calibratedScore, ltr, costs, "QLRZscoreCalibrated_pi_"+str(applicationWorkingPointsPrint[1]))
+
+
+
+    ## PolySVM zscore 0_5
+
+    scores_qsvm, ltr = classifiers.compute_PolySVM_KFold_scores(DTROriginalNormalized, LTR, numFold,
+                                                                applicationWorkingPoints[1], 10**2, 1, 2, 1)
+    with open("./Scores/" + "QSVMZscoreUncalibrated_pi_" + str(applicationWorkingPointsPrint[1]), "w") as fp:
+        fp.write("")
+    with open("./Scores/" + "QSVMZscoreUncalibrated_pi_" + str(applicationWorkingPointsPrint[1]), "a") as fp:
+        for score in scores_qsvm.tolist():
+            fp.write(str(score) + " ")
+        fp.write("\n")
+        for label in list(ltr):
+            fp.write(str(label) + " ")
+    save_bayes_error_plot(scores_qsvm, ltr, costs, "QSVMZscoreUncalibrated_pi_" + str(applicationWorkingPointsPrint[1]))
+
+
+    print("sto calibrando...")
+    calibratedScore = compute_calibration(scores_qsvm, ltr, applicationWorkingPoints[1])
+    with open("./Scores/" + "QSVMZscoreCalibrated_pi_" + str(applicationWorkingPointsPrint[1]), "w") as fp:
+        fp.write(str(calibratedScore))
+    with open("./Scores/" + "QSVMZscoreCalibrated_pi_" + str(applicationWorkingPointsPrint[1]), "w") as fp:
+        fp.write("")
+    with open("./Scores/" + "QSVMZscoreCalibrated_pi_" + str(applicationWorkingPointsPrint[1]), "a") as fp:
+        for score in list(calibratedScore):
+            fp.write(str(score) + " ")
+        fp.write("\n")
+        for label in list(ltr):
+            fp.write(str(label) + " ")
+    save_bayes_error_plot(calibratedScore, ltr, costs, "QSVMZscoreCalibrated_pi_"+str(applicationWorkingPointsPrint[1]))
 

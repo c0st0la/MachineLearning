@@ -173,7 +173,6 @@ def compute_calibration(scores, labels, prior):
     DTRc = functions.to_row(scores[:int(len(scores) * 0.7)])
     DTEc = functions.to_row(scores[int(len(scores) * 0.7):])
     LTRc = functions.to_row(labels[:int(len(labels) * 0.7)])
-    LTEc = functions.to_row(labels[int(len(labels) * 0.7):])
 
     estimatedW, estimatedB = functions.compute_logistic_regression_binary_hyperparameter(DTRc, LTRc, DTEc, 10**-5, prior)
     scoreCalibrated = np.dot(estimatedW.T, scores.reshape((1, scores.size))) + estimatedB

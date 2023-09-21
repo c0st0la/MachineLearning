@@ -29,42 +29,28 @@ if __name__ == "__main__":
     DCFsNormalized2 = []
     DCFsNormalized3 = []
 
-    llr_MVG = functions2.compute_MVG_llrs(DTROriginalNormalized, LTR, DTEOriginalNormalized, labels)
-    for threshold in thresholds:
-        optimalBayesDecisionPredictions = functions2.compute_optimal_bayes_decision_given_threshold(llr_MVG, threshold)
-        confusionMatrix = functions2.compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
-        DCFsNormalized1.append(
-            functions2.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint1, costs))
-        DCFsNormalized2.append(
-            functions2.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint2, costs))
-        DCFsNormalized3.append(
-            functions2.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint3, costs))
-    DFCmin1 = min(DCFsNormalized1)
-    DFCmin2 = min(DCFsNormalized2)
-    DFCmin3 = min(DCFsNormalized3)
 
-    kFoldDCFmin1 = classifiers.compute_MVG_KFold_DCF(DTROriginalNormalized, LTR, numFold, applicationWorkingPoint1, costs, labels)
+    kFoldDCFmin1 = classifiers.compute_MVG_KFold_DCF2(DTROriginalNormalized, LTR, numFold, applicationWorkingPoint1, costs, labels)
 
-    kFoldDCFmin2 = classifiers.compute_MVG_KFold_DCF(DTROriginalNormalized, LTR, numFold, applicationWorkingPoint2, costs, labels)
+    kFoldDCFmin2 = classifiers.compute_MVG_KFold_DCF2(DTROriginalNormalized, LTR, numFold, applicationWorkingPoint2, costs, labels)
 
-    kFoldDCFmin3 = classifiers.compute_MVG_KFold_DCF(DTROriginalNormalized, LTR, numFold, applicationWorkingPoint3, costs, labels)
+    kFoldDCFmin3 = classifiers.compute_MVG_KFold_DCF2(DTROriginalNormalized, LTR, numFold, applicationWorkingPoint3, costs, labels)
 
     toPrint = ""
     toPrint += "Prior probability for class 0 is : " + str(applicationWorkingPoint1[0]) + "\n"
     toPrint += "Prior probability for class 1 is : " + str(applicationWorkingPoint1[1]) + "\n"
-    toPrint += "The min of the normalized DCF for MVG classifier: %.3f\n" % DFCmin1
     toPrint += "The min of the normalized DCF for MVG classifier with K-fold algo (%d fold): %.3f\n" % (
         numFold, kFoldDCFmin1) + "\n"
 
     toPrint += "Prior probability for class 0 is : " + str(applicationWorkingPoint2[0]) + "\n"
     toPrint += "Prior probability for class 1 is : " + str(applicationWorkingPoint2[1]) + "\n"
-    toPrint += "The min of the normalized DCF for MVG classifier : %.3f\n" % DFCmin2
+
     toPrint += "The min of the normalized DCF for MVG classifier with K-fold algo (%d fold): %.3f\n" % (
         numFold, kFoldDCFmin2) + "\n"
 
     toPrint += "Prior probability for class 0 is : " + str(applicationWorkingPoint3[0]) + "\n"
     toPrint += "Prior probability for class 1 is : " + str(applicationWorkingPoint3[1]) + "\n"
-    toPrint += "The min of the normalized DCF for MVG classifier : %.3f\n" % DFCmin3
+
     toPrint += "The min of the normalized DCF for MVG classifier with K-fold algo (%d fold): %.3f\n" % (
         numFold, kFoldDCFmin3) + "\n"
 
@@ -78,45 +64,33 @@ if __name__ == "__main__":
     DCFsNormalized2 = []
     DCFsNormalized3 = []
 
-    llr_MVG = functions2.compute_MVG_llrs(DTROriginal, LTR, DTEOriginal, labels)
-    for threshold in thresholds:
-        optimalBayesDecisionPredictions = functions2.compute_optimal_bayes_decision_given_threshold(llr_MVG, threshold)
-        confusionMatrix = functions2.compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
-        DCFsNormalized1.append(
-            functions2.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint1, costs))
-        DCFsNormalized2.append(
-            functions2.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint2, costs))
-        DCFsNormalized3.append(
-            functions2.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint3, costs))
-    DFCmin1 = min(DCFsNormalized1)
-    DFCmin2 = min(DCFsNormalized2)
-    DFCmin3 = min(DCFsNormalized3)
 
-    kFoldDCFmin1 = classifiers.compute_MVG_KFold_DCF(DTROriginal, LTR, numFold, applicationWorkingPoint1,
+
+    kFoldDCFmin1 = classifiers.compute_MVG_KFold_DCF2(DTROriginal, LTR, numFold, applicationWorkingPoint1,
                                                      costs, labels)
 
-    kFoldDCFmin2 = classifiers.compute_MVG_KFold_DCF(DTROriginal, LTR, numFold, applicationWorkingPoint2,
+    kFoldDCFmin2 = classifiers.compute_MVG_KFold_DCF2(DTROriginal, LTR, numFold, applicationWorkingPoint2,
                                                      costs, labels)
 
-    kFoldDCFmin3 = classifiers.compute_MVG_KFold_DCF(DTROriginal, LTR, numFold, applicationWorkingPoint3,
+    kFoldDCFmin3 = classifiers.compute_MVG_KFold_DCF2(DTROriginal, LTR, numFold, applicationWorkingPoint3,
                                                      costs, labels)
 
     toPrint = ""
     toPrint += "Prior probability for class 0 is : " + str(applicationWorkingPoint1[0]) + "\n"
     toPrint += "Prior probability for class 1 is : " + str(applicationWorkingPoint1[1]) + "\n"
-    toPrint += "The min of the normalized DCF for MVG classifier: %.3f\n" % DFCmin1
+
     toPrint += "The min of the normalized DCF for MVG classifier with K-fold algo (%d fold): %.3f\n" % (
         numFold, kFoldDCFmin1) + "\n"
 
     toPrint += "Prior probability for class 0 is : " + str(applicationWorkingPoint2[0]) + "\n"
     toPrint += "Prior probability for class 1 is : " + str(applicationWorkingPoint2[1]) + "\n"
-    toPrint += "The min of the normalized DCF for MVG classifier : %.3f\n" % DFCmin2
+
     toPrint += "The min of the normalized DCF for MVG classifier with K-fold algo (%d fold): %.3f\n" % (
         numFold, kFoldDCFmin2) + "\n"
 
     toPrint += "Prior probability for class 0 is : " + str(applicationWorkingPoint3[0]) + "\n"
     toPrint += "Prior probability for class 1 is : " + str(applicationWorkingPoint3[1]) + "\n"
-    toPrint += "The min of the normalized DCF for MVG classifier : %.3f\n" % DFCmin3
+
     toPrint += "The min of the normalized DCF for MVG classifier with K-fold algo (%d fold): %.3f\n" % (
         numFold, kFoldDCFmin3) + "\n"
 

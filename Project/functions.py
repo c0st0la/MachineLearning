@@ -606,227 +606,6 @@ def compute_TNB_log_likelihood_as_score_matrix(DTR, LTR, DTE, labels):
         logpdf_MVG_matrix(DTE, mu, C, label, class_conditional_probabilities)
     return class_conditional_probabilities
 
-
-def K_fold_cross_validation_accuracy(D, L, classifier, k, class_prior_probability, labels):
-    """
-        This function perform a K-fold cross validation.
-        You have to indicate the name of the classifier you want to use between:
-        MVG, NB, TC, TNB.
-        k is the number of folds
-        D is the dataset
-        L is the class mapping of the dataset
-    """
-    num_samples = int(D.shape[1] / k)
-    tot_accuracy = 0
-    tot_error_rate = 0
-    if classifier == "MVG":
-        for i in range(k):
-            (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
-            log_MVG_class_conditional_probabilities = compute_MVG_log_likelihood_as_score_matrix(DTR, LTR, DTE, labels)
-            log_MVG_posterior_probability = compute_log_posterior_probability(log_MVG_class_conditional_probabilities,
-                                                                              class_prior_probability)
-            MVG_posterior_probability = numpy.exp(log_MVG_posterior_probability)
-            MVG_predictions = numpy.argmax(MVG_posterior_probability, axis=0)
-            MVG_prediction_accuracy = compute_prediction_accuracy(MVG_predictions, LTE)
-            MVG_error_rate = compute_error_rate(MVG_predictions, LTE)
-            tot_accuracy += MVG_prediction_accuracy
-            tot_error_rate += MVG_error_rate
-
-    elif classifier == "NB":
-        for i in range(k):
-            (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
-            log_NB_class_conditional_probabilities = compute_NB_log_likelihood_as_score_matrix(DTR, LTR, DTE, labels)
-            log_NB_posterior_probability = compute_log_posterior_probability(log_NB_class_conditional_probabilities,
-                                                                             class_prior_probability)
-            NB_posterior_probability = numpy.exp(log_NB_posterior_probability)
-            NB_predictions = numpy.argmax(NB_posterior_probability, axis=0)
-            NB_prediction_accuracy = compute_prediction_accuracy(NB_predictions, LTE)
-            NB_error_rate = compute_error_rate(NB_predictions, LTE)
-            tot_accuracy += NB_prediction_accuracy
-            tot_error_rate += NB_error_rate
-
-    elif classifier == "TC":
-        for i in range(k):
-            (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
-            log_TC_class_conditional_probabilities = compute_TC_log_likelihood_as_score_matrix(DTR, LTR, DTE, labels)
-            log_TC_posterior_probability = compute_log_posterior_probability(log_TC_class_conditional_probabilities,
-                                                                             class_prior_probability)
-            TC_posterior_probability = numpy.exp(log_TC_posterior_probability)
-            TC_predictions = numpy.argmax(TC_posterior_probability, axis=0)
-            TC_prediction_accuracy = compute_prediction_accuracy(TC_predictions, LTE)
-            TC_error_rate = compute_error_rate(TC_predictions, LTE)
-            tot_accuracy += TC_prediction_accuracy
-            tot_error_rate += TC_error_rate
-
-    elif classifier == "TNB":
-        for i in range(k):
-            (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
-            log_TNB_class_conditional_probabilities = compute_TNB_log_likelihood_as_score_matrix(DTR, LTR, DTE, labels)
-            log_TNB_posterior_probability = compute_log_posterior_probability(log_TNB_class_conditional_probabilities,
-                                                                              class_prior_probability)
-            TNB_posterior_probability = numpy.exp(log_TNB_posterior_probability)
-            TNB_predictions = numpy.argmax(TNB_posterior_probability, axis=0)
-            TNB_prediction_accuracy = compute_prediction_accuracy(TNB_predictions, LTE)
-            TNB_error_rate = compute_error_rate(TNB_predictions, LTE)
-            tot_accuracy += TNB_prediction_accuracy
-            tot_error_rate += TNB_error_rate
-
-    else:
-        print("The given classifier %s is not recognized!" % classifier)
-        exit(-1)
-    tot_accuracy = tot_accuracy / k
-    tot_error_rate = tot_error_rate / k
-    return tot_accuracy, tot_error_rate
-
-
-def K_fold_cross_validation_DCF(D, L, classifier, k, classPriorProbabilities, costs, labels, lambdaValues=[], K=1):
-    num_samples = int(D.shape[1] / k)
-    totDCF = 0
-    DCFsNormalized1 = []
-    thresholds = [i for i in numpy.arange(-30, 30, 0.1)]
-    perm = numpy.random.permutation(D.shape[1])
-    D = D[:, perm]
-    L = L[perm]
-    if classifier == "MVG":
-        for i in range(k):
-            (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
-            llr_MVG = compute_MVG_llrs(DTR, LTR, DTE, labels)
-            for threshold in thresholds:
-                optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(llr_MVG, threshold)
-                confusionMatrix = compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
-                DCFsNormalized1.append(
-                    compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
-            totDCF += min(DCFsNormalized1)
-
-    elif classifier == "NB":
-        for i in range(k):
-            (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
-            llr_NB = compute_NB_llrs(DTR, LTR, DTE, labels)
-            for threshold in thresholds:
-                optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(llr_NB, threshold)
-                confusionMatrix = compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
-                DCFsNormalized1.append(
-                    compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
-            totDCF += min(DCFsNormalized1)
-
-    elif classifier == "TC":
-        for i in range(k):
-            (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
-            llr_TC = compute_TC_llrs(DTR, LTR, DTE, labels)
-            for threshold in thresholds:
-                optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(llr_TC, threshold)
-                confusionMatrix = compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
-                DCFsNormalized1.append(
-                    compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
-            totDCF += min(DCFsNormalized1)
-
-    elif classifier == "TNB":
-        for i in range(k):
-            (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
-            llr_TNB = compute_TNB_llrs(DTR, LTR, DTE, labels)
-            for threshold in thresholds:
-                optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(llr_TNB, threshold)
-                confusionMatrix = compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
-                DCFsNormalized1.append(
-                    compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
-            totDCF += min(DCFsNormalized1)
-
-    elif classifier == "LR":
-        if len(lambdaValues) == 0:
-            print("Insert a list of lambda values!")
-            exit(-1)
-        x = dict()
-        for i in range(k):
-            (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
-            for lambd in lambdaValues:
-                llr_LR = compute_logistic_regression_binary_llr(DTR, LTR, DTE, lambd, classPriorProbabilities)
-                for threshold in thresholds:
-                    optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(llr_LR, threshold)
-                    confusionMatrix = compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
-                    DCFsNormalized1.append(
-                        compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
-                if lambd not in list(x.keys()):
-                    x[lambd] = min(DCFsNormalized1)
-                else:
-                    x[lambd] = x[lambd] + min(DCFsNormalized1)
-        for key in list(x.keys()):
-            x[key] = x[key] / k
-        return x
-
-    elif classifier == "QLR":
-        if len(lambdaValues) == 0:
-            print("Insert a list of lambda values!")
-            exit(-1)
-        x = dict()
-        for i in range(k):
-            (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
-            DTR = quadratic_expansion(DTR)
-            DTE = quadratic_expansion(DTE)
-            for lambd in lambdaValues:
-                llr_QLR = compute_logistic_regression_binary_quadratic_llr(DTR, LTR, DTE, lambd,
-                                                                           classPriorProbabilities)
-                for threshold in thresholds:
-                    optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(llr_QLR, threshold)
-                    confusionMatrix = compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
-                    DCFsNormalized1.append(
-                        compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
-                if lambd not in list(x.keys()):
-                    x[lambd] = min(DCFsNormalized1)
-                else:
-                    x[lambd] = x[lambd] + min(DCFsNormalized1)
-        for key in list(x.keys()):
-            x[key] = x[key] / k
-        return x
-    elif classifier == "SVM":
-        CList = [10 ** -5, 10 ** -4, 10 ** -3, 10 ** -2, 10 ** -1, 1, 10, 10 ** 2, 10 ** 3, 10 ** 4, 10 ** 5]
-        x = dict()
-        for i in range(k):
-            (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
-            for C in CList:
-                llr_SVM = compute_support_vector_machine_llr(DTR, LTR, DTE, LTE, K, C, classPriorProbabilities)
-                for threshold in thresholds:
-                    optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(llr_SVM, threshold)
-                    confusionMatrix = compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
-                    DCFsNormalized1.append(
-                        compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
-                if C not in list(x.keys()):
-                    x[C] = min(DCFsNormalized1)
-                else:
-                    x[C] = x[C] + min(DCFsNormalized1)
-        for key in list(x.keys()):
-            x[key] = x[key] / k
-        return x
-    elif classifier == "KSVM":
-        CList = [10 ** -5, 10 ** -4, 10 ** -3, 10 ** -2, 10 ** -1, 1, 10, 10 ** 2, 10 ** 3, 10 ** 4, 10 ** 5]
-        gammaValues = [10 ** -3, 10 ** -2, 10 ** -1]
-        x = dict()
-        for i in range(k):
-            (DTR, LTR), (DTE, LTE) = K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples)
-            for gamma in gammaValues:
-                for C in CList:
-                    llr_KSVM = compute_support_vector_machine_kernel_llr(DTR, LTR, DTE, LTE, K, C,
-                                                                         'r', classPriorProbabilities, c=None, d=None,
-                                                                         gamma=gamma)
-                    for threshold in thresholds:
-                        optimalBayesDecisionPredictions = compute_optimal_bayes_decision_given_threshold(llr_KSVM,
-                                                                                                         threshold)
-                        confusionMatrix = compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
-                        DCFsNormalized1.append(
-                            compute_normalized_detection_cost_function(confusionMatrix, classPriorProbabilities, costs))
-                    if (C, gamma) not in list(x.keys()):
-                        x[(C, gamma)] = min(DCFsNormalized1)
-                    else:
-                        x[(C, gamma)] = x[(C, gamma)] + min(DCFsNormalized1)
-        for key in list(x.keys()):
-            x[key] = x[key] / k
-        return x
-    else:
-        print("The given classifier %s is not recognized!" % classifier)
-        exit(-1)
-
-    return totDCF / k
-
-
 def K_fold_generate_Training_and_Testing_samples(D, L, i, k, num_samples, seed=0):
     numpy.random.seed(seed)
     idx = numpy.arange(0, D.shape[1])
@@ -964,7 +743,7 @@ def compute_logistic_regression_binary_hyperparameter(DTR, LTR, DTE, lambd, clas
     # print("The objective value at the minimum is %f" % f)
     w = x[0:-1]  ##phi(x) da applicare su DTR +DTE
     b = x[-1]
-    return (w, b)
+    return w, b
 
 
 def compute_logistic_regression_binary_quadratic_llr(DTR, LTR, DTE, lambd, class_prior_probability):
@@ -979,6 +758,14 @@ def compute_logistic_regression_binary_quadratic_llr(DTR, LTR, DTE, lambd, class
     llr = (numpy.dot(w.T, DTE) + b) - numpy.log(DTRTrue.shape[1] / DTRFalse.shape[1])
     return llr
 
+def compute_logistic_regression_binary_quadratic_hyperparameters(DTR, LTR, lambd, class_prior_probability):
+    logReg = logRegClass(DTR, LTR, lambd, class_prior_probability)
+
+    x, f, d = scipy.optimize.fmin_l_bfgs_b(logReg.log_reg_obj_bin, x0=numpy.zeros(DTR.shape[0] + 1), approx_grad=True,
+                                           factr=100)
+    w = x[0:-1]  ##phi(x) da applicare su DTR +DTE
+    b = x[-1]
+    return w, b
 
 def logistic_regression_binary_quadratic_surface(DTR, LTR, DTE, lambd, class_prior_probability, threshold):
     DTR = quadratic_expansion(DTR)
@@ -988,7 +775,6 @@ def logistic_regression_binary_quadratic_surface(DTR, LTR, DTE, lambd, class_pri
 
     x, f, d = scipy.optimize.fmin_l_bfgs_b(logReg.log_reg_obj_bin, x0=numpy.zeros(DTR.shape[0] + 1), approx_grad=True,
                                            factr=100)
-
     w = x[0:-1]
     b = x[-1]
     DTR_false, DTR_true = filter_dataset_by_labels(DTR, LTR)
@@ -1122,6 +908,68 @@ class SVMKernelClass:
 
 
 def compute_support_vector_machine_kernel_llr(DTR, LTR, DTE, LTE, K, C, kernelFunction, classProbabilities, c=None,
+                                              d=None, gamma=None):
+    svm = SVMKernelClass(DTR, LTR, DTE, K, C, kernelFunction, c, d, gamma)
+    svm.bounds = []
+    empPriorTrue = filter_dataset_by_labels(DTR, LTR)[1].shape[1] / DTR.shape[1]
+    empPriorFalse = filter_dataset_by_labels(DTR, LTR)[0].shape[1] / DTR.shape[1]
+    Ct = C * (classProbabilities[1] / empPriorTrue)
+    Cf = C * (classProbabilities[0] / empPriorFalse)
+    for i in range(DTR.shape[1]):
+        if LTR[i] == 0:
+            svm.bounds.append((0, Cf))
+        else:
+            svm.bounds.append((0, Ct))
+    x, f, d = scipy.optimize.fmin_l_bfgs_b(svm.svm_dual_obj, x0=numpy.zeros(svm.DTR.shape[1]), fprime=None,
+                                           bounds=svm.bounds, factr=1.0)
+    alpha = x
+    llr = []
+    DTRFalse, DTRTrue = filter_dataset_by_labels(DTR, LTR)
+    for i in range(svm.DTE.shape[1]):
+        tmp = 0
+        for j in range(svm.DTR.shape[1]):
+            if alpha[j] > 0:
+                if svm.kernelFunction == polyKernelFunction:
+                    tmp = tmp + alpha[j] * svm.z[j] * svm.kernelFunction(DTR[:, j], DTE[:, i], svm.c, svm.d, svm.K)
+                elif svm.kernelFunction == radialBassKernelFunction:
+                    tmp = tmp + alpha[j] * svm.z[j] * svm.kernelFunction(DTR[:, j], DTE[:, i], svm.gamma, svm.K)
+        llr.append(tmp - numpy.log(DTRTrue.shape[1] / DTRFalse.shape[1]))
+    return llr
+
+
+
+def compute_support_vector_machine_kernel_scores(DTR, LTR, DTE, LTE, K, C, kernelFunction, classProbabilities, c=None,
+                                              d=None, gamma=None):
+    svm = SVMKernelClass(DTR, LTR, DTE, K, C, kernelFunction, c, d, gamma)
+    svm.bounds = []
+    empPriorTrue = filter_dataset_by_labels(DTR, LTR)[1].shape[1] / DTR.shape[1]
+    empPriorFalse = filter_dataset_by_labels(DTR, LTR)[0].shape[1] / DTR.shape[1]
+    Ct = C * (classProbabilities[1] / empPriorTrue)
+    Cf = C * (classProbabilities[0] / empPriorFalse)
+    for i in range(DTR.shape[1]):
+        if LTR[i] == 0:
+            svm.bounds.append((0, Cf))
+        else:
+            svm.bounds.append((0, Ct))
+    x, f, d = scipy.optimize.fmin_l_bfgs_b(svm.svm_dual_obj, x0=numpy.zeros(svm.DTR.shape[1]), fprime=None,
+                                           bounds=svm.bounds, factr=1.0)
+    alpha = x
+    scores = []
+    DTRFalse, DTRTrue = filter_dataset_by_labels(DTR, LTR)
+    for i in range(svm.DTE.shape[1]):
+        tmp = 0
+        for j in range(svm.DTR.shape[1]):
+            if alpha[j] > 0:
+                if svm.kernelFunction == polyKernelFunction:
+                    tmp = tmp + alpha[j] * svm.z[j] * svm.kernelFunction(DTR[:, j], DTE[:, i], svm.c, svm.d, svm.K)
+                elif svm.kernelFunction == radialBassKernelFunction:
+                    tmp = tmp + alpha[j] * svm.z[j] * svm.kernelFunction(DTR[:, j], DTE[:, i], svm.gamma, svm.K)
+        scores.append(tmp)
+    return scores
+
+
+
+def compute_support_vector_machine_kernel_hyperparameter(DTR, LTR, DTE, LTE, K, C, kernelFunction, classProbabilities, c=None,
                                               d=None, gamma=None):
     svm = SVMKernelClass(DTR, LTR, DTE, K, C, kernelFunction, c, d, gamma)
     svm.bounds = []
