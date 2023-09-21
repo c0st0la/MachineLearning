@@ -1036,7 +1036,7 @@ def compute_optimal_bayes_decision(logLikelihoodRatios, priorsProbability, costs
     :param costs: index 0 contains cost of false negative, index 1 contains cost of false postive
     :return:
     """
-    predictions = numpy.zeros((logLikelihoodRatios.size), dtype=numpy.int32)
+    predictions = numpy.zeros((len(logLikelihoodRatios)), dtype=numpy.int32)
     threshold = - numpy.log((priorsProbability[1] * costs[0]) / (priorsProbability[0] * costs[1]))
     for index, llr in enumerate(logLikelihoodRatios):
         if llr > threshold:

@@ -20,8 +20,7 @@ if __name__ == "__main__":
     DTEOriginalNormalized = (DTEOriginal - functions2.compute_mean(DTEOriginal)) / functions2.to_column(DTEOriginal.std(axis=1))
 
     DOriginalNormalized = numpy.concatenate((DTROriginalNormalized, DTEOriginalNormalized), axis=1)
-    DOriginal = numpy.concatenate((DTROriginal, DTEOriginal), axis=1)
-    L = numpy.concatenate((LTR, LTE), axis=0)
+
 
     # NOW I WILL COMPUTE DCF OF MVG GIVEN A SET OF THRESHOLDS ON THE NORMALIZED DATASET
 
