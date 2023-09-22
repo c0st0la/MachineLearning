@@ -1,48 +1,39 @@
 PCA with 8 dimension
 Prior probability for class 0 is : 0.9
 Prior probability for class 1 is : 0.1
-The min of the normalized DCF for MVG classifier: 0.302
-The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.256
+The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.274
 
 Prior probability for class 0 is : 0.5
 Prior probability for class 1 is : 0.5
-The min of the normalized DCF for MVG classifier : 0.087
-The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.078
+The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.084
 
 Prior probability for class 0 is : 0.1
 Prior probability for class 1 is : 0.9
-The min of the normalized DCF for MVG classifier : 0.177
-The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.148
+The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.159
 
 PCA with 9 dimension
 Prior probability for class 0 is : 0.9
 Prior probability for class 1 is : 0.1
-The min of the normalized DCF for MVG classifier: 0.281
-The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.257
+The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.275
 
 Prior probability for class 0 is : 0.5
 Prior probability for class 1 is : 0.5
-The min of the normalized DCF for MVG classifier : 0.087
-The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.080
+The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.084
 
 Prior probability for class 0 is : 0.1
 Prior probability for class 1 is : 0.9
-The min of the normalized DCF for MVG classifier : 0.185
-The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.141
+The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.153
 
 PCA with 10 dimension
 Prior probability for class 0 is : 0.9
 Prior probability for class 1 is : 0.1
-The min of the normalized DCF for MVG classifier: 0.283
-The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.255
+The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.268
 
 Prior probability for class 0 is : 0.5
 Prior probability for class 1 is : 0.5
-The min of the normalized DCF for MVG classifier : 0.090
-The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.078
+The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.084
 
 Prior probability for class 0 is : 0.1
 Prior probability for class 1 is : 0.9
-The min of the normalized DCF for MVG classifier : 0.190
-The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.140
+The min of the normalized DCF for MVG classifier with K-fold algo (5 fold): 0.152
 

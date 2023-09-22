@@ -68,7 +68,7 @@ def save_ApplicationWorkingPoint_DCFs(scores, L, costs, path, applicationWorking
     DCFsNormalized = []
     DCFsNormalized2 = []
     DCFsNormalizedMin = []
-    applicationWorkingPoints = [[9 / 10, 1 / 10], [5 / 10, 5 / 10], [1 / 10, 9 / 10]]
+    applicationWorkingPointsPrint = ['0_1', '0_5', '0_9']
     for i, applicationWorkingPoint in enumerate(applicationWorkingPoints):
         optimalBayesDecisionPredictions = functions2.compute_optimal_bayes_decision(scores,
                                                                                     applicationWorkingPoint, costs)

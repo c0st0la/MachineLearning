@@ -214,7 +214,6 @@ def compute_QLR_KFold_scores(D, L, numFold, lambd, classPriorProbabilities):
 
 def compute_SVM_KFold_DCF(D, L, numFold, classPriorProbabilities, applicationWorkingPoint, costs, CList, K):
     num_samples = int(D.shape[1] / numFold)
-
     x = dict()
     perm = numpy.random.permutation(D.shape[1])
     D = D[:, perm]

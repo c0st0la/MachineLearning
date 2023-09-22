@@ -5,7 +5,7 @@ def save_ApplicationWorkingPoint_DCFs(scores, L, costs, path, applicationWorking
     DCFsNormalized = []
     DCFsNormalized2 = []
     DCFsNormalizedMin = []
-    applicationWorkingPoints = [[9 / 10, 1 / 10], [5 / 10, 5 / 10], [1 / 10, 9 / 10]]
+    applicationWorkingPointsPrint = ['0_1', '0_5', '0_9']
     for i, applicationWorkingPoint in enumerate(applicationWorkingPoints):
         optimalBayesDecisionPredictions = functions2.compute_optimal_bayes_decision(scores,
                                                                                     applicationWorkingPoint, costs)
@@ -22,9 +22,9 @@ def save_ApplicationWorkingPoint_DCFs(scores, L, costs, path, applicationWorking
                 functions2.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint, costs))
         DCFsNormalizedMin.append(min(DCFsNormalized2))
         DCFsNormalized2 = []
-        with open("./DCFs/minDCF_" + path , "w") as fp:
+        with open("./DCFs/minDCF_" + applicationWorkingPointsPrint[i] + "_" + path , "w") as fp:
             fp.write(str(min(DCFsNormalizedMin)))
-        with open("./DCFs/actDCF_" + path, "w") as fp:
+        with open("./DCFs/actDCF_" + applicationWorkingPointsPrint[i] + "_" + path, "w") as fp:
             fp.write(str(min(DCFsNormalized)))
 
 def train_LRKFold(D, L, lambd, classPriorProbabilities, path, applicationWorkingPoints):
@@ -101,7 +101,15 @@ if __name__=="__main__":
     DTROriginalNormalized = (DTROriginal - functions2.compute_mean(DTROriginal)) / functions2.to_column(DTROriginal.std(axis=1))
     DTEOriginalNormalized = (DTEOriginal - functions2.compute_mean(DTEOriginal)) / functions2.to_column(DTEOriginal.std(axis=1))
 
-    DOriginalNormalized = numpy.concatenate((DTROriginalNormalized, DTEOriginalNormalized), axis=1)
+    with open("Scores/mvg_score", "r") as fp:
+        scores_mvg = fp.read()
+        scores_mvg = [float(score) for score in scores_mvg.rstrip().split(",")]
+    with open("Scores/qlr_score", "r") as fp:
+        scores_qlr = fp.read()
+        scores_qlr = [float(score) for score in scores_qlr.rstrip().split(",")]
+    with open("Scores/qsvm_score", "r") as fp:
+        scores_qsvm = fp.read()
+        scores_qsvm = [float(score) for score in scores_qsvm.rstrip().split(",")]
 
     ###QLR
 
@@ -112,7 +120,7 @@ if __name__=="__main__":
     # DCFsNormalized2 = []
     # DCFsNormalized3 = []
     # effPriorLogOdds = numpy.linspace(-4, 4, 25)
-    #llr_QLR = functions.compute_logistic_regression_binary_quadratic_llr(DTROriginalNormalized, LTR, DTEOriginalNormalized, 10**-5, classPriorProbabilities2)
+    # llr_QLR = functions.compute_logistic_regression_binary_quadratic_llr(DTROriginalNormalized, LTR, DTEOriginalNormalized, 10**-5, classPriorProbabilities2)
     # print(list(llr_QLR))
     # for threshold in thresholds:
     #     optimalBayesDecisionPredictions = functions.compute_optimal_bayes_decision_given_threshold(llr_QLR,
@@ -130,41 +138,43 @@ if __name__=="__main__":
     # minDCF1 = min(DCFsNormalized1)
     # minDCF2 = min(DCFsNormalized2)
     # minDCF3 = min(DCFsNormalized3)
-    # with open("./DCFs/QLR_pt_0_5", "w") as fp:
-    #     fp.write("0.1: "+str(minDCF1)+"-0.5:"+str(minDCF2)+"-0.9:"+str(minDCF3))
-    # save_bayes_error_plot(llr_QLR, LTE, costs, "QLR_pt_0_5")
-   # #QSVM DCFsNormalized = []
-   #  DCFsNormalized1 = []
-   #  DCFsNormalized2 = []
-   #  DCFsNormalized3 = []
-   #  effPriorLogOdds = numpy.linspace(-4, 4, 25)
-   #  llr_QSVM = list(functions.compute_support_vector_machine_kernel_llr(DTROriginalNormalized, LTR,
-   #                                                                      DTEOriginalNormalized, LTE, 1, 10**2, 'p',
-   #                                                                      classPriorProbabilities2, c=1,d=2))
-   #
-   #  print(llr_QSVM)
-   #  for threshold in thresholds:
-   #      optimalBayesDecisionPredictions = functions.compute_optimal_bayes_decision_given_threshold(llr_QSVM,
-   #                                                                                                 threshold)
-   #      confusionMatrix = functions.compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
-   #      DCFsNormalized1.append(
-   #          functions.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint1,
-   #                                                               costs))
-   #      DCFsNormalized2.append(
-   #          functions.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint2,
-   #                                                               costs))
-   #      DCFsNormalized3.append(
-   #          functions.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint3,
-   #                                                               costs))
-   #  minDCF1 = min(DCFsNormalized1)
-   #  minDCF2 = min(DCFsNormalized2)
-   #  minDCF3 = min(DCFsNormalized3)
-   #  with open("./DCFs/QSVM_pt_0_5", "w") as fp:
-   #      fp.write("0.1: " + str(minDCF1) + "-0.5:" + str(minDCF2) + "-0.9:" + str(minDCF3))
-   #  save_bayes_error_plot(llr_QSVM, LTE, costs, "QSVM_pt_0_5")
-   #
 
-    # ##MVG
+    save_bayes_error_plot(scores_qlr, LTE, costs, "QLR_pt_0_5")
+    save_ApplicationWorkingPoint_DCFs(scores_qlr, LTE, costs, "QLR_pt_0_5", applicationWorkingPoints)
+
+
+   #QSVM
+    # DCFsNormalized1 = []
+    # DCFsNormalized2 = []
+    # DCFsNormalized3 = []
+    # effPriorLogOdds = numpy.linspace(-4, 4, 25)
+    # llr_QSVM = list(functions.compute_support_vector_machine_kernel_llr(DTROriginalNormalized, LTR,
+    #                                                                     DTEOriginalNormalized, LTE, 1, 10**2, 'p',
+    #                                                                     classPriorProbabilities2, c=1,d=2))
+    #
+    # print(llr_QSVM)
+    # for threshold in thresholds:
+    #     optimalBayesDecisionPredictions = functions.compute_optimal_bayes_decision_given_threshold(llr_QSVM,
+    #                                                                                                threshold)
+    #     confusionMatrix = functions.compute_binary_confusion_matrix(optimalBayesDecisionPredictions, LTE)
+    #     DCFsNormalized1.append(
+    #         functions.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint1,
+    #                                                              costs))
+    #     DCFsNormalized2.append(
+    #         functions.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint2,
+    #                                                              costs))
+    #     DCFsNormalized3.append(
+    #         functions.compute_normalized_detection_cost_function(confusionMatrix, applicationWorkingPoint3,
+    #                                                              costs))
+    # minDCF1 = min(DCFsNormalized1)
+    # minDCF2 = min(DCFsNormalized2)
+    # minDCF3 = min(DCFsNormalized3)
+
+    save_bayes_error_plot(scores_qsvm, LTE, costs, "QSVM_pt_0_5")
+    save_ApplicationWorkingPoint_DCFs(scores_qsvm, LTE, costs, "QSVM_pt_0_5", applicationWorkingPoints)
+
+
+    ##MVG
     # DCFsNormalized = []
     # DCFsNormalized1 = []
     # DCFsNormalized2 = []
@@ -188,38 +198,38 @@ if __name__=="__main__":
     # minDCF1 = min(DCFsNormalized1)
     # minDCF2 = min(DCFsNormalized2)
     # minDCF3 = min(DCFsNormalized3)
-    # with open("./DCFs/MVG_pt_0_5", "w") as fp:
-    #     fp.write("0.1: " + str(minDCF1) + "-0.5:" + str(minDCF2) + "-0.9:" + str(minDCF3))
-    # save_bayes_error_plot(llr_MVG, LTE, costs, "MVG_pt_0_5")
 
-    with open("./mvg_score", "r") as fp:
-        scores_mvg = fp.read()
-        scores_mvg = [float(score) for score in scores_mvg.rstrip().split(",")]
-    with open("./qlr_score", "r") as fp:
-        scores_qlr = fp.read()
-        scores_qlr = [float(score) for score in scores_qlr.rstrip().split(",")]
-    with open("./qsvm_score", "r") as fp:
-        scores_qsvm = fp.read()
-        scores_qsvm = [float(score) for score in scores_qsvm.rstrip().split(",")]
+    save_bayes_error_plot(scores_mvg, LTE, costs, "MVG_pt_0_5")
+    save_ApplicationWorkingPoint_DCFs(scores_mvg, LTE, costs, "MVG_pt_0_5", applicationWorkingPoints)
 
-    scores1 = [scores_mvg, scores_qlr, scores_qsvm]
-    scores = numpy.array(numpy.vstack(scores1))
-    train_LRKFold(scores, LTE, 10 ** -5, applicationWorkingPoints[1],
-                  "MVG_QLR_QSVM_Zscore_pt_", applicationWorkingPoints)
-
-    scores2 = [scores_mvg, scores_qlr]
-    scores = numpy.array(numpy.vstack(scores2))
-    train_LRKFold(scores, LTE, 10 ** -5, applicationWorkingPoints[1],
-                  "MVG_QLR_Zscore_pt_", applicationWorkingPoints)
-    scores3 = [scores_qlr, scores_qsvm]
-    scores = numpy.array(numpy.vstack(scores3))
-    train_LRKFold(scores, LTE, 10 ** -5, applicationWorkingPoints[1],
-                  "QSVM_QLR_Zscore_pt_", applicationWorkingPoints)
-
-    scores4 = [scores_mvg, scores_qsvm]
-    scores = numpy.array(numpy.vstack(scores4))
-    train_LRKFold(scores, LTE, 10 ** -5, applicationWorkingPoints[1],
-                  "MVG_QSVM_Zscore_pt_", applicationWorkingPoints)
+    # with open("Scores/mvg_score", "r") as fp:
+    #     scores_mvg = fp.read()
+    #     scores_mvg = [float(score) for score in scores_mvg.rstrip().split(",")]
+    # with open("Scores/qlr_score", "r") as fp:
+    #     scores_qlr = fp.read()
+    #     scores_qlr = [float(score) for score in scores_qlr.rstrip().split(",")]
+    # with open("Scores/qsvm_score", "r") as fp:
+    #     scores_qsvm = fp.read()
+    #     scores_qsvm = [float(score) for score in scores_qsvm.rstrip().split(",")]
+    #
+    # scores1 = [scores_mvg, scores_qlr, scores_qsvm]
+    # scores = numpy.array(numpy.vstack(scores1))
+    # train_LRKFold(scores, LTE, 10 ** -5, applicationWorkingPoints[1],
+    #               "MVG_QLR_QSVM_Zscore_pt_0_5", applicationWorkingPoints)
+    #
+    # scores2 = [scores_mvg, scores_qlr]
+    # scores = numpy.array(numpy.vstack(scores2))
+    # train_LRKFold(scores, LTE, 10 ** -5, applicationWorkingPoints[1],
+    #               "MVG_QLR_Zscore_pt_0_5", applicationWorkingPoints)
+    # scores3 = [scores_qlr, scores_qsvm]
+    # scores = numpy.array(numpy.vstack(scores3))
+    # train_LRKFold(scores, LTE, 10 ** -5, applicationWorkingPoints[1],
+    #               "QSVM_QLR_Zscore_pt_0_5", applicationWorkingPoints)
+    #
+    # scores4 = [scores_mvg, scores_qsvm]
+    # scores = numpy.array(numpy.vstack(scores4))
+    # train_LRKFold(scores, LTE, 10 ** -5, applicationWorkingPoints[1],
+    #               "MVG_QSVM_Zscore_pt_0_5", applicationWorkingPoints)
 
 
 
